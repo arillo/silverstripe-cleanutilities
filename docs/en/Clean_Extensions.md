@@ -4,7 +4,7 @@ __written by Arillo__
 Extensions for controllers which can be used together with some Clean models or model decorators.
 
 ##DownloadExtension
-Controller extension to force a direct download of a file. Works out of the box using the ([Clean Models](Clean_Models)).DownloadLink.
+Controller extension to force a direct download of a file. Works out of the box using the ([Clean Models](Clean_Models.md)).DownloadLink.
 ###Install
 
 	// add the extensions in _config.php

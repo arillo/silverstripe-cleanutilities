@@ -1,7 +1,7 @@
 #Models Decorators
 __written by Arillo__
 
-Each Model Decorator can provide SiteTree classes with has_many of its corresponding [Clean Model](Clean_Models) features. These has-many relationships are managed through DataObjectManager in the CMS. All Models Decorators will create an own tab in the CMS, where their collection can be edited. They all can be installed like this:
+Each Model Decorator can provide SiteTree classes with has_many of its corresponding [Clean Model](Clean_Models.md) features. These has-many relationships are managed through DataObjectManager in the CMS. All Models Decorators will create an own tab in the CMS, where their collection can be edited. They all can be installed like this:
 ####Install
 	// add Models Decorators in _config.php
 	Object::add_extension('Page', 'ImagesDecorator');
@@ -28,7 +28,7 @@ All Models Decorators come with similar function patterns. Just inspect the "pub
 
 
 ##ImagesDecorator
-Implements many manageable images ([CleanImage](Clean_Models#cleanimage)) to a SiteTree class.
+Implements many manageable images ([CleanImage](Clean_Models.md#cleanimage)) to a SiteTree class.
 
 ####has_many
 
@@ -41,7 +41,7 @@ Implements many manageable images ([CleanImage](Clean_Models#cleanimage)) to a S
 	public function MoreImagesThan($num = 0)
 
 ##FilesDecorator
-Implements many manageable files ([CleanFile](Clean_Models#cleanfile)) to a SiteTree class.
+Implements many manageable files ([CleanFile](Clean_Models.md#cleanfile)) to a SiteTree class.
 
 ####has_many
 
@@ -55,7 +55,7 @@ Implements many manageable files ([CleanFile](Clean_Models#cleanfile)) to a Site
 	public function MoreFilesThan($num = 0)
 
 ##TeasersDecorator
-Implements many manageable teasers to a SiteTree class. Read more about ([CleanTeaser](Clean_Models#cleanteaser)).
+Implements many manageable teasers to a SiteTree class. Read more about ([CleanTeaser](Clean_Models.md#cleanteaser)).
 
 ####has_many
 
@@ -67,7 +67,7 @@ Implements many manageable teasers to a SiteTree class. Read more about ([CleanT
 	public function MoreTeasersThan($num = 0)
 
 ##LinksDecorator
-Implements many manageable links ([CleanLink](Clean_Models#cleanlink)) to a SiteTree class.
+Implements many manageable links ([CleanLink](Clean_Models.md#cleanlink)) to a SiteTree class.
 ####has_many
 
 	'CleanLinks' => 'CleanLink'

@@ -6,13 +6,13 @@ Provides extra functionality to all kind of assets, mainly File (sub-)classes.
 ###Install
 	// in _config.php
 	Object::add_extension('File', 'AssetsDecorator');
-	
+
 ###Public static functions
 #####ControlledUploadFolder($foldername = '/uploads/')
 	/**
 	 * Limits the count of files in a folder to AssetsDecorator::$maxfilesperfolder.
 	 * Automatically adds new subfolders.
-	 * 
+	 *
 	 * @param string $foldername
 	 * @return string
 	 */
@@ -25,7 +25,7 @@ Provides extra functionality to all kind of assets, mainly File (sub-)classes.
 #####HomeDirectory()
 	/**
 	 * A folder name compund [$ClassName] / [$ID]
-	 * 
+	 *
 	 * @return string
 	 */
 	public function HomeDirectory()
@@ -36,32 +36,32 @@ Provides publish/unpublish functionality to DataObjects.
 ###Install
 	// in _config.php
 	Object::add_extension('CleanFile', 'CMSPublishableDecorator');
-	
+
 ###Public functions
 #####getStatus()
 
 	/**
-	 * Returns an indicator light, 
+	 * Returns an indicator light,
 	 * usefull feature for DataObjectManager etc.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getStatus()
 
 in getCMSFields() we need to extend fields to add publish checkbox on top
-	
+
 	// in child class
 	function updateCMSFields_forPopup(FieldSet &$fields)
 	// in base class
 	$this->extend('updateCMSFields_forPopup', $fields);
-	
+
 ##DataObjectSetDecorator
 Provides extra functionality to DataObjectSets.
 Allows to get a range on the DataObjectSet and custom sorting
 ###Install
 	// in _config.php
 	Object::add_extension('DataObjectSet', 'DataObjectSetDecorator');
-	
+
 ###Public functions
 #####SortedBy($sort)
 
@@ -69,23 +69,23 @@ Allows to get a range on the DataObjectSet and custom sorting
 	 * Sorting on this DataObjectSet by $sort,
 	 * a compound string "[FIELD] [Direction]"
 	 * like: "Title ASC"
-	 * 
+	 *
 	 * @param string $sort
 	 * @return DataObjectSet
 	 */
 	public function SortedBy($sort)
-	
+
 #####Range($param = "")
 	/**
 	 * Returns a range from this DataObjectSet.
-	 * $param should be formated as compund [START_INDEX]_[LENGTH] 
-	 * 
+	 * $param should be formated as compund [START_INDEX]_[LENGTH]
+	 *
 	 * @param string $param
 	 * @return DataObjectSet
 	 */
 	public function Range($param = "")
 
-##FileDecorator	
+##FileDecorator
 Provides extra functionality to File.
 ###Install
 	// in _config.php
@@ -94,42 +94,42 @@ Provides extra functionality to File.
 #####appCategory()
 	/**
 	 * Returns the application category this file belongs to.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function appCategory()
 #####FileCreationDate()
 	/**
-	 * Reads and returns the creation date of the file. 
-	 * 
+	 * Reads and returns the creation date of the file.
+	 *
 	 * @return Date
 	 */
 	public function FileCreationDate()
-##FolderDecorator	
+##FolderDecorator
 Provides extra functionality to Folder.
 ###Install
 	// in _config.php
 	Object::add_extension('Folder', 'FolderDecorator');
-	
+
 ###Public functions
 #####SortedChildFolders()
 	/**
 	 * Get the children sorted by name of this folder that are also folders.
-	 * 
+	 *
 	 * @return DataObjectSet
 	 */
 	function SortedChildFolders()
 #####sortedChildren($sort = "Title ASC")
 	/**
 	 * All subfolders sorted by $sort.
-	 * 
-	 *  
+	 *
+	 *
 	 * @param $sort
 	 * @return DataObjectSet
 	 */
 	public function sortedChildren($sort = "Title ASC")
 ##GroupLoginDecorator
-Provides extra fields to Group, to make custom redirects after login possible. Works together with [CustomLoginForm](clean_forms#customloginform).
+Provides extra fields to Group, to make custom redirects after login possible. Works together with [CustomLoginForm](Clean_Forms.md#customloginform).
 ###Install
 	// in _config.php
 	Object::useCustomClass('MemberLoginForm', 'CustomLoginForm');
@@ -148,7 +148,7 @@ Provides extra functionality to Image classes.
 #####getHalfWidth()
 	/**
 	 * Returns half of image width.
-	 * 
+	 *
 	 * @return int
 	 */
 	function getHalfWidth()
@@ -168,7 +168,7 @@ Provides extra functionality to Image classes.
 #####ColorizeImage($tint_r = 255, $tint_g = 255, $tint_b = 255)
 	/**
 	 * Created a tinted version of this image.
-	 * 
+	 *
 	 * @param int $tint_r
 	 * @param int $tint_g
 	 * @param int $tint_b
@@ -178,7 +178,7 @@ Provides extra functionality to Image classes.
 #####PaddedImageWithColor($width, $height, $color)
 	/**
 	 * Generates an image with colored padding.
-	 * 
+	 *
 	 * @param int $width
 	 * @param int $height
 	 * @param int $color
@@ -187,8 +187,8 @@ Provides extra functionality to Image classes.
 	 public function PaddedImageWithColor($width, $height, $color)
 #####RotatedImage($angle)
 	/**
-	 * Rotate an image by angle. 
-	 * 
+	 * Rotate an image by angle.
+	 *
 	 * @param int $angle
 	 * @return Image
 	 */
@@ -205,17 +205,17 @@ Provides SiteTree classes with a language menu.
 	 * Returns a DataObjectSet containing Pages.
 	 * The provided links point to their translated pages.
 	 * You can use it in templates like this:
-	 * 
+	 *
 	 * <% control LanguageChooser %>
-	 *   $Title, $Current, and any other vars in your page instance 
+	 *   $Title, $Current, and any other vars in your page instance
 	 * <% end_control %>
 	 *
 	 * @return DataObjectSet
 	 */
 	public function LanguageChooser()
-	
+
 ###Template usage
-	
+
 	<div id="Lang">
 		<% control LanguageChooser %>
 			<a href="$Link" class="lang $Current">
@@ -234,7 +234,7 @@ Provides with some modulo helper functionality for DataObjects when they are wit
 #####GetModulo($modulo)
 	/**
 	 * Indicator for, if this object is the nth child of a collection.
-	 * 
+	 *
 	 * @param int $modulo
 	 * @return bool
 	 */
@@ -242,7 +242,7 @@ Provides with some modulo helper functionality for DataObjects when they are wit
 #####GetBeforeModulo($modulo)
 	/**
 	 * Indicator for, if this object is before the nth child of a collection.
-	 *  
+	 *
 	 * @param int $modulo
 	 * @return bool
 	 */
@@ -250,14 +250,14 @@ Provides with some modulo helper functionality for DataObjects when they are wit
 #####LessThan($num)
 	/**
 	 * Indicator for, if this object is the nth child of a collection.
-	 * 
+	 *
 	 * @param int $modulo
 	 * @return bool
 	 */
 	public function GetModulo($modulo)
 #####GetModulo($modulo)
 	public function LessThan($num)
-	
+
 ##NotificationDecorator
 Provides notification/flash messages to SiteTree classes.
 ###Install
@@ -269,7 +269,7 @@ Provides notification/flash messages to SiteTree classes.
 	/**
 	 * Adds a message $str to notifications with a certain $mode.
 	 * This static version of this function makes this usable from everywhere.
-	 * 
+	 *
 	 * @param string $str
 	 * @param string $mode
 	 */
@@ -279,7 +279,7 @@ Provides notification/flash messages to SiteTree classes.
 
 	/**
 	 * Adds a message $str to notifications with a certain $mode.
-	 *  
+	 *
 	 * @param string $str
 	 * @param string $mode
 	 */
@@ -288,7 +288,7 @@ Provides notification/flash messages to SiteTree classes.
 
 	/**
 	 * Indicates if current notifications do exist.
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function HaveMessages()
@@ -296,11 +296,11 @@ Provides notification/flash messages to SiteTree classes.
 
 	/**
 	 * Returns all current notifications.
-	 * 
+	 *
 	 * @return DataObjectSet
 	 */
 	public function SessionMessages()
-	
+
 ###Template usage
 e.g. in Page.ss
 
@@ -314,7 +314,7 @@ in Includes/Notifications.ss
 				<p class="$Mode">$Msg</p>
 			<% end_control %>
 		</div>
-	<% end_if %> 
+	<% end_if %>
 
 ##PaginationDecorator
 Provides Pagination to SiteTree classes. It also provides a basic "previous/next" page navigation for all childrens of a page.
@@ -328,7 +328,7 @@ Provides Pagination to SiteTree classes. It also provides a basic "previous/next
 #####PageNavigation($param = 'PublishDate_DESC')
 
 	/**
-	 * 
+	 *
 	 * @param unknown_type $param
 	 * @return string|string
 	 */
@@ -338,7 +338,7 @@ Provides Pagination to SiteTree classes. It also provides a basic "previous/next
 	/**
 	 * Returns previous page in stack sorted by $param.
 	 * $param should be a compound of [FIELDNAME]_[SORTORDER].
-	 * 
+	 *
 	 * @param string $param
 	 * @return mixed
 	 */
@@ -348,7 +348,7 @@ Provides Pagination to SiteTree classes. It also provides a basic "previous/next
 	/**
 	 * Returns next page in stack sorted by $param.
 	 * $param should be a compound of [FIELDNAME]_[SORTORDER].
-	 * 
+	 *
 	 * @param string $param
 	 * @return mixed
 	 */
@@ -358,7 +358,7 @@ Provides Pagination to SiteTree classes. It also provides a basic "previous/next
 	/**
 	 * Returns current page number in stack sorted by $param.
 	 * $param should be a compound of [FIELDNAME]_[SORTORDER].
-	 * 
+	 *
 	 * @param string $param
 	 * @return mixed
 	 */
@@ -367,15 +367,15 @@ Provides Pagination to SiteTree classes. It also provides a basic "previous/next
 
 	/**
 	 * Returns the count of stack items.
-	 * 
+	 *
 	 * @return int
 	 */
 	public function NumberOfSiblings()
 #####PaginatedChildren()
 
 	/**
-	 * Return the paginated collection. 
-	 * 
+	 * Return the paginated collection.
+	 *
 	 * @return DataObjectSet
 	 */
 	public function PaginatedChildren()
@@ -384,22 +384,22 @@ Provides Pagination to SiteTree classes. It also provides a basic "previous/next
 ###Template usage
 
 #####Page Pagination
-	
+
 	<% include PagePagination %>
 Includes/PagePagination.ss
 
 	<% if PaginatedChildren.MoreThanOnePage %>
 		<div class="pagePagination">
 			<% if PaginatedChildren.PrevLink %>
-				<a class="control prevPage" href="$PaginatedChildren.PrevLink">&lt;&lt;</a> 
+				<a class="control prevPage" href="$PaginatedChildren.PrevLink">&lt;&lt;</a>
 			<% else %>
-				<span class="control prevPage disabled">&lt;&lt;</span> 
+				<span class="control prevPage disabled">&lt;&lt;</span>
 			<% end_if %>
 			<% control PaginatedChildren.Pages %>
 				<% if CurrentBool %>
-					<span>$PageNum</span> 
+					<span>$PageNum</span>
 				<% else %>
-	 				<a href="$Link" title="Go to page $PageNum">$PageNum</a> 
+	 				<a href="$Link" title="Go to page $PageNum">$PageNum</a>
 				<% end_if %>
 			<% end_control %>
 			<% if PaginatedChildren.NextLink %>
@@ -409,11 +409,11 @@ Includes/PagePagination.ss
 			<% end_if %>
 		</div>
 	<% end_if %>
-	
+
 after it we are able to create a menu for our children pages that will be displayed acording to the values of the previous pagination:
-	
+
 	<% control PaginatedChildren %><div><a href="$Link">$Title</a></div><% end_control %>
-	
+
 #####Page Navigation
 we just need to include the following Template to start controlling the previous and next pages, note that the sort order is defined in the template so we can change it by overwritting.
 
@@ -451,15 +451,15 @@ Adds a checkbox to Behaviour tab in CMS.
 #####SecondMenu($parent = 0)
 
 	/**
-	 * Returns all SiteTree instances which have SecondMenu activated. 
-	 * 
+	 * Returns all SiteTree instances which have SecondMenu activated.
+	 *
 	 * @param int $parent
 	 * @return DataObjectSet
 	 */
 	public function SecondMenu($parent = 0)
 ###Template usage
 e.g. in Page.ss
-	
+
 	<% include SecondMenu %>
 Includes/SecondMenu.ss
 
@@ -470,7 +470,7 @@ Includes/SecondMenu.ss
 			</li>
 		<% end_control %>
 	</ul>
-	
+
 ##SiteConfigAddressDecorator
 
 Generates general contact data which can be filled by the website customer.
@@ -490,7 +490,7 @@ Generates general contact data which can be filled by the website customer.
 	'Cell' => 'Text',
 	'Fax' => 'Text',
 	'Email' => 'Text'
-	
+
 ###Template usage:
 
 	$SiteConfig.Company
@@ -510,10 +510,10 @@ Provides SiteConfig with extra fields and adds Google Analytics to your site.
 #####GoogleAnalytics()
 
 	/**
-	 * Adds Google Analytics javascript to your template 
+	 * Adds Google Analytics javascript to your template
 	 */
 	public function GoogleAnalytics()
-	
+
 ###Template usage
 e.g. in <head> section of main Page.ss you can add:
 
@@ -535,7 +535,7 @@ Provides a couple of helper methods to Text classes.
 #####html_obfuscate($text)
 	/**
 	 * Obfuscates a given string into html character entities.
-	 * 
+	 *
 	 * @param string $text
 	 * @return string
 	 */
@@ -544,7 +544,7 @@ Provides a couple of helper methods to Text classes.
 #####SummaryHTML($limit = 100, $add = "&hellip;")
 	/**
 	 * Shortens (html) text to a given $limit and appends $add to it.
-	 * 
+	 *
 	 * @param int $limit
 	 * @param string $add
 	 * @return string
@@ -553,7 +553,7 @@ Provides a couple of helper methods to Text classes.
 #####ConvertText($limit = 20)
 	/**
 	 * Converts a given text into uft8 and shortens it to $limit.
-	 * 
+	 *
 	 * @param int $limit
 	 * @param string $add
 	 * @return string
@@ -561,9 +561,9 @@ Provides a couple of helper methods to Text classes.
 	public function ConvertText($limit = 20)
 #####LimitCharactersUTF($limit = 20, $add = "...")
 	/**
-	 * Converts a given text into uft8 and 
+	 * Converts a given text into uft8 and
 	 * shortens it by $limit and adds $add.
-	 * 
+	 *
 	 * @param int $limit
 	 * @param string $add
 	 * @return string
@@ -573,14 +573,14 @@ Provides a couple of helper methods to Text classes.
 	/**
 	 * Returns a representation of this text
 	 * with all email addresses converted into html character entities.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function EmailObfuscated()
 #####CheckWordCount($numWords = 26)
 	/**
 	 * Tests if the text is longer than $numWords.
-	 * 
+	 *
 	 * @param int $numWords
 	 * @return ArrayData
 	 */
@@ -600,41 +600,41 @@ Provides a couple of helper methods to Text classes.
 
 ##ThemeDecorator
 
-Provides custom template choosing functionality, which lets you set a Template to a page. Works together with [ThemeExtension](Clean_Extensions#themeextension).
+Provides custom template choosing functionality, which lets you set a Template to a page. Works together with [ThemeExtension](Clean_Extensions.md#themeextension).
 
 ###Install
 	// in _config.php
 	Object::add_extension('Page', 'ThemeDecorator');
 	Object::add_extension('Page_Controller', 'ThemeExtension');
-	
+
 ###db
 	'Template'	=> 'Varchar'
 ###Public functions
 #####ThemeDir()
 	/**
 	 * Returns a relative path to current theme directory.
-	 * 
+	 *
 	 * @return mixed
 	 */
 	function ThemeDir()
 #####TemplateFile()
 	/**
 	 * Returns a relative path to current template file.
-	 * 
+	 *
 	 * @return string
 	 */
 	function TemplateFile()
 #####TemplateAbsFile()
 	/**
 	 * Returns a absolute path to current template file.
-	 * 
+	 *
 	 * @return string
 	 */
 	function TemplateAbsFile()
 #####TemplateDir($directory = 'Layout/')
 	/**
 	 * Returns the current template directory.
-	 * 
+	 *
 	 * @param string $directory
 	 * @return string
 	 */
@@ -642,7 +642,7 @@ Provides custom template choosing functionality, which lets you set a Template t
 #####getSelectableTemplates($directory = 'Layout/')
 	/**
 	 * Returns an array of all selectable template files.
-	 * 
+	 *
 	 * @param string $directory
 	 * @return array
 	 */
@@ -665,14 +665,14 @@ Provides a couple of helper methods to the SiteTree instances.
 ###db
 
 	'PublishDate' => 'Datetime'
-	
+
 ###Public static functions
 #####generateURLSegment($title)
 ######@deprecated use CleanUtils::generateURLSegment instead.
 	/**
 	 * Generates an url friendly representation of a given string.
 	 * @deprecated use CleanUtils::generateURLSegment instead.
-	 * 
+	 *
 	 * @param string $title
 	 * @return string
 	 */
@@ -687,7 +687,7 @@ Provides a couple of helper methods to the SiteTree instances.
 #####MemberGroup($ID = 1)
 	/**
 	 * Returns all members of a group by ID .
-	 * 
+	 *
 	 * @param int $ID  group ID
 	 * @return DataObjectSet
 	 */
@@ -695,7 +695,7 @@ Provides a couple of helper methods to the SiteTree instances.
 #####PageInstance($pagetype = 'Page')
 	/**
 	 * Returns a SiteTree instance by ClassName.
-	 * 
+	 *
 	 * @param string $pagetype
 	 * @return mixed DataObject|bool
 	 */
@@ -703,14 +703,14 @@ Provides a couple of helper methods to the SiteTree instances.
 #####PageControllerInstance($pagetype = 'Page')
 	/**
 	 * Return a Page_Controller instance by page ClassName.
-	 * 
+	 *
 	 * @return mixed Page_Controller|bool
 	 */
 	public function PageControllerInstance($pagetype = 'Page')
 #####ShortLang()
 	/**
 	 * Returns shortlang from Locale.
-	 *  
+	 *
 	 * @return string
 	 */
 	public function ShortLang()
@@ -730,16 +730,16 @@ For a good locale behaviour we can introduce it in Page_Controller::init() funct
 		<!-- Will print all ADMIN members here… -->
 		$Email $FullName
 	<% end_control %>
-	
+
 	<% control PageInstance(SomePageClass) %>
 		<!-- All public page stuff available here… -->
 		$Title, etc...
 	<% end_control %>
-	
+
 	<% control PageControllerInstance(SomePageClass) %>
 		<!-- All public controller stuff available here... -->
 		$Form
 	<% end_control %>
-	
+
 	$ShortLang <!-- DE -->
-	
+

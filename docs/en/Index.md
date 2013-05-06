@@ -5,13 +5,13 @@ It also gives more functionality to several other sapphire classes. For more inf
 ##Installation
 As with all Silverstripe modules, you have to copy cleanutilities folder and all [dependent modules](#Dependencies) into your project's root directory. After that you should run dev/build and you are done.
 ##Included packages
-* [Clean Actions](Clean_Actions)
-* [Clean Extensions](Clean_Extensions)
-* [Clean Forms](Clean_Forms)
-* [Clean Models](Clean_Models)
-* [Model Decorators](Model_Decorators)
-* [Clean Utils](Clean_Utils)
-* [Utilities Decorators](Utilities_Decorators)
+* [Clean Actions](Clean_Actions.md)
+* [Clean Extensions](Clean_Extensions.md)
+* [Clean Forms](Clean_Forms.md)
+* [Clean Models](Clean_Models.md)
+* [Model Decorators](Model_Decorators.md)
+* [Clean Utils](Clean_Utils.md)
+* [Utilities Decorators](Utilities_Decorators.md)
 
 
 ##Dependencies
