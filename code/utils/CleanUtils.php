@@ -13,23 +13,30 @@ class CleanUtils{
 	 * @var string
 	 */
 	public static $module = "cleanutilities";
+	
 	/**
 	 * Helper function, which adds the given $cssClass to all
-	 * formfields in a given $fieldset, specified by $requiredFields.
+	 * $form fields specified by its requiredfields
 	 *
-	 * @param FieldSet $fieldset
-	 * @param array $requiredFields
+	 * @param Form $form
 	 * @param string $cssClass
-	public static function add_required_css($fieldset, $requiredFields, $cssClass = "required" ){
-		foreach($requiredFields as $f){
-			try{
-				$fieldset->dataFieldByName($f)->addExtraClass($cssClass);
-			}catch(Exception $err){
-				Debug::show("Error: Field " . $f . " does not exist in given fieldlist");
+	 */
+	public static function add_required_css($form, $cssClass = "required"){
+		if($requiredFields = $form->getValidator()->getRequired()){
+			foreach($requiredFields as $f){
+				$form->dataFieldByName($f)->addExtraClass($cssClass);
 			}
 		}
 	}
-	*/
+
+	/**
+	 * Sets i18n locale and adds Content-language to meta tags.
+	 * @param string $locale
+	 */
+	public static function setup_locale($locale){
+	   	Requirements::insertHeadTags('<meta http-equiv="Content-language" content="' . i18n::get_lang_from_locale($locale) . '" />');
+		i18n::set_locale($locale);
+	}
 
 	/**
 	 * Like PHPs instance_of but the SS way of doing it.
@@ -38,7 +45,9 @@ class CleanUtils{
 	 * @param string $parentClass
 	 * @return bool
 	 */
-	public static function instance_of($class, $parentClass){ return (ClassInfo::is_subclass_of($class, $parentClass) || $class == $parentClass); }
+	public static function instance_of($class, $parentClass){
+		return (ClassInfo::is_subclass_of($class, $parentClass) || $class == $parentClass);
+	}
 
 	/**
 	 * Generates an url friendly representation of a given string.

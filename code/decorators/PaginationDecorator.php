@@ -83,7 +83,7 @@ class PaginationDecorator extends DataObjectDecorator{
 	public function NextPage($param = 'PublishDate_DESC'){
 		$scriteria = explode("_", $param);
 		$sorting = $scriteria[0].' '.$scriteria[1];
-	if($this->owner->ParentID && count($scriteria) == 2){
+		if($this->owner->ParentID && count($scriteria) == 2){
 			$pagenumber = ($this->owner->CurrentPageNumber($param));
 			return DataObject::get("SiteTree", "ParentID = {$this->owner->ParentID}", $sorting, null, "{$pagenumber},1");
 		} else{

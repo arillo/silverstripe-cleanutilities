@@ -8,18 +8,29 @@ Provides extra funtionality to GD
 
 ###Public functions
 #####imagetint(&$img, $tint_r = 255, $tint_g = 255, $tint_b = 255)
-	/*
-	Here's some examples:
-	imagegrayscaletint ($img);  // Grayscale, no tinting
-	imagegrayscaletint ($img,304,242,209);  // What I use for sepia
-	imagegrayscaletint ($img,0,0,255);  // A berry blue image
-	The RGB values for tinting are normally from 0 to 255.
-	But, you can use values larger than 255 to lighten and "burn" the image.
-	The sepia example above does this a little, the below example provides a better
-	example of lightening the image and burning the light areas out a little:
-	imagegrayscaletint ($img,400,400,400);  // Lighten image
-	imagegrayscaletint ($img,127,127,127);  // Darken image
-	*/
+	/**
+	 * Tints an image.
+	 * 
+	 * @param data $img
+	 * @param int $tint_r
+	 * @param int $tint_g
+	 * @param int $tint_b
+	 * @return data
+	 * 
+	 * @example:
+	 * imagetint($img);  // Grayscale, no tinting
+	 * imagetint($img, 304, 242, 209);  // What I use for sepia
+	 * imagetint($img, 0, 0, 255);  // A berry blue image
+	 * 
+	 * The RGB values for tinting are normally from 0 to 255.
+	 * But, you can use values larger than 255 to lighten and "burn" the image.
+	 * The sepia example above does this a little, the below example provides
+	 * a better example of lightening the image and burning the light areas
+	 * out a little:
+	 * 
+	 * imagetint($img, 400, 400, 400);  // Lighten image
+	 * imagetint($img, 127, 127, 127);  // Darken image
+	 */
 	function imagetint(&$img, $tint_r = 255, $tint_g = 255, $tint_b = 255)
 
 
@@ -27,18 +38,23 @@ Provides extra funtionality to GD
 Provides a couple of helper methods for Theme handling and lets us set a Template other than the default on this page instance.
 
 ###Public static functions
-<!---
-#####add_required_css($fieldset, $requiredFields, $cssClass = "required" )
+
+#####add_required_css($form, $cssClass = "required" )
 	/**
 	 * Helper function, which adds the given $cssClass to all
-	 * formfields in a given $fieldset, specified by $requiredFields.
+	 * $form fields specified by its requiredfields
 	 *
-	 * @param FieldSet $fieldset
-	 * @param array $requiredFields
+	 * @param Form $form
 	 * @param string $cssClass
 	 */
-	public static function add_required_css($fieldset, $requiredFields, $cssClass = "required" )
--->
+	public static function add_required_css($form, $cssClass = "required")
+	
+#####setup_locale($locale)
+	/**
+	 * Sets i18n locale and adds Content-language to meta tags.
+	 * @param string $locale
+	 */
+	public static function setup_locale($locale)
 
 #####instance_of($class, $parentClass)
 

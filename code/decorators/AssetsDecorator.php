@@ -13,14 +13,12 @@
  * @author arillo
  */
 class AssetsDecorator extends DataObjectDecorator {
-
 	/**
 	 * Max. file count in controlled upload folders.
 	 *
 	 * @var int
 	 */
 	static $maxfilesperfolder = 100;
-
 	/**
 	 * Limits the count of files in a folder to $maxfilesperfolder.
 	 * Automatically adds new subfolders.
@@ -48,7 +46,6 @@ class AssetsDecorator extends DataObjectDecorator {
 			$newfolder = Folder::findOrMake($foldername.'000000');
 			return $foldername.$newfolder->Name;
 		}
-
 		$filecount = count(glob($lastfolder."/*.*"));
 		if($filecount < AssetsDecorator::$maxfilesperfolder){
 			return $foldername.$file;
@@ -58,7 +55,6 @@ class AssetsDecorator extends DataObjectDecorator {
 			return $foldername.$newfolder->Name;
 		}
 	}
-
 	/**
 	 * A folder name compund [$ClassName] / [$ID]
 	 *

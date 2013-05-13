@@ -41,7 +41,7 @@ class CleanFile extends DataObject{
 		$destination = isset(self::$upload_folder) ? self::$upload_folder : '/files/';
 		$upload->setUploadFolder($this->ControlledUploadFolder($destination));
 		$fields = new FieldSet(
-			new TextField('Title','Title'),
+			new TextField('Title', 'Title'),
 			$upload
 		);
 		$this->extend('updateCMSFields_forPopup', $fields);
@@ -56,7 +56,12 @@ class CleanFile extends DataObject{
 	 */
 	public function DownloadLink(){
 		if($this->ReferenceID != 0){
-			return Controller::join_links($this->Reference()->Link(), 'download', $this->ClassName, $this->ID);
+			return Controller::join_links(
+				$this->Reference()->Link(),
+				'download',
+				$this->ClassName,
+				$this->ID
+			);
 		}
 		return false;
 	}

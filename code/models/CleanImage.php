@@ -53,7 +53,9 @@ class CleanImage extends DataObject{
 	 * @return mixed
 	 */
 	function getThumbnail(){
-		if ($image = $this->Attachment()) return $image->CMSThumbnail();
+		if ($image = $this->Attachment()){
+			return $image->CMSThumbnail();
+		}
 		return _t('CleanImage.NO_IMAGE', '(No Image)');
 	}
 
@@ -64,7 +66,14 @@ class CleanImage extends DataObject{
 	 *
 	 * @return string
 	 */
-	public function DownloadLink(){ return $this->Reference()->Link().'download/'.$this->ClassName.'/'.$this->owner->ID; }
+	public function DownloadLink(){
+		return Controller::join_links(
+			$this->Reference()->Link(),
+			'download',
+			$this->ClassName,
+			$this->ID
+		);
+	}
 
 	/**
 	 * Returns an absolute link
@@ -73,7 +82,11 @@ class CleanImage extends DataObject{
 	 */
 	public function AbsoluteLink(){
 		if($this->owner->ReferenceID != 0 && isset($this->owner->ReferenceID)){
-			return Controller::join_links($this->owner->Reference()->AbsoluteLink(), $this->owner->ClassName, $this->owner->ID);
+			return Controller::join_links(
+				$this->Reference()->AbsoluteLink(),
+				$this->ClassName,
+				$this->ID
+			);
 		}
 		return false;
 	}
@@ -85,7 +98,11 @@ class CleanImage extends DataObject{
 	 */
 	public function Link(){
 		if($this->ReferenceID != 0 && isset($this->ReferenceID)){
-			return Controller::join_links($this->owner->Reference()->Link(), $this->owner->ClassName, $this->owner->ID);
+			return Controller::join_links(
+				$this->Reference()->Link(),
+				$this->ClassName,
+				$this->ID
+			);
 		}
 		return false;
 	}

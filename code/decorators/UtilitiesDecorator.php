@@ -16,15 +16,6 @@
 class UtilitiesDecorator extends DataObjectDecorator{
 
 	/**
-	 * Sets i18n locale and adds Content-language to meta tags.
-	 * @param string $locale
-	 */
-	public static function setup_locale($locale){
-	   	Requirements::insertHeadTags('<meta http-equiv="Content-language" content="' . i18n::get_lang_from_locale($locale) . '" />');
-		i18n::set_locale($locale);
-	}
-
-	/**
 	 * Adds new Fields to this Page.
 	 * Fields:
 	 *   'PublishDate' => 'Datetime'
@@ -66,12 +57,13 @@ class UtilitiesDecorator extends DataObjectDecorator{
 	}
 
 	/**
+	 * @deprecated Use CleanUtils::setup_locale($locale) instead.
 	 * Sets i18n locale and adds Content-language to meta tags.
 	 * @param string $locale
 	 */
 	public function setupLocale($locale){
-		Debug::show("Deprecated functionality, use UtilitiesDecorator::setup_locale() instead.");
-		self::setup_locale($locale);
+		Debug::show("Deprecated functionality, use CleanUtils::setup_locale($locale) instead.");
+		CleanUtils::setup_locale($locale);
 	}
 
 	/**

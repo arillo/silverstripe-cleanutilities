@@ -666,23 +666,6 @@ Provides a couple of helper methods to the SiteTree instances.
 
 	'PublishDate' => 'Datetime'
 
-###Public static functions
-#####generateURLSegment($title)
-######@deprecated use CleanUtils::generateURLSegment instead.
-	/**
-	 * Generates an url friendly representation of a given string.
-	 * @deprecated use CleanUtils::generateURLSegment instead.
-	 *
-	 * @param string $title
-	 * @return string
-	 */
-	public static function generateURLSegment($title)
-#####setupLocale($locale)
-	/**
-	 * Sets i18n locale and adds Content-language to meta tags.
-	 * @param string $locale
-	 */
-	 public static function setupLocale($locale)
 ###Public functions
 #####MemberGroup($ID = 1)
 	/**

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /* DECORATORS */
 Object::add_extension('SiteTree', 'Translatable');
@@ -14,12 +14,6 @@ Object::add_extension('CleanImage','AssetsDecorator');
 Object::add_extension('CleanFile','AssetsDecorator');
 Object::add_extension('CleanTeaser','AssetsDecorator');
 Object::add_extension('HTMLText','TextDecorator');
-
-
-//Object::add_extension('CleanTeaser', 'CMSPublishableDecorator');
-
-// used for the download link
-//Director::addRules(5, array('$Action/$ClassName!/$ID!' => 'ExtendedPageController'));
 
 /* SORTABLES */
 SortableDataObject::add_sortable_class('CleanImage');
