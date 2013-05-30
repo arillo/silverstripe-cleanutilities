@@ -63,7 +63,7 @@ class VideosDecorator extends DataObjectDecorator{
 	 * @param string $sortorder
 	 * @return DataObjectSet
 	 */
-	public function Videos($offset = 0, $limit = 0, $sortorder = 'Created DESC'){
+	public function Videos($offset = 0, $limit = 0, $sortorder = 'SortOrder'){
 		$range = $offset.",".$limit;
 		if(!$limit){
 			$range = 0;

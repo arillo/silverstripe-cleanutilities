@@ -49,6 +49,14 @@ Provides a couple of helper methods for Theme handling and lets us set a Templat
 	 */
 	public static function add_required_css($form, $cssClass = "required")
 	
+#####html_obfuscate($text)
+	/**
+	 * Obfuscates a given string into html character entities.
+	 *
+	 * @param string $text
+	 * @return string
+	 */
+	public static function html_obfuscate($text)
 #####setup_locale($locale)
 	/**
 	 * Sets i18n locale and adds Content-language to meta tags.

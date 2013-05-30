@@ -15,19 +15,6 @@
 class TextDecorator extends DataObjectDecorator{
 
 	/**
-	 * Obfuscates a given string into html character entities.
-	 *
-	 * @param string $text
-	 * @return string
-	 */
-	public static function html_obfuscate($text){
-		$rv = '';
-		for($i = 0; $i < strlen($text); $i++)  $rv .= '&#' . ord($text[$i]) . ';';
-		return $rv;
-	}
-
-
-	/**
 	 * Shortens (html) text to a given $limit and appends $add to it.
 	 *
 	 * @param int $limit
@@ -79,7 +66,9 @@ class TextDecorator extends DataObjectDecorator{
 	 * @param int $limit
 	 * @return string
 	 */
-	public function ConvertText($limit = 20){ return utf8_encode($this->owner->value, 0, $limit); }
+	public function ConvertText($limit = 20){
+		return utf8_encode(substr($this->owner->value, 0, $limit));
+	}
 
 	/**
 	 * Converts a given text into uft8 and
@@ -110,7 +99,7 @@ class TextDecorator extends DataObjectDecorator{
 			$replaces = array();
 			for($i=0; $i<count($matches[0]); $i++){
 				$link = $matches[0][$i];
-				$obfuscatedLink = self::html_obfuscate($link);
+				$obfuscatedLink = CleanUtils::html_obfuscate($link);
 				array_push($searches,$link);
 				array_push($replaces, $obfuscatedLink);
 			}

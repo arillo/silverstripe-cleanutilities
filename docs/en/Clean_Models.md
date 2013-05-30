@@ -119,7 +119,7 @@ Link used in [CleanTeaser](Clean_Models#cleanteaser).
 
 		'Title'=> 'Text',
 		'URL' => 'Text',
-		'Type'	=> "Enum('_self,_blank','_blank')"
+		'Target'	=> "Enum('_self,_blank','_blank')"
 
 ####has_one
 

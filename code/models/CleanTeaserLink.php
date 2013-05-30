@@ -12,7 +12,7 @@ class CleanTeaserLink extends DataObject{
 	static $db = array(
 		'Title'=> 'Text',
 		'URL' => 'Text',
-		'Type'	=> "Enum('_self,_blank','_blank')"
+		'Target' => "Enum('_self,_blank','_blank')"
 	);
 
 	static $has_one = array(
@@ -36,9 +36,9 @@ class CleanTeaserLink extends DataObject{
 			new TextField('Title','Title'),
 			new TextField('URL','URL'),
 			new DropdownField(
-				'Type',
-				'Link Type',
-			$this->dbObject('Type')->enumValues()
+				'Target',
+				'Link Target',
+			$this->dbObject('Target')->enumValues()
 		));
 	}
 }

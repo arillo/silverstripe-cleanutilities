@@ -531,15 +531,6 @@ Provides a couple of helper methods to Text classes.
 	'Copyright' => 'Text'
 	'GoogleAnalyticsTrackingCode' => 'Text'
 
-###Public static functions
-#####html_obfuscate($text)
-	/**
-	 * Obfuscates a given string into html character entities.
-	 *
-	 * @param string $text
-	 * @return string
-	 */
-	public static function html_obfuscate($text)
 ###Public functions
 #####SummaryHTML($limit = 100, $add = "&hellip;")
 	/**

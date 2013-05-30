@@ -30,12 +30,30 @@ class CleanUtils{
 	}
 
 	/**
+	 * Obfuscates a given string into html character entities.
+	 *
+	 * @param string $text
+	 * @return string
+	 */
+	public static function html_obfuscate($text){
+		$rv = '';
+		for($i = 0; $i < strlen($text); $i++){
+			$rv .= '&#' . ord($text[$i]) . ';';
+		}
+		return $rv;
+	}
+
+	/**
 	 * Sets i18n locale and adds Content-language to meta tags.
 	 * @param string $locale
 	 */
-	public static function setup_locale($locale){
-	   	Requirements::insertHeadTags('<meta http-equiv="Content-language" content="' . i18n::get_lang_from_locale($locale) . '" />');
-		i18n::set_locale($locale);
+	public static function setup_locale($locale = ""){
+		if($locale != ""){
+			Requirements::insertHeadTags('<meta http-equiv="Content-language" content="' . i18n::get_lang_from_locale($locale) . '" />');
+			i18n::set_locale($locale);
+		}else{
+			Debug::show("Your locale is not properly set. Remember that for using this function you need to use Object::add_extension('SiteTree', 'Translatable'); in your project _config.php");
+		}
 	}
 
 	/**
