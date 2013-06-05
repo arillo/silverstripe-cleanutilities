@@ -1,7 +1,7 @@
 #Clean Models
 __written by Arillo__
 
-All models in this module are mainly used by its corresponding [Model Decorators](Model_Decorators). They are mostly wrappers for File (sub-)classes and they add a relation to the belonging page in a one-to-many fashion.
+All models in this module are mainly used by its corresponding [Model Decorators](Model_Decorators). They are mostly wrappers for File (sub-)classes and they add a relation to the belonging page in a one-to-many fashion. All these classes provide a function DataObjectManager uses. If you extend a CleanModel you can implement the **updateCMSFields_forPopup** function to update its CMS fields:
 
 	// in subclass of a CleanModel extend form´s fieldset like this:
 	public function updateCMSFields_forPopup(FieldSet &fields)
@@ -11,6 +11,20 @@ All models in this module are mainly used by its corresponding [Model Decorators
 ##CleanFile
 Wrapper for a File.
 
+__Note:__ Uses a custom static $allowed_extensions variable to limit file extensions for upload.
+
+####static vars
+	/**
+	 * This var specifies the name of the upload folder
+	 * @var string
+	 */
+	public static $upload_folder = "Files";
+
+	/**
+	 * Allowed file extensions for uploading.
+	 * @var array
+	 */
+	 public static $allowed_extensions = etc..
 ####db
 
 		'Title'=> 'Text'
@@ -26,23 +40,23 @@ Wrapper for a File.
 	 * Returns a link like URLSegment/download/ClassName/ID.
 	 * To make this to work you need to implement a "download" function in
 	 * the Reference's controller.
-	 *
-	 * @return mixed
+	 * This can be achieved by using DownloadExtension.
+	 * 
+	 * @return string
 	 */
 	public function DownloadLink()
 #####AbsoluteDownloadLink()
 	/**
-	 * Returns a absolute download link like:
-	 * http://domain.com/URLSegment/download/ClassName/ID
-	 * 
+	 * Returns a absolute download link like http://domain.com/URLSegment/download/ClassName/ID.
 	 * To make this to work you need to implement a "download" function in
 	 * the Reference's controller.
 	 * This can be achieved by using DownloadExtension.
 	 * 
 	 * @return string
 	 */
+	public function AbsoluteDownloadLink()
 
-Tip: You can use DownloadExtension to provide the download function to your controller.
+__Tip:__ You can use DownloadExtension to provide the download function to your controller.
 
 ##CleanImage
 Wrapper for an Image.
@@ -76,20 +90,14 @@ Wrapper for an Image.
 	 */
 	public function DownloadLink()
 
-#####AbsoluteDownloadLink()
+#####AbsoluteLink()
 
-	/**
-	 * Returns a absolute download link like:
-	 * http://domain.com/URLSegment/download/ClassName/ID
-	 * 
-	 * To make this to work you need to implement a "download" function in
-	 * the Reference's controller.
-	 * This can be achieved by using DownloadExtension.
-	 * 
-	 * @return string
-	 */
-	public function AbsoluteDownloadLink()
+	// http://domain.com/URLSegment/ClassName/ID
+	public function AbsoluteLink()
 
+#####Link()
+	// URLSegment/ClassName/ID
+	public function Link()
 
 ##CleanLink
 Wrapper for external links.
@@ -167,7 +175,7 @@ A DataObject for Videos. Provides a video that can either be embedded through a 
 	 */
 	public function getValidator()
 
-#####VideoEmbed($width = 640, $height = 375, $autoplay = null)
+#####VideoEmbed($width = 640, $height = 375)
 
 	/**
 	 * Returns the actual video embed code.
@@ -178,6 +186,17 @@ A DataObject for Videos. Provides a video that can either be embedded through a 
 	 */
 	 public function VideoEmbed($width = 640, $height = 375)
 
+#####VideoEmbedAuto($width = 640, $height = 375, $autoplay = false)
+
+	/**
+	 * Returns the actual video embed code.
+	 * Allows to set its auto-play to on/off.
+	 *
+	 * @param int $width
+	 * @param int $height
+	 * @return string
+	 */
+	public function VideoEmbedAuto($width = 640, $height = 375, $autoplay = false)
 
 #####getVideoFileName()
 	/**

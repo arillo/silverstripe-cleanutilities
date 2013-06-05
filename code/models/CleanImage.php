@@ -1,72 +1,106 @@
-<?php
+<?php 
 /**
- * A wrapper for Image, which adds a Title field
+ * A wrapper for File, which adds a Title field
  * and a relation to it's page.
- *
+ * 
  * @package cleanutilities
  * @subpackage models
- *
+ * 
  * @author arillo
  */
-class CleanImage extends DataObject{
-
-	static $db = array (
+class CleanImage extends DataObject {
+	
+	static $db = array(
 		'Title'=> 'Text'
 	);
-	static $has_one = array (
+	
+	static $has_one = array(
 		'Attachment' => 'Image',
 		'Reference' => 'SiteTree'
 	);
+	
 	static $searchable_fields = array(
-		'Reference.Title'
+		'Title',
+		'Attachment.Title'
 	);
+
 	static $summary_fields = array(
-		'Reference.Title'
+		'Thumbnail' => 'Image',
+		'Title' => 'Title'
 	);
 
-	/**
-	* Specifies a custom upload folder name.
-	* @var string
-	*/
-	static $upload_folder;
+		/**
+	 * This var specifies the name of the upload folder
+	 * @var string
+	 */
+	public static $upload_folder = "Images";
 
 	/**
-	* Prepares this model for usage with DataObjectManager.
-	* @return FieldSet
-	*/
-	public function getCMSFields_forPopup(){
-		$upload = new ImageUploadField('Attachment');
-		$destination = isset(self::$upload_folder) ? self::$upload_folder : '/images/';
-		$upload->setUploadFolder($this->ControlledUploadFolder($destination));
-		$fields = new FieldSet(
-			new TextField('Title','Title'),
-			$upload
-		);
-		$this->extend('updateCMSFields_forPopup', $fields);
-		return $fields;
+	 * Allowed file extensions for uploading.
+	 * @var array
+	 */
+	public static $allowed_extensions = array(
+		'', 'bmp','png','gif','jpg','jpeg','ico','pcx','tif','tiff'
+		
+	);
+	
+	/**
+	 * Getter for current upload folder.
+	 * @return string
+	 */
+	public static function get_upload_folder() {
+		return self::$use_controlled_upload_folder ?
+				CleanUtils::controlled_upload_folder(self::$upload_folder) :
+				self::$upload_folder;
 	}
 
+	public function getCMSFields(){
+		$fields = FieldList::create();
+		$fields->push(
+			TextField::create('Title',
+				_t('CleanUtilities.TITLE', 'Title')
+			)
+		);
+		if ($this->ID) {
+			$upload = UploadField::create('Attachment', 'Image');
+			$upload->setConfig('allowedMaxFileNumber', 1);
+			$upload->getValidator()->setAllowedExtensions(
+				self::$allowed_extensions
+			);
+			if($this->hasExtension('ControlledFolderDataExtension')) {
+				$upload->setFolderName($this->getUploadFolder());
+			} else {
+				$upload->setFolderName(self::$upload_folder);
+			}
+			$fields->push($upload);
+		}
+		return $fields;
+	}
+	
 	/**
 	 * Returns CMS thumbnail, if an image is attached.
-	 * Mainly used by DataObjectManager.
+	 * Mainly used by GridField.
 	 *
 	 * @return mixed
 	 */
-	function getThumbnail(){
-		if ($image = $this->Attachment()){
+	public function getThumbnail() {
+		if ($image = $this->Attachment()) {
 			return $image->CMSThumbnail();
 		}
 		return _t('CleanImage.NO_IMAGE', '(No Image)');
 	}
-
+	
 	/**
-	 * Returns a relative link like URLSegment/download/ClassName/ID.
+	 * Returns a download link like:
+	 * URLSegment/download/ClassName/ID
+	 * 
 	 * To make this to work you need to implement a "download" function in
-	 * the Reference' s controller.
-	 *
+	 * the Reference's controller.
+	 * This can be achieved by using DownloadExtension.
+	 * 
 	 * @return string
 	 */
-	public function DownloadLink(){
+	public function DownloadLink() {
 		return Controller::join_links(
 			$this->Reference()->Link(),
 			'download',
@@ -76,34 +110,18 @@ class CleanImage extends DataObject{
 	}
 
 	/**
-	 * Returns an absolute link
-	 *
-	 * @return mixed
+	 * Returns a absolute download link like:
+	 * http://domain.com/URLSegment/download/ClassName/ID
+	 * 
+	 * To make this to work you need to implement a "download" function in
+	 * the Reference's controller.
+	 * This can be achieved by using DownloadExtension.
+	 * 
+	 * @return string
 	 */
-	public function AbsoluteLink(){
-		if($this->owner->ReferenceID != 0 && isset($this->owner->ReferenceID)){
-			return Controller::join_links(
-				$this->Reference()->AbsoluteLink(),
-				$this->ClassName,
-				$this->ID
-			);
-		}
-		return false;
-	}
-
-	/**
-	 * Returns an relative link
-	 *
-	 * @return mixed
-	 */
-	public function Link(){
-		if($this->ReferenceID != 0 && isset($this->ReferenceID)){
-			return Controller::join_links(
-				$this->Reference()->Link(),
-				$this->ClassName,
-				$this->ID
-			);
-		}
-		return false;
+	public function AbsoluteDownloadLink() {
+		return Director::absoluteURL(
+			$this->DownloadLink()
+		);
 	}
 }

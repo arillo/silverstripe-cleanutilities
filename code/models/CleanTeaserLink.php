@@ -7,38 +7,42 @@
  *
  * @author arillo
  */
-class CleanTeaserLink extends DataObject{
-
+class CleanTeaserLink extends DataObject {
 	static $db = array(
 		'Title'=> 'Text',
 		'URL' => 'Text',
-		'Target' => "Enum('_self,_blank','_blank')"
+		'Target' => "Enum('_blank,_self','_blank')"
 	);
-
 	static $has_one = array(
 		'Reference' => 'CleanTeaser'
 	);
-
 	static $searchable_fields = array(
 		'Title',
 		'URL',
 		'Reference.Title'
 	);
-
 	static $summary_fields = array(
 		'Title',
 		'URL',
-		'Reference.Title'
+		'Target'
 	);
-
-	public function getCMSFields_forPopup(){
-		return new FieldSet(
-			new TextField('Title','Title'),
-			new TextField('URL','URL'),
-			new DropdownField(
+	public function getCMSFields() {
+		$fields = FieldList::create(
+			TextField::create(
+				'Title',
+				_t('CleanUtilities.TITLE', 'Title')
+			),
+			TextField::create(
+				'URL',
+				_t('CleanUtilities.URL', 'Url')
+			),
+			DropdownField::create(
 				'Target',
-				'Link Target',
-			$this->dbObject('Target')->enumValues()
-		));
+				_t('CleanUtilities.TARGET', 'Link target'),
+				$this->dbObject('Target')->enumValues()
+			)
+		);
+		$this->extend('updateCMSFields', $fields);
+		return $fields;
 	}
 }

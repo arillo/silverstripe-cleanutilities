@@ -32,26 +32,21 @@ class CleanGD extends GD{
 	 * imagetint($img, 400, 400, 400);  // Lighten image
 	 * imagetint($img, 127, 127, 127);  // Darken image
 	 */
-	function imagetint(&$img, $tint_r = 255, $tint_g = 255, $tint_b = 255){
-		if(!$this->gd){
-			return;
-		}
-		
+	public function imagetint(&$img, $tint_r = 255, $tint_g = 255, $tint_b = 255){
+		if(!$this->gd) return;
 		$width = imagesx($this->gd); 
 		$height = imagesy($this->gd);
 		$dest = imagecreate ($width, $height);
-		for ($i=0; $i<256; $i++){
+		for($i=0; $i<256; $i++){
 			imagecolorallocate ($dest, $i, $i, $i);
 		}
-			
 		imagecopyresized ($dest, $this->gd, 0, 0, 0, 0, $width, $height, $width, $height);
-		for ($i = 0; $i < 256; $i++){
-			imagecolorset ($dest, $i, min($i * abs($tint_r) / 255, 255), min($i * abs($tint_g) / 255, 255), min($i * abs($tint_b) / 255, 255));
+		for($i = 0; $i < 256; $i++){
+			imagecolorset($dest, $i, min($i * abs($tint_r) / 255, 255), min($i * abs($tint_g) / 255, 255), min($i * abs($tint_b) / 255, 255));
 		}
-
 		$img = imagecreate ($width, $height);
-		imagecopy ($this->gd, $dest, 0, 0, 0, 0, $width, $height);
-		imagedestroy ($dest);
+		imagecopy($this->gd, $dest, 0, 0, 0, 0, $width, $height);
+		imagedestroy($dest);
 		$output = clone $this;
 		$output->setGD($this->gd);
 		return $output;
