@@ -8,19 +8,32 @@
  *
  * Add this extension to a File instance
  * by adding this to your _config.php:
- * 
+ *
+ * // For Clean Models this is already done in the modules _config.php
  * DataObject::add_extension('CleanFile', 'ControlledFolderDataExtension');
- * ControlledFolderDataExtension::set_controlled_folder_for("CleanFile", "FolderName", 100);
+ * // With this configuration, ControlledFolderDataExtension::$folder_max_files will be used as
+ * // limit and the folder will be named by the related class name ("CleanFile") in this example.
+ * // 
+ * // You also can pass a config array to this method to override the defaults, like this:
+ * ControlledFolderDataExtension::set_controlled_folder_for(
+ *   "CleanFile",
+ *   array(
+ *    'folderName' => "MyFolder",
+ *    'folderMaxFiles' => 23
+ * ));
  *
  * This extension adds an instance function to the decorated class e.g.
  * $cleanFile = CleanFile::create();
- * // for using a controlled upload folder with default settings
+ * // for using a controlled upload folder with default/ earlier created settings
  * $cleanFile->getUploadFolder();
  * // you can also pass a config object like:
- * $cleanFile->getUploadFolder(array(
- *  'folderName' => "MyFolder",
- *  'folderMaxFiles' => 23
- * ));
+ * $cleanFile->getUploadFolder(
+ *  array(
+ *    'folderName' => "MyFolder",
+ *    'folderMaxFiles' => 23
+ *  ),
+ *  true // this flag determines if this config should be made permanent for later use.
+ * );
  * 
  * 
  * @package cleanutilities
@@ -42,7 +55,7 @@ class ControlledFolderDataExtension extends DataExtension {
 	 * 
 	 * @var string
 	 */
-	public static $default_folder_name = 'Uploads';
+	public static $default_folder_name = 'ControlledUploads';
 
 	/**
 	 * Stores class names and folder names fot setting up
@@ -68,12 +81,11 @@ class ControlledFolderDataExtension extends DataExtension {
 			'folderName' => self::sanitize_folder_name(self::$default_folder_name),
 			'folderMaxFiles' => self::$folder_max_files
 		);
-		Debug::show($config);
 		if($config) {
 			if(is_array($config)) {
 				$config = array_merge($default, $config);
+				//$config['folderMaxFiles'] = abs($config['folderMaxFiles']);
 				$config['folderName'] = self::sanitize_folder_name($config['folderName']);
-				Debug::show($config);
 				return $config;
 			} else {
 				throw new InvalidArgumentException("config should be an array");
@@ -100,17 +112,6 @@ class ControlledFolderDataExtension extends DataExtension {
 	}
 
 	/**
-	 * Disable controlled upload folder for the given $className
-	 * 
-	 * @param  string $className
-	 */
-	public static function unset_controlled_folder_for($className) {
-		if(array_key_exists($className, self::$controlled_folders)) {
-			unset(self::$controlled_folders[$className]);
-		}
-	}
-
-	/**
 	 * Limits the count of files in a folder to $folder_max_files.
 	 * Automatically adds new subfolders.
 	 * 
@@ -118,8 +119,10 @@ class ControlledFolderDataExtension extends DataExtension {
 	 * @return string
 	 */
 	public static function find_or_make_controlled_folder($config) {
+		
 		$foldername = self::sanitize_folder_name(self::$default_folder_name);
 		$folderMaxFiles = self::$folder_max_files;
+
 		if(is_string($config)) {
 			$foldername = self::sanitize_folder_name($config);
 		} else if(is_array($config)) {
@@ -127,11 +130,18 @@ class ControlledFolderDataExtension extends DataExtension {
 			$foldername = self::sanitize_folder_name($config['folderName']);
 			$folderMaxFiles = $config['folderMaxFiles'];
 		}
+		//  TEST VARS
+		/*
+		$foldername = "TheTestFolder2";
+		$folderMaxFiles = 3;
+		*/
 		Folder::find_or_make($foldername);
 		$folder = Controller::join_links(
 			ASSETS_PATH,
 			$foldername
 		);
+
+
 		$dir = opendir($folder);
 		$lastfolder = '';
 		$foldercount = 0;
@@ -158,10 +168,7 @@ class ControlledFolderDataExtension extends DataExtension {
 				}
 			}
 		}
-		/*
-		 * TODO:
-		 * check if more folders already available dont put files in first folder with deleted images so less count is available
-		 */
+
 		if ($lastfolder == '') {
 			$newfolder = Folder::find_or_make(
 				Controller::join_links(
@@ -176,7 +183,7 @@ class ControlledFolderDataExtension extends DataExtension {
 		}
 
 		$filecount = count(glob($lastfolder."/*.*"));
-		if ($filecount < self::$folder_max_files 
+		if ($filecount < $folderMaxFiles 
 			&& $subfolder != ''
 		) {
 			return Controller::join_links(
@@ -206,8 +213,15 @@ class ControlledFolderDataExtension extends DataExtension {
 	 * @return string
 	 */
 	public static function sanitize_folder_name($foldername) {
-		//$filter = FileNameFilter::create();
+		//return $foldername;
 		return FileNameFilter::create()->filter(basename($foldername));
+	}
+	public function updateCMSFields(FieldList $fields) {
+		if (isset(self::$controlled_folders[$this->owner->ClassName])) {
+			$info = self::$controlled_folders[$this->owner->ClassName];
+			$text = 'maxfiles: ' . $info['folderMaxFiles'] . ' foldername: ' . $info['folderName'];
+			$fields->push(new LiteralField('ULInfo', $text));
+		}
 	}
 
 	/**
@@ -231,11 +245,21 @@ class ControlledFolderDataExtension extends DataExtension {
 			}
 			return self::find_or_make_controlled_folder($config);
 		} else if (array_key_exists($className, self::$controlled_folders)) {
-			Debug::show(self::$controlled_folders[$className]);
 			return self::find_or_make_controlled_folder(
 				self::$controlled_folders[$className]
 			);
-		} else if (isset($className::$upload_folder)) {
+		} else {
+			$config = array(
+				'folderName' => self::sanitize_folder_name($className),
+				'folderMaxFiles' => self::$folder_max_files
+			);
+			self::set_controlled_folder_for(
+				$className,
+				$config
+			);
+			return self::find_or_make_controlled_folder($config);
+		}
+		if (isset($className::$upload_folder)) {
 			return $className::$upload_folder;
 		}
 		return self::sanitize_folder_name(self::$default_folder_name);

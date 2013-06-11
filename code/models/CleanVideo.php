@@ -122,6 +122,7 @@ class CleanVideo extends DataObject {
 				$upload->setFolderName(self::$upload_folder);
 			}
 		}
+		$this->extend('updateCMSFields', $fields);
 		return $fields;
 	}
 	

@@ -30,7 +30,42 @@ When an object gets extended by CMSPublishableDataExtension we need to realize t
 	$datacolumns->setDisplayFields($cfields);
 	
 ##ControlledFolderDataExtension
-Provides the extended class with the ability to use controlled upload folders. Controlled in this case means, the amount of files contained in each folder is limited to the value of ControlledFolderDataExtension::$folder_max_files. It will create subfolders named in a numeric way like 000000 to 999999. 
+
+Provides the extended class with the ability
+to use controlled upload folders. Controlled in this case means,
+the amount of files contained in each folder is limited to the value of
+ControlledFolderDataExtension::$folder_max_files. It will create subfolders
+named in a numeric way like 000000 to 999999.
+
+Add this extension to a File instance by adding this to your _config.php:
+
+	// For Clean Models this is already done in the modules _config.php
+	DataObject::add_extension('CleanFile', 'ControlledFolderDataExtension');
+
+ With this configuration, ControlledFolderDataExtension::$folder_max_files will be used as limit and the folder will be named by the related class name ("CleanFile") in this example.
+ 
+You also can pass a config array to this method to override the defaults, like this:
+
+	ControlledFolderDataExtension::set_controlled_folder_for(
+		 "CleanFile",
+		array(
+			'folderName' => "MyFolder",
+			'folderMaxFiles' => 23
+	));
+ 
+This extension adds an instance function to the decorated class e.g.
+	$cleanFile = CleanFile::create();
+	// for using a controlled upload folder with default/ earlier created settings
+	$cleanFile->getUploadFolder();
+	// you can also pass a config object like:
+	$cleanFile->getUploadFolder(
+		array(
+			'folderName' => "MyFolder",
+			'folderMaxFiles' => 23
+		),
+		true // flag for, if this config should be made permanent for later use.
+	);
+ 
 ###Install
 Add this extension to a File instance by adding this to your _config.php:
 
@@ -86,14 +121,7 @@ This extension adds an instance function to the decorated class e.g.
 	 * @param  string $className
 	 * @param  string|array $config
 	 */
-	 
-#####unset_controlled_folder_for($className)
-	/**
-	 * Disable controlled upload folder for the given $className
-	 * 
-	 * @param  string $className
-	 */
-	public static function unset_controlled_folder_for($className)
+	 public static function set_controlled_folder_for($className, $config)
 	
 #####find_or_make_controlled_folder($config)
 	/**

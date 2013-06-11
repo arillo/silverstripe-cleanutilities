@@ -74,6 +74,7 @@ class CleanImage extends DataObject {
 			}
 			$fields->push($upload);
 		}
+		$this->extend('updateCMSFields', $fields);
 		return $fields;
 	}
 	
