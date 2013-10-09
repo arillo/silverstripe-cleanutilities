@@ -63,8 +63,13 @@ class NotificationDecorator extends DataObjectDecorator{
 	public function SessionMessages(){
 		$msgs = Session::get('SysMsg');
 		$ret = array();
-		foreach($msgs as $key => $msg) $ret[] = $msg;
-
+		$messages = array();
+		foreach($msgs as $key => $msg) {
+			if (array_search($msg['Msg'], $messages) === false) {
+				$ret[] = $msg;
+			}
+			$messages[] = $msg['Msg'];
+		}
 		Session::clear('SysMsg');
 		return new DataObjectSet($ret);
 	}

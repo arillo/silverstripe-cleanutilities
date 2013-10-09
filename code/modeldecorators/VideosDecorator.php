@@ -25,7 +25,6 @@ class VideosDecorator extends DataObjectDecorator{
 			),
 		);
 	}
-
 	/**
 	 * Adds the DataObjectManager to crud this SiteTree 's videos
 	 */

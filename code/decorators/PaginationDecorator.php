@@ -90,7 +90,6 @@ class PaginationDecorator extends DataObjectDecorator{
 			return false;
 		}
 	}
-
 	/**
 	 * Returns current page number in stack sorted by $param.
 	 * $param should be a compound of [FIELDNAME]_[SORTORDER].

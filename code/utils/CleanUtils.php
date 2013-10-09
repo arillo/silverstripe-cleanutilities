@@ -85,6 +85,34 @@ class CleanUtils{
 		$t = trim($t, '-');
 		return $t;
 	}
+
+	/**
+	 * Return current users IP
+	 * 
+	 * @return string
+	 */
+	public static function get_ip() {
+		$ip = "";
+		if ($_SERVER) {
+			if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+				$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+			} else if (isset($_SERVER['HTTP_CLIENT_IP'])) {
+				$ip = $_SERVER['HTTP_CLIENT_IP'];
+			} else {
+				$ip = $_SERVER['REMOTE_ADDR'];
+			}
+		} else {
+			if(getenv('HTTP_X_FORWARDED_FOR')){
+				$ip = getenv('HTTP_X_FORWARDED_FOR');
+			} else if (getenv('HTTP_CLIENT_IP')) {
+				$ip = getenv('HTTP_CLIENT_IP');
+			} else {
+				$ip = getenv('REMOTE_ADDR');
+			}
+		}
+		return $ip;
+	}
+
 	/**
 	 * Generates an url friendly representation of a given string.
 	 * Will replace all "illegal" characters with a _ .
