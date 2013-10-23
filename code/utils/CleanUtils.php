@@ -13,7 +13,7 @@ class CleanUtils {
 	 * Define the foldername for this module.
 	 * @var string
 	 */
-	public static $module = "cleanutilities";
+	public static $module = "silverstripe-cleanutilities";
 
 	/**
 	 * Helper function, which adds the given $cssClass to all
