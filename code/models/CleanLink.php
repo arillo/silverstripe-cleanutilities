@@ -37,17 +37,21 @@ class CleanLink extends DataObject{
 			_t('CleanLink.TARGET', 'Choose the target'),
 			$this->dbObject('Target')->enumValues()
 		);
-
 		$fields = FieldList::create(
-			TextField::create(
-				'Title',
-				_t('CleanUtilities.Title', 'Title')
-			),
-			TextField::create(
-				'URL',
-				_t('CleanUtilities.URL', 'Url')
-			),
-			$options
+			new TabSet(
+				"Root",
+				new Tab("Main",
+					TextField::create(
+						'Title',
+						_t('CleanUtilities.Title', 'Title')
+					),
+					TextField::create(
+						'URL',
+						_t('CleanUtilities.URL', 'Url')
+					),
+					$options
+				)
+			)
 		);
 		$this->extend('updateCMSFields', $fields);
 		return $fields;

@@ -55,25 +55,32 @@ class CleanImage extends DataObject {
 	}
 
 	public function getCMSFields(){
-		$fields = FieldList::create();
-		$fields->push(
+		$fields = FieldList::create(
+			new TabSet(
+				"Root",
+				new Tab("Main")
+			)
+		);
+		$fields->addFieldToTab(
+			'Root.Main',
 			TextField::create('Title',
 				_t('CleanUtilities.TITLE', 'Title')
 			)
 		);
-		if ($this->ID) {
-			$upload = UploadField::create('Attachment', 'Image');
-			$upload->setConfig('allowedMaxFileNumber', 1);
-			$upload->getValidator()->setAllowedExtensions(
-				self::$allowed_extensions
-			);
-			if($this->hasExtension('ControlledFolderDataExtension')) {
-				$upload->setFolderName($this->getUploadFolder());
-			} else {
-				$upload->setFolderName(self::$upload_folder);
-			}
-			$fields->push($upload);
+		$upload = UploadField::create('Attachment', 'Image');
+		$upload->setConfig('allowedMaxFileNumber', 1);
+		$upload->getValidator()->setAllowedExtensions(
+			self::$allowed_extensions
+		);
+		if($this->hasExtension('ControlledFolderDataExtension')) {
+			$upload->setFolderName($this->getUploadFolder());
+		} else {
+			$upload->setFolderName(self::$upload_folder);
 		}
+		$fields->addFieldToTab(
+			'Root.Main',
+			$upload
+		);
 		$this->extend('updateCMSFields', $fields);
 		return $fields;
 	}

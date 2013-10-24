@@ -104,7 +104,7 @@ class TextDataExtension extends DataExtension {
 			$replaces = array(); 
 			for ($i=0; $i<count($matches[0]); $i++) {
 				$link = $matches[0][$i];
-				$obfuscatedLink = CleanUtils::html_obfuscate($link);
+				$obfuscatedLink = Email::obfuscate($link,'hex');;
 				array_push($searches,$link); 
 				array_push($replaces, $obfuscatedLink); 
 			}

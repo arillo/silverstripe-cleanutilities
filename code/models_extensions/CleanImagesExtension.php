@@ -30,7 +30,7 @@ class CleanImagesExtension extends DataExtension {
 		}
 		
 		if (ClassInfo::exists('GridFieldBulkImageUpload')) {
-			$iu = new GridFieldBulkImageUpload('AttachmentID');
+			$iu = new GridFieldBulkImageUpload('Attachment');
 			if(singleton('CleanImage')->hasExtension('ControlledFolderDataExtension')) {
 				$iu->setConfig(
 					'folderName',
@@ -45,9 +45,9 @@ class CleanImagesExtension extends DataExtension {
 			$config->addComponent($iu);
 		}
 		if ($sortable) {
-			$data = $this->owner->CleanImages()->sort('SortOrder');
+			$data = $this->owner->CleanImages("ClassName = 'CleanImage'")->sort('SortOrder');
 		} else {
-			$data = $this->owner->CleanImages();
+			$data = $this->owner->CleanImages("ClassName = 'CleanImage'");
 		}
 		
 		$fields->addFieldToTab(
@@ -67,7 +67,7 @@ class CleanImagesExtension extends DataExtension {
 	 * @return DataList
 	 */
 	public function Images($limit = 0, $offset = 0, $sortField = 'SortOrder', $sortDir = 'ASC') {
-		return $this->owner->CleanImages()
+		return $this->owner->CleanImages("ClassName = 'CleanImage'")
 			->limit($limit, $offset)
 			->sort($sortField, $sortDir);
 	}
@@ -81,7 +81,7 @@ class CleanImagesExtension extends DataExtension {
 	 * @return Image|boolean
 	 */
 	public function ImageAttachment($index = 0, $sortField = 'SortOrder', $sortDir = 'ASC') {
-		$images = $this->owner->CleanImages()->sort($sortField, $sortDir);
+		$images = $this->owner->CleanImages("ClassName = 'CleanImage'")->sort($sortField, $sortDir);
 		$images = $images->toArray();
 		if (count($images) > $index) {
 			return $images[$index]->Attachment();
@@ -99,7 +99,7 @@ class CleanImagesExtension extends DataExtension {
 	 * @return DataList|boolean
 	 */
 	public function ImagesAttachment($limit = 0, $offset = 0, $sortField = 'SortOrder', $sortDir = 'ASC') {
-		$images = $this->owner->CleanImages()
+		$images = $this->owner->CleanImages("ClassName = 'CleanImage'")
 			->limit($limit, $offset)
 			->sort($sortField, $sortDir);
 		$images = $images->toArray();
@@ -117,6 +117,6 @@ class CleanImagesExtension extends DataExtension {
 	 * @return boolean
 	 */
 	public function MoreImagesThan($num = 0){
-		return ($this->owner->CleanImages()->Count() > $num);
+		return ($this->owner->CleanImages("ClassName = 'CleanImage'")->Count() > $num);
 	}
 }

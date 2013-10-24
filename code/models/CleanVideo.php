@@ -35,6 +35,8 @@ class CleanVideo extends DataObject {
 	 */
 	public static $upload_folder = 'Videos';
 
+
+	public static $use_video_upload = true;
 	/**
 	 * Returns custom validator
 	 * 
@@ -80,7 +82,6 @@ class CleanVideo extends DataObject {
 					);
 					Requirements::javascript(CleanUtils::$module . "/javascript/libs/swfobject.js");
 					Requirements::javascriptTemplate(CleanUtils::$module . "/javascript/init_video.js", $vars);
-					//Requirements::javascript(CleanUtils::$module . "/javascript/init_video.js");
 					return $this->customise($vars)->renderWith(array('VideoEmbed'));
 				}
 				break;
@@ -89,29 +90,39 @@ class CleanVideo extends DataObject {
 	}
 	
 	public function getCMSFields(){
-		$fields = FieldList::create();
-		$fields->push(LiteralField::create('VideoError','<div></div>'));
-		$fields->push(CheckboxField::create(
+		$fields = FieldList::create(
+			new TabSet(
+				"Root",
+				new Tab("Main")
+			)
+		);
+		$fields->addFieldToTab("Root.Main",LiteralField::create('VideoError','<div></div>'));
+		$fields->addFieldToTab("Root.Main",CheckboxField::create(
 			'Autoplay',
 			_t('CleanVideo.AUTOPLAY', 'Auto play')
 		));
-		$fields->push(
-			DropdownField::create(
-				'VideoType',
-				_t('CleanVideo.BEHAVIOUR', 'Choose a behaviour'),
-				$this->dbObject('VideoType')->enumValues()
-			)
-		);
-		$fields->push(TextField::create(
+
+		if(self::$use_video_upload){
+			$fields->addFieldToTab("Root.Main",
+				DropdownField::create(
+					'VideoType',
+					_t('CleanVideo.BEHAVIOUR', 'Choose a behaviour'),
+					$this->dbObject('VideoType')->enumValues()
+				)
+			);
+		}else{
+			$fields->addFieldToTab("Root.Main",new HiddenField("VideoType","VideoType","Embed"));
+		}
+		$fields->addFieldToTab("Root.Main",TextField::create(
 			'Title',
 			_t('CleanUtilities.TITLE', 'Title')
 		));
-		$fields->push(TextField::create(
+		$fields->addFieldToTab("Root.Main",TextField::create(
 			'VideoAddress',
 			_t('CleanVideo.VIDEO_URL', 'Video URL')
 		));
-		if ($this->ID) {
-			$fields->push($upload = UploadField::create(
+		if(self::$use_video_upload){
+			$fields->addFieldToTab("Root.Main",$upload = UploadField::create(
 				'VideoFile',
 				_t('CleanVideo.VIDEO_FILE', 'Video File')
 			));

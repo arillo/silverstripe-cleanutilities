@@ -15,44 +15,39 @@
  * @author arillo
  */
 class CleanFilesExtension extends DataExtension {
-	
 	public static $has_many = array(
 		'CleanFiles' => 'CleanFile'
 	);
-	
 	public function updateCMSFields(FieldList $fields) {
 		$sortable = singleton('CleanFile')->hasExtension('SortableDataExtension');
 		$config = GridFieldConfig_RelationEditor::create();
-		$config->addComponent($gridFieldForm = new GridFieldDetailForm()); 
+		$config->addComponent($gridFieldForm = new GridFieldDetailForm());
 		if ($sortable) {
 			$config->addComponent(new GridFieldSortableRows('SortOrder'));
 		}
-		if (ClassInfo::exists('GridFieldBulkFileUpload')) {
-			$iu = new GridFieldBulkFileUpload('AttachmentID');
-			if(singleton('CleanFile')->hasExtension('ControlledFolderDataExtension')) {
-				$iu->setConfig(
-					'folderName',
-					singleton('CleanFile')->getUploadFolder()
-				);
-			} else {
-				$iu->setConfig(
-					'folderName',
-					CleanFile::$upload_folder
-				);
-			}
-			$config->addComponent($iu);
-		}
-		if ($sortable) {
-			$data = $this->owner->CleanFiles()->sort('SortOrder');
+		$iu = new GridFieldBulkImageUpload('Attachment');
+		if(singleton('CleanFile')->hasExtension('ControlledFolderDataExtension')) {
+			$iu->setConfig(
+				'folderName',
+				singleton('CleanFile')->getUploadFolder()
+			);
 		} else {
-			$data = $this->owner->CleanFiles();
+			$iu->setConfig(
+				'folderName',
+				CleanFile::$upload_folder
+			);
+		}
+		$config->addComponent($iu);
+		if($sortable) {
+			$data = $this->owner->CleanFiles("ClassName = 'CleanFile'")->sort('SortOrder');
+		} else {
+			$data = $this->owner->CleanFiles("ClassName = 'CleanFile'");
 		}
 		$fields->addFieldToTab(
 			"Root.Files",
-			GridField::create('CleanFiles', 'CleanFile', $data, $config)
+			GridField::create('CleanFiles','CleanFile', $data, $config)
 		);
 	}
-
 	/**
 	 * Getter for the attached files.
 	 * You can specifiy a range and sorting of those files.
@@ -64,7 +59,7 @@ class CleanFilesExtension extends DataExtension {
 	 * @return DataList
 	 */
 	public function Files($limit = 0, $offset = 0, $sortField = 'SortOrder', $sortDir = 'ASC') {
-		return $this->owner->CleanFiles()
+		return $this->owner->CleanFiles("ClassName = 'CleanFile'")
 				->limit($limit, $offset)
 				->sort($sortField, $sortDir);
 	}
@@ -78,7 +73,7 @@ class CleanFilesExtension extends DataExtension {
 	 * @return File|boolean
 	 */
 	public function FileAttachment($index = 0, $sortField = 'SortOrder', $sortDir = 'ASC') {
-		$files = $this->owner->CleanFiles()->sort($sortField, $sortDir);
+		$files = $this->owner->CleanFiles("ClassName = 'CleanFile'")->sort($sortField, $sortDir);
 		$files = $files->toArray();
 		if (count($files) > $index) {
 			return $files[$index]->Attachment();
@@ -96,7 +91,7 @@ class CleanFilesExtension extends DataExtension {
 	 * @return ArrayList|boolean
 	 */
 	public function FilesAttachment($limit = 0, $offset = 0, $sortField = 'SortOrder', $sortDir = 'ASC'){
-		$files = $this->owner->CleanFiles()
+		$files = $this->owner->CleanFiles("ClassName = 'CleanFile'")
 			->limit($limit, $offset)
 			->sort($sortField, $sortDir);
 		$result = ArrayList::create();
@@ -113,6 +108,6 @@ class CleanFilesExtension extends DataExtension {
 	 * @return boolean
 	 */
 	public function MoreFilesThan($num = 0) {
-		return ($this->owner->CleanFiles()->Count() > $num);
+		return ($this->owner->CleanFiles("ClassName = 'CleanFile'")->Count() > $num);
 	}
 }

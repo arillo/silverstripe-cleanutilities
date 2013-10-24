@@ -1,7 +1,7 @@
 <?php
 /**
  * A DataObject for Teasers
- * Provides Title, Description, an Image and many Links
+ * Provides Title, Description and an Image
  *
  * @package cleanutilities
  * @subpackage models
@@ -16,13 +16,8 @@ class CleanTeaser extends DataObject {
 	);
 	
 	static $has_one = array(
-		'RelatedPage' => 'SiteTree',
 		'Reference' => 'SiteTree',
 		'Image' => 'Image'
-	);
-	
-	static $has_many = array(
-		'Links' => 'CleanTeaserLink'
 	);
 	
 	static $searchable_fields = array(
@@ -41,7 +36,6 @@ class CleanTeaser extends DataObject {
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->removeByName('ReferenceID');
-		$fields->removeFieldFromTab('Root.Links', 'Links');
 		
 		$fields->removeByName('Image');
 		$upload = UploadField::create(
@@ -58,25 +52,6 @@ class CleanTeaser extends DataObject {
 			$upload->setFolderName(self::$upload_folder);
 		}
 		$fields->insertBefore($upload, 'Title');
-		$relpage = $fields->dataFieldByName('RelatedPageID');
-		$fields->removeByName('RelatedPageID');
-		$fields->insertBefore($relpage, 'Title');
-
-		if ($this->ID) {
-			$sortable = singleton('CleanTeaserLink')->hasExtension('SortableDataExtension');
-			$config = GridFieldConfig_RelationEditor::create();
-			$config->addComponent($gridFieldForm = new GridFieldDetailForm());
-			$gridFieldForm->setTemplate('CMSGridFieldPopupForms');
-			if ($sortable) {
-				$config->addComponent(new GridFieldSortableRows('SortOrder'));
-			}
-			$links = $this->owner->Links();
-			if ($sortable) {
-				$links->sort('SortOrder');
-			}
-			$gridField = GridField::create('Links', 'CleanTeaser', $links, $config);
-			$fields->addFieldToTab('Root.Links', $gridField);
-		}
 		$this->extend('updateCMSFields', $fields);
 		return $fields;
 	}

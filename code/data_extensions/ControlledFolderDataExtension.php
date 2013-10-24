@@ -102,13 +102,20 @@ class ControlledFolderDataExtension extends DataExtension {
 	 * @param  string|array $config
 	 */
 	public static function set_controlled_folder_for($className, $config) {
-		if(is_string($config)) {
-			$fconfig = self::get_folder_config();
-			$fconfig['folderName'] = self::sanitize_folder_name($config);
-		} else if(is_array($config)) {
-			$fconfig = self::get_folder_config($config);
+		if(is_array($className)){
+			foreach($className as $modelclass){
+				self::set_controlled_folder_for($modelclass,$config);
+			}
+		}else{
+			Object::add_extension($className,'ControlledFolderDataExtension');
+			if(is_string($config)) {
+				$fconfig = self::get_folder_config();
+				$fconfig['folderName'] = self::sanitize_folder_name($config);
+			} else if(is_array($config)) {
+				$fconfig = self::get_folder_config($config);
+			}
+			self::$controlled_folders[$className] = $fconfig;
 		}
-		self::$controlled_folders[$className] = $fconfig;
 	}
 
 	/**
@@ -216,14 +223,6 @@ class ControlledFolderDataExtension extends DataExtension {
 		//return $foldername;
 		return FileNameFilter::create()->filter(basename($foldername));
 	}
-	public function updateCMSFields(FieldList $fields) {
-		if (isset(self::$controlled_folders[$this->owner->ClassName])) {
-			$info = self::$controlled_folders[$this->owner->ClassName];
-			$text = 'maxfiles: ' . $info['folderMaxFiles'] . ' foldername: ' . $info['folderName'];
-			$fields->push(new LiteralField('ULInfo', $text));
-		}
-	}
-
 	/**
 	 * Getter for the actual folder name.
 	 * If an $config array is passed, it will return 

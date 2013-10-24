@@ -48,7 +48,8 @@ class CleanUtils {
 				if (is_a($items, 'ManyManyList') && ClassInfo::exists('GridFieldManyRelationHandler')) {
 					$config->addComponent(new GridFieldManyRelationHandler(), 'GridFieldPaginator');
 				}
-				if (Object::has_extension($model, 'SortableDataExtension')){
+				$sortable = singleton($model)->hasExtension('SortableDataExtension');
+				if ($sortable){
 					$config->addComponent(new GridFieldSortableRows('SortOrder'));
 				}
 				$gridfield = GridField::create($relationname, $model, $items, $config);
@@ -65,6 +66,23 @@ class CleanUtils {
 		} else {
 			throw new InvalidArgumentException("Couldn't create GridField because wrong parameters passed to the factory.");
 		}
+	}
+	public static function create_uploadfield_for($relationname,$title,$reference,$allowed_extensions = null,$upload_folder=null){
+		$upload = UploadField::create($relationname,$title);
+		$upload->setConfig('allowedMaxFileNumber', 1);
+		if($allowed_extensions!=null){
+			$upload->getValidator()->setAllowedExtensions($allowed_extensions);
+		}
+		if($upload_folder != null){
+			$upload->setFolderName($upload_folder);
+		}else{
+			if($reference->hasExtension('ControlledFolderDataExtension')) {
+				$upload->setFolderName($reference->getUploadFolder());
+			} else {
+				$upload->setFolderName('uploads');
+			}
+		}
+		return $upload;
 	}
 
 	/**
@@ -133,13 +151,13 @@ class CleanUtils {
 	 * @param string $text
 	 * @return string
 	 */
-	public static function html_obfuscate($text) {
-		$rv = '';
-		for($i = 0; $i < strlen($text); $i++){
-			$rv .= '&#' . ord($text[$i]) . ';';
-		}
-		return $rv;
-	} 
+	// public static function html_obfuscate($text) {
+	// 	$rv = '';
+	// 	for($i = 0; $i < strlen($text); $i++){
+	// 		$rv .= '&#' . ord($text[$i]) . ';';
+	// 	}
+	// 	return $rv;
+	// } 
 	
 	/**
 	 * Sets i18n locale and adds Content-language to meta tags.

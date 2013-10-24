@@ -13,7 +13,6 @@
  * @author arillo
  */
 class SiteConfigAddressExtension extends DataExtension {
-	
 	static $db = array(
 		'Company' => 'Text',
 		'Address' => 'Text',
@@ -25,25 +24,24 @@ class SiteConfigAddressExtension extends DataExtension {
 		'Fax' => 'Text',
 		'Email' => 'Text'
 	);
-	
 	public function updateCMSFields(FieldList $fields) {
-		$fields->addFieldToTab("Root.Main", TextField::create("Company", _t('SiteConfig.COMPANY', "Company")));
-		$fields->addFieldToTab("Root.Main", TextField::create("Address", _t('SiteConfig.ADDRESS', "Address")));
-		$fields->addFieldToTab("Root.Main", TextField::create("Country", _t('SiteConfig.COUNTRY', "Country")));
-		$fields->addFieldToTab("Root.Main", TextField::create("ZIP", _t('SiteConfig.ZIP', "ZIP")));
-		$fields->addFieldToTab("Root.Main", TextField::create("City", _t('SiteConfig.CITY', "City")));
-		$fields->addFieldToTab("Root.Main", TextField::create("Telephone", _t('SiteConfig.TELEPHONE', "Telephone")));
-		$fields->addFieldToTab("Root.Main", TextField::create("Cell", _t('SiteConfig.Cell', "Cell")));
-		$fields->addFieldToTab("Root.Main", TextField::create("Fax", _t('SiteConfig.FAX', "Fax")));
-		$fields->addFieldToTab("Root.Main", TextField::create("Email", _t('SiteConfig.EMAIL', "Email")));
+		$fields->addFieldToTab("Root.Address", TextField::create("Company", _t('SiteConfig.COMPANY', "Company")));
+		$fields->addFieldToTab("Root.Address", TextField::create("Address", _t('SiteConfig.ADDRESS', "Address")));
+		$fields->addFieldToTab("Root.Address", TextField::create("Country", _t('SiteConfig.COUNTRY', "Country")));
+		$fields->addFieldToTab("Root.Address", TextField::create("ZIP", _t('SiteConfig.ZIP', "ZIP")));
+		$fields->addFieldToTab("Root.Address", TextField::create("City", _t('SiteConfig.CITY', "City")));
+		$fields->addFieldToTab("Root.Address", TextField::create("Telephone", _t('SiteConfig.TELEPHONE', "Telephone")));
+		$fields->addFieldToTab("Root.Address", TextField::create("Cell", _t('SiteConfig.Cell', "Cell")));
+		$fields->addFieldToTab("Root.Address", TextField::create("Fax", _t('SiteConfig.FAX', "Fax")));
+		$fields->addFieldToTab("Root.Address", TextField::create("Email", _t('SiteConfig.EMAIL', "Email")));
 	}
-	
 	/**
 	 * Email encoded in html character entities.
 	 * 
 	 * @return string
 	 */
 	public function EncodedEmail() {
-		return CleanUtils::html_obfuscate($this->owner->Email);
+		// return CleanUtils::html_obfuscate($this->owner->Email);
+		return Email::obfuscate($this->owner->Email,'hex');
 	}
 }

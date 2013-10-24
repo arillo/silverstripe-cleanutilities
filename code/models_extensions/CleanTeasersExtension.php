@@ -57,15 +57,15 @@ class CleanTeasersExtension extends DataExtension {
 		}
 
 		if ($sortable) {
-			$data = $this->owner->CleanTeasers()->sort('SortOrder');
+			$data = $this->owner->CleanTeasers("ClassName = 'CleanTeaser'")->sort('SortOrder');
 		} else {
-			$data = $this->owner->CleanTeasers();
+			$data = $this->owner->CleanTeasers("ClassName = 'CleanTeaser'");
 		}
 
 		$config->removeComponentsByType('GridFieldAddNewButton');
-		if (ClassInfo::exists('GridFieldBulkImageUpload')) {
-			$config->addComponent(new GridFieldAddNewMultiClass());
-		}
+		// if (ClassInfo::exists('GridFieldBulkImageUpload')) {
+		// 	$config->addComponent(new GridFieldAddNewMultiClass());
+		// }
 
 		$fields->addFieldToTab(
 			"Root.Teasers",
@@ -83,7 +83,7 @@ class CleanTeasersExtension extends DataExtension {
 	 * @param string $sortDir
 	 */
 	public function Teasers($limit = 0, $offset = 0, $sortField = 'SortOrder', $sortDir = 'ASC') {
-		return $this->owner->CleanTeasers()
+		return $this->owner->CleanTeasers("ClassName = 'CleanTeaser'")
 				->limit($limit, $offset)
 				->sort($sortField, $sortDir);
 	}
@@ -96,9 +96,9 @@ class CleanTeasersExtension extends DataExtension {
 	 */
 	public function MoreTeasersThan($num = 0) {
 		if (singleton('CleanTeaser')->hasExtension('CMSPublishableDataExtension')) {
-			return ($this->owner->CleanTeasers()->filter(array("Published" => true))->Count() > $num);
+			return ($this->owner->CleanTeasers("ClassName = 'CleanTeaser'")->filter(array("Published" => true))->Count() > $num);
 		} else {
-			return ($this->owner->CleanTeasers()->Count() > $num);
+			return ($this->owner->CleanTeasers("ClassName = 'CleanTeaser'")->Count() > $num);
 		}
 	}
 }

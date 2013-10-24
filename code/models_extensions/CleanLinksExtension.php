@@ -28,9 +28,9 @@ class CleanLinksExtension extends DataExtension {
 			$config->addComponent(new GridFieldSortableRows('SortOrder'));
 		}
 		if ($sortable) {
-			$data = $this->owner->CleanLinks()->sort('SortOrder');
+			$data = $this->owner->CleanLinks("ClassName = 'CleanLink'")->sort('SortOrder');
 		} else {
-			$data = $this->owner->CleanLinks();
+			$data = $this->owner->CleanLinks("ClassName = 'CleanLink'");
 		}
 		$fields->addFieldToTab(
 			"Root.Links",
@@ -49,7 +49,7 @@ class CleanLinksExtension extends DataExtension {
 	 * @return DataList
 	 */
 	public function Links($limit = 0, $offset = 0, $sortField = 'SortOrder', $sortDir = 'ASC') {
-		return $this->owner->CleanLinks()
+		return $this->owner->CleanLinks("ClassName = 'CleanLink'")
 			->limit($limit, $offset)
 			->sort($sortField, $sortDir);
 	}
@@ -61,6 +61,6 @@ class CleanLinksExtension extends DataExtension {
 	 * @return bool
 	 */
 	public function MoreLinksThan($num = 0) {
-		return ($this->owner->CleanLinks()->Count() > $num);
+		return ($this->owner->CleanLinks("ClassName = 'CleanLink'")->Count() > $num);
 	}
 }

@@ -45,9 +45,9 @@ class CleanVideosExtension extends DataExtension {
 		}
 
 		if ($sortable) {
-			$data = $this->owner->CleanVideos()->sort('SortOrder');
+			$data = $this->owner->CleanVideos("ClassName = 'CleanVideo'")->sort('SortOrder');
 		} else {
-			$data = $this->owner->CleanVideos();
+			$data = $this->owner->CleanVideos("ClassName = 'CleanVideo'");
 		}
 
 		$fields->addFieldToTab(
@@ -67,7 +67,7 @@ class CleanVideosExtension extends DataExtension {
 	 * @return DataList
 	 */
 	public function Videos($limit = 0, $offset = 0, $sortField = 'SortOrder', $sortDir = 'ASC') {
-		return $this->owner->CleanVideos()
+		return $this->owner->CleanVideos("ClassName = 'CleanVideo'")
 				->limit($limit, $offset)
 				->sort($sortField, $sortDir);
 	}
@@ -79,6 +79,6 @@ class CleanVideosExtension extends DataExtension {
 	 * @return bool
 	 */
 	public function MoreVideosThan($num = 0) {
-		return ($this->owner->CleanVideos()->Count() > $num);
+		return ($this->owner->CleanVideos("ClassName = 'CleanVideo'")->Count() > $num);
 	}
 }
