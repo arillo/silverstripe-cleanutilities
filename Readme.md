@@ -3,7 +3,7 @@ Arillo CleanUtilities is a module for Silverstripe 3.1 which provides functional
 
 It also gives more functionality to several other sapphire classes. For more information, please consult the docs and the example sections.
 ##Installation
-As with all Silverstripe modules, you have to copy cleanutilities folder and all [dependent modules](#Dependencies) into your project's root directory. After that you should run dev/build and you are done. You should ensure, that you name the module folder "cleanutilities". If you have to, for some reason, use an other name than the standard one you can set it in _config.php like:
+As with all Silverstripe modules, you have to copy cleanutilities folder and all [dependent modules](#Dependencies) into your project's root directory. After that you should run dev/build and you are done. You should ensure, that you name the module folder "silverstripe-cleanutilities". If you have to, for some reason, use an other name than the standard one you can set it in _config.php like:
 
 	CleanUtils::$module = "renamed_cleanutilities";
 	
