@@ -39,8 +39,12 @@ class CleanImage extends DataObject{
 		$destination = isset(self::$upload_folder) ? self::$upload_folder : '/images/';
 		$upload->setUploadFolder($this->ControlledUploadFolder($destination));
 		$fields = new FieldSet(
-			new TextField('Title','Title'),
-			$upload
+			new Tabset('Root',
+				new Tab('Main',
+					new TextField('Title', 'Title'),
+					$upload
+				)
+			)
 		);
 		$this->extend('updateCMSFields_forPopup', $fields);
 		return $fields;

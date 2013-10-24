@@ -14,38 +14,40 @@
  * @author arillo
  */
 class TeasersDecorator extends DataObjectDecorator{
-
 	/**
 	 * Adds has-many relation to this SiteTree class
 	 */
 	function extraStatics() {
 		return array(
 			'has_many' => array(
-				'CleanTeasers' => 'CleanTeaser'
+				"CleanTeasers" => "CleanTeaser.Reference"
 			),
 		);
 	}
-
 	/**
 	 * Adds the DataObjectManager to crud this SiteTree 's teasers
 	 */
 	public function updateCMSFields(FieldSet &$fields) {
-		$ancestry = ClassInfo::dataClassesFor('CleanTeaser');
-		$managedclass = $ancestry[count($ancestry)-1];
-		$domheader = array(
-			'Thumbnail' => 'Thumbnail',
-			'Title' => 'Title'
-		);
-		if(singleton('CleanTeaser')->hasExtension('CMSPublishableDecorator')){
-			$status = array('Status' => 'Status');
-			$domheader = $status+$domheader;
-		}
+		// $ancestry = ClassInfo::dataClassesFor('CleanTeaser');
+		// $managedclass = $ancestry[count($ancestry)-1];
+		// $domheader = array(
+		// 	'Thumbnail' => 'Thumbnail',
+		// 	'Title' => 'Title'
+		// );
+		// if(singleton('CleanTeaser')->hasExtension('CMSPublishableDecorator')){
+		// 	$status = array('Status' => 'Status');
+		// 	$domheader = $status+$domheader;
+		// }
 		$manager = new DataObjectManager(
 			$this->owner,
 			'CleanTeasers',
-			$managedclass,
-			$domheader,
-			'getCMSFields_forPopup'
+			'CleanTeaser',
+			array(
+				'Thumbnail' => 'Thumbnail',
+				'Title' => 'Title'
+			),
+			'getCMSFields_forPopup',
+			"ClassName = 'CleanTeaser'"
 		);
 		$manager->setPluralTitle('Teasers');
 		$manager->setAddTitle('Teasers');
@@ -69,10 +71,9 @@ class TeasersDecorator extends DataObjectDecorator{
 		if(singleton('CleanTeaser')->hasExtension('CMSPublishableDecorator')){
 			return  $this->owner->CleanTeasers("Published = 1", "", "", $range);
 		}else{
-			return  $this->owner->CleanTeasers("", "", "", $range);
+			return  $this->owner->CleanTeasers("ClassName = 'CleanTeaser'", "", "", $range);
 		}
    	}
-
    	/**
    	 * Tests if the count of teasers is higher than $num.
    	 *
@@ -81,7 +82,7 @@ class TeasersDecorator extends DataObjectDecorator{
    	 */
    	public function MoreTeasersThan($num = 0){
    		if(singleton('CleanTeaser')->hasExtension('CMSPublishableDecorator')){
-	   		if($this->owner->CleanTeasers("Published = 1")->Count() > $num) return true;
+	   		if($this->owner->CleanTeasers("Published = 1 AND ClassName = 'CleanTeaser'")->Count() > $num) return true;
 	   		else return false;
    		}else{
    			if($this->owner->CleanTeasers()->Count() > $num) return true;

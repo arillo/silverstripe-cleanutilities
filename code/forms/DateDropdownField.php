@@ -20,7 +20,8 @@ class DateDropdownField extends TextField {
 		'dateformat' => null,
 		'datavalueformat' => 'yyyy-MM-dd',
 		'min' => null,
-		'max' => null
+		'max' => null,
+		'yearRange' => "-60:+0"
 	);
 	/**
 	 * @var String
@@ -285,7 +286,7 @@ JS;
 	/**
 	 * @return Boolean
 	 */
-	function validate($validator) {
+	function validate() {
 		$valid = true;
 
 		// Don't validate empty fields
@@ -298,6 +299,7 @@ JS;
 			$valid = (Zend_Date::isDate($this->value, $this->getConfig('dateformat'), $this->locale));
 		}
 		if(!$valid) {
+			/*
 			$validator->validationError(
 				$this->name,
 				sprintf(
@@ -307,6 +309,7 @@ JS;
 				"validation",
 				false
 			);
+			*/
 			return false;
 		}
 
@@ -387,6 +390,16 @@ JS;
 				$format = $this->getConfig('datavalueformat');
 				if($val && !Zend_Date::isDate($val, $format) && !strtotime($val)) {
 					throw new InvalidArgumentException('Date "%s" is not a valid maximum date format (%s) or strtotime() argument', $val, $format);
+				}
+				break;
+			case 'yearRange':
+				$validate = split(":", $val);
+				if (count($validate) == 2) {
+					if (!is_numeric($validate[0])
+						|| !is_numeric($validate[1])
+					) {
+						$val = "-60:+0";
+					}
 				}
 				break;
 		}
@@ -476,7 +489,7 @@ class DateDropdownField_View_JQuery {
 			// Inject configuration into existing HTML
 			$format = self::convert_iso_to_jquery_format($this->getField()->getConfig('dateformat'));
 			$conf = array(
-				'yearRange' => "-60:+0",
+				'yearRange' => $this->getField()->getConfig('yearRange'),
 				'showcalendar' => true,
 				'dateFormat' => $format,
 				'changeYear' => true,

@@ -14,10 +14,6 @@
  * @author arillo
  */
 class VideosDecorator extends DataObjectDecorator{
-
-	/**
-	 * Adds has-many relation to this SiteTree class
-	 */
 	function extraStatics() {
 		return array(
 			'has_many' => array(
@@ -25,35 +21,39 @@ class VideosDecorator extends DataObjectDecorator{
 			),
 		);
 	}
-
-	/**
+	/*
 	 * Adds the DataObjectManager to crud this SiteTree 's videos
 	 */
 	public function updateCMSFields(FieldSet &$fields) {
-		$ancestry = ClassInfo::dataClassesFor('CleanVideo');
-		$managedclass = $ancestry[count($ancestry)-1];
-		$domheader = array(
-			'VideoType' => 'Type',
-			'VideoAddress' => 'URL',
-			'VideoFileName' => 'VideoFile',
-			'Autoplay' => 'Autoplay'
-		);
-		if(singleton('CleanVideo')->hasExtension('CMSPublishableDecorator')){
-			$status = array('Status' => 'Status');
-			$domheader = $status+$domheader;
+		// $ancestry = ClassInfo::dataClassesFor('CleanVideo');
+		// $managedclass = $ancestry[count($ancestry)-1];
+		// $domheader = array(
+		// 	'VideoType' => 'Type',
+		// 	'VideoAddress' => 'URL',
+		// 	'VideoFileName' => 'VideoFile',
+		// 	'Autoplay' => 'Autoplay'
+		// );
+		// if(singleton('CleanVideo')->hasExtension('CMSPublishableDecorator')){
+		// 	$status = array('Status' => 'Status');
+		// 	$domheader = $status+$domheader;
+		// }
+		$domheader = array('Autoplay' => 'Autoplay','Title'=>'Title','VideoAddress' => 'URL');
+		if(CleanVideo::$use_video_upload){
+			$domheader['VideoFileName']= 'VideoFile';
+			$domheader['VideoType']= 'Type';
 		}
 		$manager = new DataObjectManager(
 			$this->owner,
 			'Videos',
-			$managedclass,
+			'CleanVideo',
 			$domheader,
-			'getCMSFields_forPopup'
+			'getCMSFields_forPopup',
+			"ClassName = 'CleanVideo'"
 		);
 		$manager->setPluralTitle('Videos');
 		$manager->setAddTitle('Videos');
 		$fields->addFieldToTab("Root.Content.Videos", $manager);
 	}
-
 	/**
 	 * Getter for the attached teasers.
 	 * You can specifiy a range of those videos.
@@ -68,9 +68,8 @@ class VideosDecorator extends DataObjectDecorator{
 		if(!$limit){
 			$range = 0;
 		}
-		return  $this->owner->CleanVideos("", "$sortorder", "", $range);
+		return  $this->owner->CleanVideos("ClassName = 'CleanVideo'", "$sortorder", "", $range);
 	}
-
 	/**
 	* Tests if the count of videos is higher than $num.
 	*
@@ -79,7 +78,7 @@ class VideosDecorator extends DataObjectDecorator{
 	*/
 	public function MoreVideosThan($num = 0){
 		if(singleton('CleanVideo')->hasExtension('CMSPublishableDecorator')){
-			if($this->owner->CleanVideos("Published = 1")->Count() > $num) return true;
+			if($this->owner->CleanVideos("Published = 1 AND ClassName = 'CleanVideo'")->Count() > $num) return true;
 			else return false;
 		} else {
 			if($this->owner->CleanVideos()->Count() > $num) return true;

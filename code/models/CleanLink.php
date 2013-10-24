@@ -38,9 +38,13 @@ class CleanLink extends DataObject{
 			$this->dbObject('Target')->enumValues()
 		);
 		$fields = new FieldSet(
-			new TextField('Title','Title'),
-			new TextField('URL','URL'),
-			$options
+			new Tabset('Root',
+				new Tab('Main',
+					new TextField('Title','Title'),
+					new TextField('URL','URL'),
+					$options
+				)
+			)
 		);
 		$this->extend('updateCMSFields_forPopup', $fields);
 		return $fields;

@@ -30,18 +30,19 @@ class LinksDecorator extends DataObjectDecorator{
 	 * Adds the DataObjectManager to crud this SiteTree 's links
 	 */
 	public function updateCMSFields(FieldSet &$fields) {
-		$ancestry = ClassInfo::dataClassesFor('CleanLink');
-		$managedclass = $ancestry[count($ancestry)-1];
+		// $ancestry = ClassInfo::dataClassesFor('CleanLink');
+		// $managedclass = $ancestry[count($ancestry)-1];
 		$manager = new DataObjectManager(
 			$this->owner,
 			'CleanLinks',
-			$managedclass,
+			'CleanLink',
 			array(
 				'Title' => 'Title',
 				'URL' => 'URL',
 				'Target' => 'Target'
 			),
-			'getCMSFields_forPopup'
+			'getCMSFields_forPopup',
+			"ClassName = 'CleanLink'"
 		);
 		$manager->setPluralTitle('Links');
 		$manager->setAddTitle('Links');
@@ -61,7 +62,7 @@ class LinksDecorator extends DataObjectDecorator{
 		if(!$limit){
 			$range = 0;
 		}
-		return  $this->owner->CleanLinks("", "", "", $range);
+		return  $this->owner->CleanLinks("ClassName = 'CleanLink'", "", "", $range);
    	}
 
    	/**
@@ -71,7 +72,7 @@ class LinksDecorator extends DataObjectDecorator{
    	 * @return bool
    	 */
    	public function MoreLinksThan($num = 0){
-   		if($this->owner->CleanLinks()->Count() > $num){
+   		if($this->owner->CleanLinks("ClassName = 'CleanLink'")->Count() > $num){
    			return true;
    		}
    		return false;

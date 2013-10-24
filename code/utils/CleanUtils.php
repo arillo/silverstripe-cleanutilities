@@ -85,20 +85,6 @@ class CleanUtils{
 		$t = trim($t, '-');
 		return $t;
 	}
-	/**
-	 * Generates an url friendly representation of a given string.
-	 * Will replace all "illegal" characters with a _ .
-	 *
-	 * @param string $string
-	 * @return string
-	 */
-	public static function string_to_underscored_name($string){
-		$string = preg_replace('/[\'"]/', '', $string);
-		$string = preg_replace('/[^a-zA-Z0-9]+/', '_', $string);
-		$string = trim($string, '_');
-		$string = strtolower($string);
-		return $string;
-	}
 
 	/**
 	 * Return current users IP
@@ -128,6 +114,21 @@ class CleanUtils{
 	}
 
 	/**
+	 * Generates an url friendly representation of a given string.
+	 * Will replace all "illegal" characters with a _ .
+	 *
+	 * @param string $string
+	 * @return string
+	 */
+	public static function string_to_underscored_name($string){
+		$string = preg_replace('/[\'"]/', '', $string);
+		$string = preg_replace('/[^a-zA-Z0-9]+/', '_', $string);
+		$string = trim($string, '_');
+		$string = strtolower($string);
+		return $string;
+	}
+
+	/**
 	 * Removes all alphanumeric and punctual characters from
 	 * the given $string.
 	 *
@@ -136,5 +137,49 @@ class CleanUtils{
 	 */
 	public static function clean_name($string){
 		return preg_replace("/[^[:alnum:][:punct:]]/", "", $string);
+	}
+	public static function encode_email($email = ''){
+		$output = "";
+		for($i = 0; $i < strlen($email); $i++) $output .= '&#'.ord($email[$i]).';';
+		return $output;
+	}
+	public static function update_manager_header($dom = null,$header = null){
+		if($dom!=null && $header!=null){
+			$cn = $dom->class;
+			return new $cn(
+				$this,
+				$dom->Name(),
+				$dom->sourceClass(),
+				$header,
+				'getCMSFields_forPopup'
+			);
+		}
+		return false;
+	}
+	public static function create_manager_for($relationname = null,$reference = null,$header = null){
+		if($relationname!=null && $reference!=null && $header!=null){
+			$hasmanyclass = $reference->has_many($relationname);
+			$manymanyclass = $reference->many_many($relationname);
+			if(isset($hasmanyclass)){
+				$manager = new DataObjectManager(
+					$reference,
+					$relationname,
+					$hasmanyclass,
+					$header,
+					'getCMsFields_forPopup'
+				);
+			}
+			if(isset($manymanyclass)){
+				$manager = new ManyManyDataObjectManager(
+					$reference,
+					$relationname,
+					$hasmanyclass,
+					$header,
+					'getCMsFields_forPopup'
+				);
+			}
+			return $manager;
+		}
+		return false;
 	}
 }

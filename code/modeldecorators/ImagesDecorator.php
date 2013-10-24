@@ -30,24 +30,34 @@ class ImagesDecorator extends DataObjectDecorator{
 	 * Adds the DataObjectManager to crud this SiteTree 's images
 	 */
 	public function updateCMSFields(FieldSet &$fields) {
-		$ancestry = ClassInfo::dataClassesFor('CleanImage');
-		$managedclass = $ancestry[count($ancestry)-1];
-		$manager = new ImageDataObjectManager(
+		// $manager = new ImageDataObjectManager(
+		// 	$this->owner,
+		// 	'CleanImages',
+		// 	'CleanImage',
+		// 	'Attachment',
+		// 	array(
+		// 		'Thumbnail' => 'Thumbnail',
+		// 		'Title' => 'Title'
+		// 	),
+		// 	'getCMSFields_forPopup',
+		// 	"ClassName = 'CleanImage'"
+		// );
+		$manager = new DataObjectManager(
 			$this->owner,
 			'CleanImages',
-			$managedclass,
-			'Attachment',
+			'CleanImage',
 			array(
 				'Thumbnail' => 'Thumbnail',
 				'Title' => 'Title'
 			),
-			'getCMSFields_forPopup'
+			'getCMSFields_forPopup',
+			"ClassName = 'CleanImage'"
 		);
 		$manager->setPageSize(999);
 		$manager->setPerPageMap(array());
 		$manager->setPluralTitle('Images');
 		$manager->setAddTitle('Images');
-		$manager->setUploadFolder($this->owner->ControlledUploadFolder('/images/'));
+		// $manager->setUploadFolder($this->owner->ControlledUploadFolder('/images/'));
 		$fields->addFieldToTab("Root.Content.Images", $manager);
 	}
 
@@ -64,7 +74,7 @@ class ImagesDecorator extends DataObjectDecorator{
 		if(!$limit){
 			$range = 0;
 		}
-		return  $this->owner->CleanImages("", "", "", $range);
+		return  $this->owner->CleanImages("ClassName = 'CleanImage'", "", "", $range);
 	}
 	/**
 	 * Getter for a specific image's attachment by $index.
@@ -73,7 +83,7 @@ class ImagesDecorator extends DataObjectDecorator{
 	 * @return Image
 	 */
 	public function ImageAttachment($index = 0){
-		$images = $this->owner->CleanImages()->toArray();
+		$images = $this->owner->CleanImages("ClassName = 'CleanImage'")->toArray();
 		if(count($images) > $index){
 			return $images[$index]->Attachment();
 		}
@@ -93,7 +103,7 @@ class ImagesDecorator extends DataObjectDecorator{
 		if(!$limit){
 			$range = 0;
 		}
-		$images =  $this->owner->CleanImages("", "", "", $range);
+		$images = $this->owner->CleanImages("ClassName = 'CleanImage'", "", "", $range);
 		$arr = array();
 		foreach($images as $image){
 			$arr[] = $image->Attachment();
@@ -108,7 +118,7 @@ class ImagesDecorator extends DataObjectDecorator{
 	 * @return bool
 	 */
 	public function MoreImagesThan($num = 0){
-		if($this->owner->CleanImages()->Count() > $num){
+		if($this->owner->CleanImages("ClassName = 'CleanImage'")->Count() > $num){
 			return true;
 		}
 		return false;

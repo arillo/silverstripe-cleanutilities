@@ -15,7 +15,6 @@
  * @author arillo
  */
 class ThemeExtension extends Extension{
-	
 	/**
 	 * Renders the decorated page with a given template.
 	 * @return array
@@ -28,4 +27,4 @@ class ThemeExtension extends Extension{
 		}
 		return array();
 	}
-} 
+}

@@ -19,7 +19,6 @@ SortableDataObject::add_sortable_class('CleanImage');
 SortableDataObject::add_sortable_class('CleanFile');
 SortableDataObject::add_sortable_class('CleanLink');
 SortableDataObject::add_sortable_class('CleanTeaser');
-SortableDataObject::add_sortable_class('CleanTeaserLink');
-
+// SortableDataObject::add_sortable_class('CleanTeaserLink');
 
 AssetsDecorator::$maxfilesperfolder = 200;

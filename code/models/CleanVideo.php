@@ -20,12 +20,12 @@ class CleanVideo extends DataObject{
 		'Reference' => 'SiteTree',
 		'VideoFile' => 'File'
 	);
-
 	/**
 	* Specifies a custom upload folder name.
 	* @var string
 	*/
 	static $upload_folder;
+	public static $use_video_upload = true;
 
 	/**
 	 * Returns custom validator
@@ -105,7 +105,6 @@ class CleanVideo extends DataObject{
 		}
 		return false;
 	}
-
 	/**
 	 * Form fields for use with DataObjectManager
 	 *
@@ -113,25 +112,31 @@ class CleanVideo extends DataObject{
 	 */
 	public function getCMSFields_forPopup(){
 		$fields = new FieldSet();
-		$fields->push(new LiteralField('VideoError','<div></div>'));
-		$fields->push(new CheckboxField('Autoplay','Autoplay'));
-		$fields->push(
-			new DropdownField(
-        		'VideoType',
-        		'Choose a behaviour',
-        		$this->dbObject('VideoType')->enumValues()
-        	)
-        );
-        $fields->push(new TextField('Title','Title'));
-		$fields->push(new TextField('VideoAddress','Video URL'));
-		$fields->push($up = new FileUploadField('VideoFile','Video File'));
-		$destination = isset(self::$upload_folder) ? self::$upload_folder : 'Videos';
-		$up->setUploadFolder($destination);
-		$up-> setFileTypes(array('mov','flv','mp4'));
+		$fields = new FieldSet(new Tabset('Root',new Tab('Main')));
+		$fields->addFieldToTab("Root.Main",new LiteralField('VideoError','<div></div>'));
+		$fields->addFieldToTab("Root.Main",new CheckboxField('Autoplay','Autoplay'));
+		if(self::$use_video_upload){
+			$fields->addFieldToTab("Root.Main",
+				new DropdownField(
+					'VideoType',
+					'Choose a behaviour',
+					$this->dbObject('VideoType')->enumValues()
+				)
+			);
+		}else{
+			$fields->addFieldToTab("Root.Main",new HiddenField("VideoType","VideoType","Embed"));
+		}
+		$fields->addFieldToTab("Root.Main",new TextField('Title','Title'));
+		$fields->addFieldToTab("Root.Main",new TextField('VideoAddress','Video URL'));
+		if(self::$use_video_upload){
+			$fields->addFieldToTab("Root.Main",$up = new FileUploadField('VideoFile','Video File'));
+			$destination = isset(self::$upload_folder) ? self::$upload_folder : 'Videos';
+			$up->setUploadFolder($destination);
+			$up-> setFileTypes(array('mov','flv','mp4'));
+		}
 		$this->extend('updateCMSFields_forPopup', $fields);
 		return $fields;
 	}
-
 	/**
 	 * Getter for the video file name
 	 *
@@ -151,6 +156,12 @@ class CleanVideo extends DataObject{
 	public function VideoID(){
 		$purl = VideoUtility::prepare_url($this->VideoAddress);
 		return $purl['sourceid'];
+	}
+	public function onBeforeWrite(){
+		parent::onBeforeWrite();
+		if(!self::$use_video_upload){
+			$this->VideoType = "Embed";
+		}
 	}
 
 }

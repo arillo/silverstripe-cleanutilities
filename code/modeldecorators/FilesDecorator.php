@@ -31,21 +31,31 @@ class FilesDecorator extends DataObjectDecorator{
 	 * Adds the DataObjectManager to crud this SiteTree 's files
 	 */
 	public function updateCMSFields(FieldSet &$fields) {
-		$ancestry = ClassInfo::dataClassesFor('CleanFile');
-		$managedclass = $ancestry[count($ancestry)-1];
-		$manager = new FileDataObjectManager(
+		// $manager = new FileDataObjectManager(
+		// 	$this->owner,
+		// 	'CleanFiles',
+		// 	'CleanFile',
+		// 	'Attachment',
+		// 	array(
+		// 		'Title' => 'Title'
+		// 	),
+		// 	'getCMSFields_forPopup',
+		// 	"ClassName = 'CleanFile'"
+		// );
+		$manager = new DataObjectManager(
 			$this->owner,
 			'CleanFiles',
-			$managedclass,
-			'Attachment',
+			'CleanFile',
 			array(
-				'Title' => 'Title'
+				'Title' => 'Title',
+				'Attachment.Filename' => 'File'
 			),
-			'getCMSFields_forPopup'
+			'getCMSFields_forPopup',
+			"ClassName = 'CleanFile'"
 		);
 		$manager->setPluralTitle('Files');
 		$manager->setAddTitle('Files');
-		$manager->setUploadFolder($this->owner->ControlledUploadFolder('/files/'));
+		// $manager->setUploadFolder($this->owner->ControlledUploadFolder('/files/'));
 		$fields->addFieldToTab("Root.Content.Files", $manager);
 	}
 
@@ -62,7 +72,7 @@ class FilesDecorator extends DataObjectDecorator{
 		if(!$limit){
 			$range = 0;
 		}
-		return  $this->owner->CleanFiles("", "", "", $range);
+		return  $this->owner->CleanFiles("ClassName = 'CleanFile'", "", "", $range);
 	}
 
 	/**
@@ -72,7 +82,7 @@ class FilesDecorator extends DataObjectDecorator{
 	* @return File
 	*/
 	public function FileAttachment($index = 0){
-		$images = $this->owner->CleanFiles()->toArray();
+		$images = $this->owner->CleanFiles("ClassName = 'CleanFile'")->toArray();
 		if(count($images) > $index){
 			return $images[$index]->Attachment();
 		}
@@ -92,7 +102,7 @@ class FilesDecorator extends DataObjectDecorator{
 		if(!$limit){
 			$range = 0;
 		}
-		$images =  $this->owner->CleanFiles("", "", "", $range);
+		$images =  $this->owner->CleanFiles("ClassName = 'CleanFile'", "", "", $range);
 		$arr = array();
 		foreach($images as $image){
 			$arr[] = $image->Attachment();
@@ -106,7 +116,7 @@ class FilesDecorator extends DataObjectDecorator{
 	* @return bool
 	*/
 	public function MoreFilesThan($num = 0){
-		if($this->owner->CleanFiles()->Count() > $num){
+		if($this->owner->CleanFiles("ClassName = 'CleanFile'")->Count() > $num){
 			return true;
 		}
 		return false;

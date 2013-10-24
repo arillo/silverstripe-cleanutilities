@@ -16,13 +16,8 @@ class CleanTeaser extends DataObject{
 	);
 
 	static $has_one = array(
-		'RelatedPage' => 'SiteTree',
-		'Reference' => 'SiteTree',
+		'Reference' => 'Page',
 		'Image' => 'Image'
-	);
-
-	static $has_many = array (
-		'Links' => 'CleanTeaserLink'
 	);
 
 	static $searchable_fields = array(
@@ -35,36 +30,20 @@ class CleanTeaser extends DataObject{
 	);
 
 	public function getCMSFields_forPopup(){
-		$upload = new ImageUploadField('Image');
+		$upload = new ImageUploadField("Image","Image");
 		$upload->setUploadFolder($this->ControlledUploadFolder('/teasers/'));
-		$links = new DataObjectManager(
-			$this,
-			'Links',
-			'CleanTeaserLink',
-			array(
-				'Title' => 'Title',
-				'URL' => 'URL',
-				'Type' => 'Type'
-			),
-			'getCMSFields_forPopup'
-		);
-		if(isset($_SESSION['CMSMain']['currentPage'])){
-			$currPage = DataObject::get_by_id("SiteTree", $_SESSION['CMSMain']['currentPage']);
-			if($currPage) Translatable::set_current_locale($currPage->Locale);
-		}
-		$relpag = new SimpleTreeDropDownField("RelatedPageID","Related Page","SiteTree","","Title","","Please Select");
-		$relpag->setFilter("ClassName != 'ErrorPage'");
 		$fields = new FieldSet(
-			new TextField('Title','Title'),
-			new SimpleTinyMCEField('Description','Description'),
-			$relpag,
-			$upload,
-			$links
+			new Tabset('Root',
+				new Tab('Main',
+					new TextField('Title','Title'),
+					new SimpleTinyMCEField('Description','Description'),
+					$upload
+				)
+			)
 		);
 		$this->extend('updateCMSFields_forPopup', $fields);
 		return $fields;
 	}
-
 	/**
 	 * Returns CMS thumbnail, if an image is attached.
 	 * Mainly used by DataObjectManager.
