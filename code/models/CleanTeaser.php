@@ -8,71 +8,93 @@
  *
  * @author arillo
  */
-class CleanTeaser extends DataObject{
+class CleanTeaser extends DataObject {
 
 	static $db = array(
 		'Title'=> 'Text',
 		'Description' => 'HTMLText'
 	);
-
+	
 	static $has_one = array(
 		'RelatedPage' => 'SiteTree',
 		'Reference' => 'SiteTree',
 		'Image' => 'Image'
 	);
-
-	static $has_many = array (
+	
+	static $has_many = array(
 		'Links' => 'CleanTeaserLink'
 	);
-
+	
 	static $searchable_fields = array(
 		'Title',
 		'Reference.Title'
 	);
 
 	static $summary_fields = array(
-		'Title'
+		'Title',
+		'Description' => 'Description',
+		'Thumbnail' => 'Thumbnail'
 	);
 
-	public function getCMSFields_forPopup(){
-		$upload = new ImageUploadField('Image');
-		$upload->setUploadFolder($this->ControlledUploadFolder('/teasers/'));
-		$links = new DataObjectManager(
-			$this,
-			'Links',
-			'CleanTeaserLink',
-			array(
-				'Title' => 'Title',
-				'URL' => 'URL',
-				'Type' => 'Type'
-			),
-			'getCMSFields_forPopup'
+	public static $upload_folder = "Teaser";
+
+	public function getCMSFields() {
+		$fields = parent::getCMSFields();
+		$fields->removeByName('ReferenceID');
+		$fields->removeFieldFromTab('Root.Links', 'Links');
+		
+		$fields->removeByName('Image');
+		$upload = UploadField::create(
+			'Attachment',
+			_t('CleanUtilities.IMAGE', 'Image')
 		);
-		if(isset($_SESSION['CMSMain']['currentPage'])){
-			$currPage = DataObject::get_by_id("SiteTree", $_SESSION['CMSMain']['currentPage']);
-			if($currPage) Translatable::set_current_locale($currPage->Locale);
+		$upload->setConfig('allowedMaxFileNumber', 1);
+		$upload->getValidator()->setAllowedExtensions(
+			Image::$allowed_extensions
+		);
+		if($this->hasExtension('ControlledFolderDataExtension')) {
+			$upload->setFolderName($this->getUploadFolder());
+		} else {
+			$upload->setFolderName(self::$upload_folder);
 		}
-		$relpag = new SimpleTreeDropDownField("RelatedPageID","Related Page","SiteTree","","Title","","Please Select");
-		$relpag->setFilter("ClassName != 'ErrorPage'");
-		$fields = new FieldSet(
-			new TextField('Title','Title'),
-			new SimpleTinyMCEField('Description','Description'),
-			$relpag,
-			$upload,
-			$links
-		);
-		$this->extend('updateCMSFields_forPopup', $fields);
+		$fields->insertBefore($upload, 'Title');
+		$relpage = $fields->dataFieldByName('RelatedPageID');
+		$fields->removeByName('RelatedPageID');
+		$fields->insertBefore($relpage, 'Title');
+
+		if ($this->ID) {
+			$sortable = singleton('CleanTeaserLink')->hasExtension('SortableDataExtension');
+			$config = GridFieldConfig_RelationEditor::create();
+			$config->addComponent($gridFieldForm = new GridFieldDetailForm());
+			$gridFieldForm->setTemplate('CMSGridFieldPopupForms');
+			if ($sortable) {
+				$config->addComponent(new GridFieldSortableRows('SortOrder'));
+			}
+			$links = $this->owner->Links();
+			if ($sortable) {
+				$links->sort('SortOrder');
+			}
+			$gridField = GridField::create('Links', 'CleanTeaser', $links, $config);
+			$fields->addFieldToTab('Root.Links', $gridField);
+		}
+		$this->extend('updateCMSFields', $fields);
 		return $fields;
 	}
-
+	
+	public function getCleanDescription() {
+		return strip_tags($this->Description);
+	}
+	
 	/**
 	 * Returns CMS thumbnail, if an image is attached.
-	 * Mainly used by DataObjectManager.
+	 * Mainly used by GridField.
 	 *
 	 * @return mixed
 	 */
-	function getThumbnail(){
-		if ($image = $this->Image()) return $image->CMSThumbnail();
+	public function getThumbnail() {
+		if ($image = $this->Image()) {
+			return $image->CMSThumbnail();
+		}
 		return _t('CleanTeaser.NO_IMAGE', '(No Image)');
 	}
 }

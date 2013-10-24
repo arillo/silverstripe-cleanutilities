@@ -9,13 +9,13 @@
  */
 class CleanLink extends DataObject{
 	
-	static $db = array (
+	static $db = array(
 		'Title' => 'Text',
 		'URL' => 'Varchar(255)',
-		'Target'	=> "Enum('_self,_blank','_self')"
+		'Target' => "Enum('_blank,_self','_blank')"
 	);
-	
-	static $has_one = array (
+
+	static $has_one = array(
 		'Reference' => 'SiteTree'
 	);
 	
@@ -26,23 +26,30 @@ class CleanLink extends DataObject{
 	);
 	
 	static $summary_fields = array(
-		'Title',
-		'URL',
-		'Reference.Title'
+		'Title' => 'Title',
+		'URL' => 'URL',
+		'Target' => 'Target'
 	);
-	
-	public function getCMSFields_forPopup(){
-		$options = new DropdownField(
+
+	public function getCMSFields() {
+		$options = DropdownField::create(
 			'Target',
-			'Choose the target',
+			_t('CleanLink.TARGET', 'Choose the target'),
 			$this->dbObject('Target')->enumValues()
 		);
-		$fields = new FieldSet(
-			new TextField('Title','Title'),
-			new TextField('URL','URL'),
+
+		$fields = FieldList::create(
+			TextField::create(
+				'Title',
+				_t('CleanUtilities.Title', 'Title')
+			),
+			TextField::create(
+				'URL',
+				_t('CleanUtilities.URL', 'Url')
+			),
 			$options
 		);
-		$this->extend('updateCMSFields_forPopup', $fields);
+		$this->extend('updateCMSFields', $fields);
 		return $fields;
 	}
 }

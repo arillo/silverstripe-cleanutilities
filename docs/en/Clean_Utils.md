@@ -6,7 +6,13 @@ Utility functions. Some of them are required by other classes in this module.
 ##CleanGD
 Provides extra funtionality to GD
 
+###Install
+
+	// add the extensions in _config.php
+	Object::add_extension('GD','CleanGD');
+
 ###Public functions
+
 #####imagetint(&$img, $tint_r = 255, $tint_g = 255, $tint_b = 255)
 	/**
 	 * Tints an image.
@@ -33,10 +39,32 @@ Provides extra funtionality to GD
 	 */
 	function imagetint(&$img, $tint_r = 255, $tint_g = 255, $tint_b = 255)
 
+### Usage
+
+This class is used internally in ImageDataExtension. So to colorize an image please use ImageDataExtension. We will do somthing like:
+
+	$Image.ColorizeImage(255,0,0)
+
 
 ##CleanUtils
 Provides a couple of helper methods for Theme handling and lets us set a Template other than the default on this page instance.
 
+###Public static variables
+
+#####$module = "cleanutilities"
+	/**
+	 * Define the foldername for this module.
+	 * @var string
+	 */
+	public static $module = "cleanutilities";
+
+#####$folder_max_files = 100
+	/**
+	 * Max. file count in controlled upload folders.
+	 * 
+	 * @var int
+	 */
+	public static $folder_max_files = 100;
 ###Public static functions
 
 #####add_required_css($form, $cssClass = "required" )
@@ -47,25 +75,9 @@ Provides a couple of helper methods for Theme handling and lets us set a Templat
 	 * @param Form $form
 	 * @param string $cssClass
 	 */
-	public static function add_required_css($form, $cssClass = "required")
+	public static function add_required_css(Form $form, $cssClass = "required")
 	
-#####html_obfuscate($text)
-	/**
-	 * Obfuscates a given string into html character entities.
-	 *
-	 * @param string $text
-	 * @return string
-	 */
-	public static function html_obfuscate($text)
-#####setup_locale($locale)
-	/**
-	 * Sets i18n locale and adds Content-language to meta tags.
-	 * @param string $locale
-	 */
-	public static function setup_locale($locale)
-
 #####instance_of($class, $parentClass)
-
 	/**
 	 * Like PHPs instance_of but the SS way of doing it.
 	 *
@@ -77,7 +89,6 @@ Provides a couple of helper methods for Theme handling and lets us set a Templat
 
 
 #####generate_urlsegment($title)
-
 	/**
 	 * Generates an url friendly representation of a given string.
 	 *
@@ -86,17 +97,34 @@ Provides a couple of helper methods for Theme handling and lets us set a Templat
 	 */
 	public static function generate_urlsegment($title)
 
-#####clean_name($string)
-
+#####setup_locale($locale)
 	/**
-	 * Removes all alphanumeric and punctual characters from
-	 * the given $string.
-	 *
-	 * @param string $string
+	 * Sets i18n locale and adds Content-language to meta tags.
+	 * @param string $locale
+	 */
+	public static function setup_locale($locale)
+
+#####controlled_upload_folder($foldername = 'customfiles')
+	/**
+	 * Limits the count of files in a folder to $folder_max_files.
+	 * Automatically adds new subfolders.
+	 * 
+	 * @param string $foldername
 	 * @return string
 	 */
-	public static function clean_name($string)
+	public static function controlled_upload_folder($foldername = 'customfiles')
 
+#####create_gridfield_for($model, $relationname, $reference)
+	/**
+	 * A simple Gridfield factory
+	 * @param  string $model
+	 * @param  string $relationname
+	 * @param  DataObject $reference
+	 * @return GridField
+	 */
+	 public static function create_gridfield_for($model, $relationname, $reference)
+
+<!---
 ##EmailSender
 Helper for sending emails with ease.
 
@@ -182,6 +210,7 @@ in Email/TestEmail.ss
 	<div>$Data</div>
 
 __Note__: For validating purposes the function will return a boolean indicating if the email(s) were succesfully sent.
+-->
 ##VideoUtility
 Provides helper funtionality to handle and display videos from diffrent media platforms. Supported platforms are:
 

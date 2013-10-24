@@ -1,7 +1,7 @@
 #Clean Models
 __written by Arillo__
 
-All models in this module are mainly used by its corresponding [Model Decorators](Model_Decorators). They are mostly wrappers for File (sub-)classes and they add a relation to the belonging page in a one-to-many fashion. All these classes provide a function DataObjectManager uses. If you extend a CleanModel you can implement the **updateCMSFields_forPopup** function to update its CMS fields:
+All models in this module are mainly used by its corresponding [Model Decorators](Model_Decorators). They are mostly wrappers for File (sub-)classes and they add a relation to the belonging page in a one-to-many fashion.
 
 	// in subclass of a CleanModel extend form´s fieldset like this:
 	public function updateCMSFields_forPopup(FieldSet &fields)
@@ -30,6 +30,17 @@ Wrapper for a File.
 	 * @return mixed
 	 */
 	public function DownloadLink()
+#####AbsoluteDownloadLink()
+	/**
+	 * Returns a absolute download link like:
+	 * http://domain.com/URLSegment/download/ClassName/ID
+	 * 
+	 * To make this to work you need to implement a "download" function in
+	 * the Reference's controller.
+	 * This can be achieved by using DownloadExtension.
+	 * 
+	 * @return string
+	 */
 
 Tip: You can use DownloadExtension to provide the download function to your controller.
 
@@ -65,14 +76,20 @@ Wrapper for an Image.
 	 */
 	public function DownloadLink()
 
-#####AbsoluteLink()
+#####AbsoluteDownloadLink()
 
-	// http://domain.com/URLSegment/ClassName/ID
-	public function AbsoluteLink()
+	/**
+	 * Returns a absolute download link like:
+	 * http://domain.com/URLSegment/download/ClassName/ID
+	 * 
+	 * To make this to work you need to implement a "download" function in
+	 * the Reference's controller.
+	 * This can be achieved by using DownloadExtension.
+	 * 
+	 * @return string
+	 */
+	public function AbsoluteDownloadLink()
 
-#####Link()
-	// URLSegment/ClassName/ID
-	public function Link()
 
 ##CleanLink
 Wrapper for external links.
@@ -119,7 +136,7 @@ Link used in [CleanTeaser](Clean_Models#cleanteaser).
 
 		'Title'=> 'Text',
 		'URL' => 'Text',
-		'Target'	=> "Enum('_self,_blank','_blank')"
+		'Type'	=> "Enum('_self,_blank','_blank')"
 
 ####has_one
 
@@ -150,7 +167,7 @@ A DataObject for Videos. Provides a video that can either be embedded through a 
 	 */
 	public function getValidator()
 
-#####VideoEmbed($width = 640, $height = 375)
+#####VideoEmbed($width = 640, $height = 375, $autoplay = null)
 
 	/**
 	 * Returns the actual video embed code.
@@ -161,17 +178,6 @@ A DataObject for Videos. Provides a video that can either be embedded through a 
 	 */
 	 public function VideoEmbed($width = 640, $height = 375)
 
-#####VideoEmbedAuto($width = 640, $height = 375, $autoplay = false)
-
-	/**
-	 * Returns the actual video embed code.
-	 * Allows to set its auto-play to on/off.
-	 *
-	 * @param int $width
-	 * @param int $height
-	 * @return string
-	 */
-	public function VideoEmbedAuto($width = 640, $height = 375, $autoplay = false)
 
 #####getVideoFileName()
 	/**

@@ -10,22 +10,25 @@
  * Object::add_extension('Page_Controller', 'ThemeExtension');
  * 
  * @package cleanutilities
- * @subpackage utilitiesdecorators
+ * @subpackage data_extensions
  * 
  * @author arillo
  */
-class ThemeExtension extends Extension{
-	
+class ThemeExtension extends Extension {
+
 	/**
 	 * Renders the decorated page with a given template.
 	 * @return array
 	 */
-	function index(){
-		if($this->owner->Template != ''){
+	function index() {
+		if ($this->owner->Template != '') {
 			return $this->owner->renderWith(
-				array($this->owner->Template, 'Page')
+				array(
+					$this->owner->Template,
+					'Page'
+				)
 			);
 		}
 		return array();
 	}
-} 
+}
