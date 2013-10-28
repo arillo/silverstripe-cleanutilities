@@ -1,4 +1,4 @@
-#Arillo CleanUtlities
+#Arillo CleanUtilities
 Arillo CleanUtilities is a module for Silverstripe 3.1 which provides functionality that makes the daily development easier and faster. It comes with a couple of classes which can be easily added as extensions to the SiteTree class.
 
 It also gives more functionality to several other sapphire classes. For more information, please consult the docs and the example sections.
