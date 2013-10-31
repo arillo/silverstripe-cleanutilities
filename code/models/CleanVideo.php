@@ -122,7 +122,6 @@ class CleanVideo extends DataObject {
 				break;
 			case 'File':
 				if ($this->MP4File()->exists()
-					&& $this->MP4File()->exists()
 					&& $this->OGVFile()->exists()
 					&& $this->WebMFile()->exists()
 				) {
@@ -179,12 +178,13 @@ class CleanVideo extends DataObject {
 				new HiddenField('VideoTypes', 'VideoType', 'Embed'));
 		}
 
-		$videoType->setValue('Embed');
-
-		$fields->addFieldToTab("Root.Main",TextField::create(
-			'Title',
-			_t('CleanUtilities.TITLE', 'Title')
-		));
+		$fields->addFieldToTab(
+			'Root.Main',
+			TextField::create(
+				'Title',
+				_t('CleanUtilities.TITLE', 'Title')
+			)
+		);
 
 		$fields->addFieldToTab(
 			'Root.Main',
@@ -215,10 +215,11 @@ class CleanVideo extends DataObject {
 					$this,
 					CleanImage::$allowed_extensions,
 					$uploadFolder
-				)->hideIf('VideoType')->isEqualTo('Embed')->end()
+				)
 			);
 			$previewImage->getValidator()->setAllowedMaxFileSize($uploadLimit);
-			
+			$previewImage->hideIf('VideoType')->isEqualTo('Embed');
+
 			// mp4
 			$fields->addFieldToTab(
 				'Root.Main',
@@ -228,9 +229,10 @@ class CleanVideo extends DataObject {
 					$this,
 					array('mp4'),
 					$uploadFolder
-				)->hideIf('VideoType')->isEqualTo('Embed')->end()
+				)
 			);
 			$mp4->getValidator()->setAllowedMaxFileSize($uploadLimit);
+			$mp4->hideIf('VideoType')->isEqualTo('Embed');
 
 			// ogv
 			$fields->addFieldToTab(
@@ -241,9 +243,10 @@ class CleanVideo extends DataObject {
 					$this,
 					array('ogv'),
 					$uploadFolder
-				)->hideUnless('VideoType')->isEqualTo('File')->end()
+				)
 			);
 			$ogv->getValidator()->setAllowedMaxFileSize($uploadLimit);
+			$ogv->hideUnless('VideoType')->isEqualTo('File');
 
 			// webm
 			$fields->addFieldToTab(
