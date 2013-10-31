@@ -14,6 +14,7 @@
 		"composer/installers": "*",
 		"colymba/gridfield-bulk-editing-tools": "*",
 		"simonwelsh/gridfieldrelationhandler": "*",
-		"undefinedoffset/sortablegridfield": "*"
+		"undefinedoffset/sortablegridfield": "*",
+		"silverstripe/display-logic": "dev-master"
 	}
 }

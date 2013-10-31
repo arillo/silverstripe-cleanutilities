@@ -137,38 +137,6 @@ class CleanVideo extends DataObject {
 		return false;
 	}
 
-	public function wtf($fields) {
-		$fields->addFieldToTab(
-			'Root.Main',
-			LiteralField::create(
-				'PreviewImage_WTF',
-				'PreviewImage_WTF:' . $this->PreviewImage()->ID
-			)
-		);
-		$fields->addFieldToTab(
-			'Root.Main',
-			LiteralField::create(
-				'MP4File_WTF',
-				'MP4File_WTF:' . $this->MP4File()->ID
-			)
-		);
-		$fields->addFieldToTab(
-			'Root.Main',
-			LiteralField::create(
-				'OGVFile_WTF',
-				'OGVFile_WTF:' . $this->OGVFile()->ID
-			)
-		);
-		$fields->addFieldToTab(
-			'Root.Main',
-			LiteralField::create(
-				'WebMFile_WTF',
-				'WebMFile_WTF:' . $this->WebMFile()->ID
-			)
-		);
-		return $fields;
-	}
-
 	public function getCMSFields(){
 		$fields = FieldList::create(
 			new TabSet(
@@ -176,9 +144,6 @@ class CleanVideo extends DataObject {
 				new Tab('Main')
 			)
 		);
-
-		$fields = $this->wtf($fields);
-
 
 		$fields->addFieldToTab(
 			'Root.Main',
@@ -221,7 +186,7 @@ class CleanVideo extends DataObject {
 				_t('CleanVideo.VIDEO_URL', 'Video URL')
 			)
 		);
-		//$url->displayIf('VideoType')->isEqualTo('Embed');
+		$url->displayIf('VideoType')->isEqualTo('Embed');
 
 		if (self::$use_video_upload && $this->ID) {
 			$uploadLimit = self::$upload_limit * 1024 * 1024;
