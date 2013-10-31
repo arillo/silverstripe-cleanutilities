@@ -2,7 +2,9 @@
 /**
  * A DataObject for Videos
  * Provides a video that can either be embeded through
- * a service api or through its own embed code. 
+ * a service api or file uploads.
+ * It uses video.js, visit:
+ * http://www.videojs.com/
  * 
  * @package cleanutilities
  * @subpackage models
@@ -14,7 +16,7 @@ class CleanVideo extends DataObject {
 	static $db = array(
 		'Title' => 'Text',
 		'VideoAddress' => 'Text',
-		'VideoType' => "Enum('Embed, File','Embed')",
+		'VideoType' => "Enum('Embed, File', 'Embed')",
 		'Autoplay' => 'Boolean'
 	);
 
@@ -25,7 +27,7 @@ class CleanVideo extends DataObject {
 		'WebMFile' => 'File',
 		'PreviewImage' => 'Image'
 	);
-	
+
 	/**
 	 * Allowed file extensions for uploading.
 	 * @var array
@@ -96,7 +98,7 @@ class CleanVideo extends DataObject {
 	public function getValidator() {
 		return new CleanVideo_Validator();
 	}
-	
+
 	/**
 	 * Returns the actual video embed code.
 	 * If $autoplay isset it will use this value
@@ -175,7 +177,7 @@ class CleanVideo extends DataObject {
 		} else {
 			$fields->addFieldToTab(
 				'Root.Main',
-				new HiddenField('VideoTypes', 'VideoType', 'Embed'));
+				new HiddenField('VideoType', 'VideoType', 'Embed'));
 		}
 
 		$fields->addFieldToTab(

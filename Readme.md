@@ -8,7 +8,7 @@ It also gives more functionality to several other sapphire classes. For more inf
 ##Installation
 As with all Silverstripe modules, you have to copy cleanutilities folder and all [dependent modules](#Dependencies) into your project's root directory. After that you should run dev/build and you are done. You should ensure, that you name the module folder "silverstripe-cleanutilities". If you have to, for some reason, use an other name than the standard one you can set it in _config.php like:
 
-	CleanUtils::$module = "silverstripe_cleanutilities";
+	CleanUtils::$module = "silverstripe-cleanutilities";
 	
 This is important because some classes use the value of this variable for loading dependent files for example.
 ##Included packages
