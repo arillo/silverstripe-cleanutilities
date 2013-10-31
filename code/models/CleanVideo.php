@@ -10,24 +10,27 @@
  * @author arillo
  */
 class CleanVideo extends DataObject {
-	
+
 	static $db = array(
-		"Title" => "Text",
-		"VideoAddress" => "Text",
-		"VideoType" => "Enum('Embed, File','Embed')",
-		"Autoplay" => "Boolean"
+		'Title' => 'Text',
+		'VideoAddress' => 'Text',
+		'VideoType' => "Enum('Embed, File','Embed')",
+		'Autoplay' => 'Boolean'
 	);
-	
+
 	static $has_one = array(
 		'Reference' => 'SiteTree',
-		'VideoFile' => 'File'
+		'MP4File' => 'File',
+		'OGVFile' => 'File',
+		'WebMFile' => 'File',
+		'PreviewImage' => 'Image'
 	);
 	
 	/**
 	 * Allowed file extensions for uploading.
 	 * @var array
 	 */
-	public static $allowed_extensions = array('mov', 'flv', 'mp4');
+	public static $allowed_extensions = array('ogv', 'webm', 'mp4');
 
 	/**
 	 * Specifies a custom upload folder name.
@@ -35,8 +38,49 @@ class CleanVideo extends DataObject {
 	 */
 	public static $upload_folder = 'Videos';
 
-
+	/**
+	 * Enable video upload
+	 * @var boolean
+	 */
 	public static $use_video_upload = true;
+
+	/**
+	 * Upload in MB
+	 * @var integer
+	 */
+	public static $upload_limit = 25;
+
+	/**
+	 * Make sure that js injected once only
+	 * @var boolean
+	 */
+	protected static $js_initialized = false;
+
+	/**
+	 * Inject required js
+	 */
+	public static function init_js() {
+		if (!self::$js_initialized) {
+			
+			Requirements::css(CleanUtils::$module . '/css/videojs.css');
+			Requirements::javascript(CleanUtils::$module . '/javascript/libs/video.js');
+			
+			$swf = Controller::join_links(
+				Director::absoluteBaseURL(),
+				CleanUtils::$module,
+				'swf/video-js.swf'
+			);
+			Requirements::customScript("
+				;(function($){
+					$(document).ready(function(){
+						videojs.options.flash.swf = '$swf';
+					});
+				})(jQuery);
+			");
+			self::$js_initialized = true;
+		}
+	}
+
 	/**
 	 * Returns custom validator
 	 * 
@@ -70,69 +114,185 @@ class CleanVideo extends DataObject {
 				}
 				break;
 			case 'File':
-				if ($this->VideoFileID != 0 && isset($this->VideoFileID)) {
+				if ($this->MP4File()->exists()
+					&& $this->MP4File()->exists()
+					&& $this->OGVFile()->exists()
+					&& $this->WebMFile()->exists()
+				) {
+					Debug::show($this->PreviewImage());
 					$vars = array(
 						'ID' => $this->ID,
 						'Width' => $width,
 						'Height' => $height,
-						'VideoURL' => $this->VideoFile()->URL,
-						'ThemeDir' => $this->ThemeDir(),
-						'Autoplay' => $autoplay,
-						'Module' => CleanUtils::$module
+						'PreviewImage' => $this->PreviewImage(),
+						'MP4File' => $this->MP4File(),
+						'OGVFile' => $this->OGVFile(),
+						'WebMFile' => $this->WebMFile(),
+						'Autoplay' => $autoplay
 					);
-					Requirements::javascript(CleanUtils::$module . "/javascript/libs/swfobject.js");
-					Requirements::javascriptTemplate(CleanUtils::$module . "/javascript/init_video.js", $vars);
 					return $this->customise($vars)->renderWith(array('VideoEmbed'));
 				}
 				break;
 		}
 		return false;
 	}
-	
+
+	public function wtf($fields) {
+		$fields->addFieldToTab(
+			'Root.Main',
+			LiteralField::create(
+				'PreviewImage_WTF',
+				'PreviewImage_WTF:' . $this->PreviewImage()->ID
+			)
+		);
+		$fields->addFieldToTab(
+			'Root.Main',
+			LiteralField::create(
+				'MP4File_WTF',
+				'MP4File_WTF:' . $this->MP4File()->ID
+			)
+		);
+		$fields->addFieldToTab(
+			'Root.Main',
+			LiteralField::create(
+				'OGVFile_WTF',
+				'OGVFile_WTF:' . $this->OGVFile()->ID
+			)
+		);
+		$fields->addFieldToTab(
+			'Root.Main',
+			LiteralField::create(
+				'WebMFile_WTF',
+				'WebMFile_WTF:' . $this->WebMFile()->ID
+			)
+		);
+		return $fields;
+	}
+
 	public function getCMSFields(){
 		$fields = FieldList::create(
 			new TabSet(
-				"Root",
-				new Tab("Main")
+				'Root',
+				new Tab('Main')
 			)
 		);
-		$fields->addFieldToTab("Root.Main",LiteralField::create('VideoError','<div></div>'));
-		$fields->addFieldToTab("Root.Main",CheckboxField::create(
-			'Autoplay',
-			_t('CleanVideo.AUTOPLAY', 'Auto play')
-		));
 
-		if(self::$use_video_upload){
-			$fields->addFieldToTab("Root.Main",
-				DropdownField::create(
+		$fields = $this->wtf($fields);
+
+
+		$fields->addFieldToTab(
+			'Root.Main',
+			LiteralField::create('VideoError', '<div></div>')
+		);
+		$fields->addFieldToTab(
+			'Root.Main',
+			CheckboxField::create(
+				'Autoplay',
+				_t('CleanVideo.AUTOPLAY', 'Auto play')
+			)
+		);
+
+		if (self::$use_video_upload) {
+			$fields->addFieldToTab(
+				'Root.Main',
+				$videoType = OptionSetField::create(
 					'VideoType',
 					_t('CleanVideo.BEHAVIOUR', 'Choose a behaviour'),
 					$this->dbObject('VideoType')->enumValues()
 				)
 			);
-		}else{
-			$fields->addFieldToTab("Root.Main",new HiddenField("VideoType","VideoType","Embed"));
+		} else {
+			$fields->addFieldToTab(
+				'Root.Main',
+				new HiddenField('VideoTypes', 'VideoType', 'Embed'));
 		}
+
+		$videoType->setValue('Embed');
+
 		$fields->addFieldToTab("Root.Main",TextField::create(
 			'Title',
 			_t('CleanUtilities.TITLE', 'Title')
 		));
-		$fields->addFieldToTab("Root.Main",TextField::create(
-			'VideoAddress',
-			_t('CleanVideo.VIDEO_URL', 'Video URL')
-		));
-		if(self::$use_video_upload){
-			$fields->addFieldToTab("Root.Main",$upload = UploadField::create(
-				'VideoFile',
-				_t('CleanVideo.VIDEO_FILE', 'Video File')
-			));
-			$upload->getValidator()->setAllowedExtensions(self::$allowed_extensions);
+
+		$fields->addFieldToTab(
+			'Root.Main',
+			$url = TextField::create(
+				'VideoAddress',
+				_t('CleanVideo.VIDEO_URL', 'Video URL')
+			)
+		);
+		//$url->displayIf('VideoType')->isEqualTo('Embed');
+
+		if (self::$use_video_upload && $this->ID) {
+			$uploadLimit = self::$upload_limit * 1024 * 1024;
+			$uploadFolder = self::$upload_folder;
 			if($this->hasExtension('ControlledFolderDataExtension')) {
-				$upload->setFolderName($this->getUploadFolder());
-			} else {
-				$upload->setFolderName(self::$upload_folder);
+				$uploadFolder = $this->getUploadFolder();
 			}
+			$uploadFolder = Controller::join_links(
+				$uploadFolder,
+				$this->ID
+			);
+
+			// preview image
+			$fields->addFieldToTab(
+				'Root.Main',
+				$previewImage = CleanUtils::create_uploadfield_for(
+					'PreviewImage',
+					_t('CleanVideo.PREVIEW_IAMGE', 'Preview image'),
+					$this,
+					CleanImage::$allowed_extensions,
+					$uploadFolder
+				)->hideIf('VideoType')->isEqualTo('Embed')->end()
+			);
+			$previewImage->getValidator()->setAllowedMaxFileSize($uploadLimit);
+			
+			// mp4
+			$fields->addFieldToTab(
+				'Root.Main',
+				$mp4 = CleanUtils::create_uploadfield_for(
+					'MP4File',
+					_t('CleanVideo.MP4_FILE', 'Mp4 File'),
+					$this,
+					array('mp4'),
+					$uploadFolder
+				)->hideIf('VideoType')->isEqualTo('Embed')->end()
+			);
+			$mp4->getValidator()->setAllowedMaxFileSize($uploadLimit);
+
+			// ogv
+			$fields->addFieldToTab(
+				'Root.Main',
+				$ogv = CleanUtils::create_uploadfield_for(
+					'OGVFile',
+					_t('CleanVideo.OGV_FILE', 'Ogv File'),
+					$this,
+					array('ogv'),
+					$uploadFolder
+				)->hideUnless('VideoType')->isEqualTo('File')->end()
+			);
+			$ogv->getValidator()->setAllowedMaxFileSize($uploadLimit);
+
+			// webm
+			$fields->addFieldToTab(
+				'Root.Main',
+				$webm = CleanUtils::create_uploadfield_for(
+					'WebMFile',
+					_t('CleanVideo.WEBM_FILE', 'Webm File'),
+					$this,
+					array('webm'),
+					$uploadFolder
+				)->hideUnless('VideoType')->isEqualTo('File')->end()
+			);
+			$webm->getValidator()->setAllowedMaxFileSize($uploadLimit);
 		}
+
+		$fileUploads = HeaderField::create(
+			'UploadInfo',
+			_t('CleanVideo.UPLOAD_INFO', 'INFO: Uploads can be attached after first saving.'),
+			4
+		);
+
 		$this->extend('updateCMSFields', $fields);
 		return $fields;
 	}
@@ -141,13 +301,13 @@ class CleanVideo extends DataObject {
 	 * Getter for the video file name
 	 * 
 	 * @return string
-	 */
 	public function getVideoFileName() {
 		if($this->VideoFileID != 0 && isset($this->VideoFileID)) {
 			return $this->VideoFile()->FileName;
 		}
 		return '';
 	}
+	 */
 	
 	/**
 	 * Getter for the service's video id.

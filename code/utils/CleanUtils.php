@@ -67,8 +67,19 @@ class CleanUtils {
 			throw new InvalidArgumentException("Couldn't create GridField because wrong parameters passed to the factory.");
 		}
 	}
-	public static function create_uploadfield_for($relationname,$title,$reference,$allowed_extensions = null,$upload_folder=null){
-		$upload = UploadField::create($relationname,$title);
+
+	/**
+	 * Generates an uploadfield.
+	 * 
+	 * @param  string $relationname
+	 * @param  string $title
+	 * @param  DataObject $reference
+	 * @param  array $allowed_extensions
+	 * @param  string $upload_folder
+	 * @return UploadField
+	 */
+	public static function create_uploadfield_for($relationname, $title, $reference, $allowed_extensions = null, $upload_folder=null){
+		$upload = UploadField::create($relationname, $title);
 		$upload->setConfig('allowedMaxFileNumber', 1);
 		if($allowed_extensions!=null){
 			$upload->getValidator()->setAllowedExtensions($allowed_extensions);
