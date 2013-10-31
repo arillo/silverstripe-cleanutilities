@@ -51,6 +51,12 @@ class CleanVideo extends DataObject {
 	public static $upload_limit = 25;
 
 	/**
+	 * Upload in MB
+	 * @var integer
+	 */
+	public static $default_css = true;
+
+	/**
 	 * Make sure that js injected once only
 	 * @var boolean
 	 */
@@ -61,8 +67,9 @@ class CleanVideo extends DataObject {
 	 */
 	public static function init_js() {
 		if (!self::$js_initialized) {
-			
-			Requirements::css(CleanUtils::$module . '/css/videojs.css');
+			if (self::$default_css) {
+				Requirements::css(CleanUtils::$module . '/css/video-js.css');
+			}
 			Requirements::javascript(CleanUtils::$module . '/javascript/libs/video.js');
 			
 			$swf = Controller::join_links(
@@ -119,7 +126,7 @@ class CleanVideo extends DataObject {
 					&& $this->OGVFile()->exists()
 					&& $this->WebMFile()->exists()
 				) {
-					Debug::show($this->PreviewImage());
+					self::init_js();
 					$vars = array(
 						'ID' => $this->ID,
 						'Width' => $width,
@@ -261,19 +268,7 @@ class CleanVideo extends DataObject {
 		$this->extend('updateCMSFields', $fields);
 		return $fields;
 	}
-	
-	/**
-	 * Getter for the video file name
-	 * 
-	 * @return string
-	public function getVideoFileName() {
-		if($this->VideoFileID != 0 && isset($this->VideoFileID)) {
-			return $this->VideoFile()->FileName;
-		}
-		return '';
-	}
-	 */
-	
+
 	/**
 	 * Getter for the service's video id.
 	 * 

@@ -67,7 +67,6 @@ class CleanVideosExtension extends DataExtension {
 	 * @return DataList
 	 */
 	public function Videos($limit = 0, $offset = 0, $sortField = 'SortOrder', $sortDir = 'ASC') {
-		CleanVideo::init_js($this->owner->Link());
 		return $this->owner->CleanVideos("ClassName = 'CleanVideo'")
 				->limit($limit, $offset)
 				->sort($sortField, $sortDir);
