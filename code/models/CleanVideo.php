@@ -17,7 +17,10 @@ class CleanVideo extends DataObject {
 		'Title' => 'Text',
 		'VideoAddress' => 'Text',
 		'VideoType' => "Enum('Embed, File', 'Embed')",
-		'Autoplay' => 'Boolean'
+		'Autoplay' => 'Boolean',
+		'Controls' => 'Boolean',
+		'Loop' => 'Boolean',
+		'Preload' => "Enum('auto, none, metadata', 'auto')"
 	);
 
 	static $has_one = array(
@@ -26,6 +29,12 @@ class CleanVideo extends DataObject {
 		'OGVFile' => 'File',
 		'WebMFile' => 'File',
 		'PreviewImage' => 'Image'
+	);
+
+	private static $defaults = array(
+		'Autoplay' => false,
+		'Controls' => true,
+		'Loop' => false
 	);
 
 	/**
@@ -110,7 +119,7 @@ class CleanVideo extends DataObject {
 	 * @return string
 	 */
 	public function VideoEmbed($width = 640, $height = 375, $autoplay = null) {
-		$autoplay = isset($autoplay) ? $autoplay : $this->Autoplay;
+		$autoplay = isset($autoplay) && is_bool($autoplay) ? $autoplay : $this->Autoplay;
 		switch($this->VideoType) {
 			case 'Embed':
 				if ($this->VideoAddress!='') {
@@ -136,9 +145,9 @@ class CleanVideo extends DataObject {
 						'MP4File' => $this->MP4File(),
 						'OGVFile' => $this->OGVFile(),
 						'WebMFile' => $this->WebMFile(),
-						'Autoplay' => $autoplay
+						'Setup' => '{ "controls": ' . $this->Controls . ', "autoplay":' . $this->Autoplay . ', "preload": "' . $this->Preload . '" }'
 					);
-					return $this->customise($vars)->renderWith(array('VideoEmbed'));
+					return $this->customise($vars)->renderWith(array('VideoJSEmbed'));
 				}
 				break;
 		}
@@ -174,6 +183,9 @@ class CleanVideo extends DataObject {
 					$this->dbObject('VideoType')->enumValues()
 				)
 			);
+			if (!$this->VideoType) {
+				$videoType->setValue('Embed');
+			}
 		} else {
 			$fields->addFieldToTab(
 				'Root.Main',
@@ -259,16 +271,51 @@ class CleanVideo extends DataObject {
 					$this,
 					array('webm'),
 					$uploadFolder
-				)->hideUnless('VideoType')->isEqualTo('File')->end()
+				)
 			);
 			$webm->getValidator()->setAllowedMaxFileSize($uploadLimit);
-		}
+			$webm->hideUnless('VideoType')->isEqualTo('File');
 
-		$fileUploads = HeaderField::create(
-			'UploadInfo',
-			_t('CleanVideo.UPLOAD_INFO', 'INFO: Uploads can be attached after first saving.'),
-			4
+
+			$fields->addFieldToTab(
+				'Root.Main',
+				$controls = CheckboxField::create(
+					'Controls',
+					_t('CleanVideo.CONTROLS', 'Show controls')
+				)
+			);
+			$controls->hideUnless('VideoType')->isEqualTo('File');
+
+			$fields->addFieldToTab(
+				'Root.Main',
+				$loop = CheckboxField::create(
+					'Loop',
+					_t('CleanVideo.LOOP', 'Loop video')
+				)
+			);
+			$loop->hideUnless('VideoType')->isEqualTo('File');
+
+			$fields->addFieldToTab(
+				'Root.Main',
+				$preload = DropdownField::create(
+					'Preload',
+					_t('CleanVideo.PRELOAD', 'Preload video'),
+					$this->obj('Preload')->enumValues()
+				)
+			);
+			$preload->hideUnless('VideoType')->isEqualTo('File');
+		}
+		$fields->addFieldToTab(
+			'Root.Main',
+			$videoUploadInfo = TextField::create(
+				'VideoUploadInfo',
+				'Info',
+				_t('CleanVideo.UPLOAD_INFO', 'Uploads can be attached after first saving.')
+			)
 		);
+		$videoUploadInfo->performReadonlyTransformation();
+		$videoUploadInfo->setDisabled(true);
+		$videoUploadInfo->hideUnless('VideoType')->isEqualTo('File')->andIf('ID')->isGreaterThan(0);
 
 		$this->extend('updateCMSFields', $fields);
 		return $fields;
@@ -308,25 +355,27 @@ class CleanVideo_Validator extends RequiredFields {
 			if ($data['VideoAddress'] != '') {
 				if (VideoUtility::validate_video($data['VideoAddress']) == false) {
 					$this->validationError(
-						"VideoError",
-						_t('Video_Validator.ADDRESS_ERROR','Please enter a valid Video URL')
+						'VideoError',
+						_t('Video_Validator.ADDRESS_ERROR', 'Please enter a valid Video URL')
 					);
 					$valid = false;
 				}
 			} else {
 				$this->validationError(
-					"VideoError",
-					_t('Video_Validator.ADDRESS_REQUIRED','Video URL is required for Embeded videos')
+					'VideoError',
+					_t('Video_Validator.ADDRESS_REQUIRED', 'Video URL is required for Embeded videos')
 				);
 				$valid = false;
 			}
 		}
 		if ($data['VideoType'] == 'File') {
-			$videofile = $data['VideoFile'];
-			if ($data['VideoFile'] == '') {
+			if ($data['MP4File'] == ''
+				|| $data['OGVFile'] == ''
+				|| $data['WebMFile'] == ''
+			) {
 				$this->validationError(
-					"VideoError",
-					_t('Video_Validator.VIDEOFILE_REQUIRED','Video File is required for File videos')
+					'VideoError',
+					_t('Video_Validator.VIDEOFILES_REQUIRED', 'It looks like some video files are missing.')
 				);
 				$valid = false;
 			}
