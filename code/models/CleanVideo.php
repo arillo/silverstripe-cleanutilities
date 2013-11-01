@@ -166,13 +166,6 @@ class CleanVideo extends DataObject {
 			'Root.Main',
 			LiteralField::create('VideoError', '<div></div>')
 		);
-		$fields->addFieldToTab(
-			'Root.Main',
-			CheckboxField::create(
-				'Autoplay',
-				_t('CleanVideo.AUTOPLAY', 'Auto play')
-			)
-		);
 
 		if (self::$use_video_upload) {
 			$fields->addFieldToTab(
@@ -316,6 +309,14 @@ class CleanVideo extends DataObject {
 		$videoUploadInfo->performReadonlyTransformation();
 		$videoUploadInfo->setDisabled(true);
 		$videoUploadInfo->hideUnless('VideoType')->isEqualTo('File')->andIf('ID')->isGreaterThan(0);
+
+		$fields->addFieldToTab(
+			'Root.Main',
+			CheckboxField::create(
+				'Autoplay',
+				_t('CleanVideo.AUTOPLAY', 'Auto play')
+			)
+		);
 
 		$this->extend('updateCMSFields', $fields);
 		return $fields;

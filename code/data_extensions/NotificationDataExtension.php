@@ -60,7 +60,7 @@ class NotificationDataExtension extends DataExtension {
 		$msgs = Session::get(self::$session_store);
 		return isset($msgs);
 	}
-	
+
 	/**
 	 * Returns all current notifications.
 	 * 
@@ -70,13 +70,11 @@ class NotificationDataExtension extends DataExtension {
 		$msgs = Session::get(self::$session_store);
 		Session::clear(self::$session_store);
 		if (is_array($msgs)) {
-			return new ArrayList(
-				array_map(function($item){
-					return new ArrayData($item);
-				},
-				$msgs)
-			);
+			$result = ArrayList::create($msgs);
+			$result->removeDuplicates('Msg');
+			return $result;
 		}
+		return false;
 	}
 }
 
