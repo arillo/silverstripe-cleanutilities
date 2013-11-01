@@ -16,6 +16,34 @@ class CleanUtils {
 	public static $module = "silverstripe-cleanutilities";
 
 	/**
+	 * Merges two or more arrays of arrays.
+	 * Later parameters will override possible values of the previous.
+	 * 
+	 * @param  array  $array1
+	 * @param  array  $array2
+	 * @return array
+	 */
+	public static function array_extend(array $array1, array $array2) {
+		$merged = $array1;
+		foreach ($array2 as $key => $value) {
+			if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
+				$merged[$key] = self::array_extend($merged[$key], $value);
+			} else {
+				$merged[$key] = $value;
+			}
+		}
+		if (func_num_args() > 2) {
+			$rest = array_slice(func_get_args(), 2);
+			foreach ($rest as $other) {
+				if (is_array($other)) {
+					$merged = self::array_extend($merged, $other);
+				}
+			}
+		}
+		return $merged;
+	}
+
+	/**
 	 * Helper function, which adds the given $cssClass to all
 	 * $form fields specified by its requiredfields
 	 *

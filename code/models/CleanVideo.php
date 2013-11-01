@@ -67,6 +67,11 @@ class CleanVideo extends DataObject {
 	 */
 	public static $default_css = true;
 
+	protected static $config = array(
+		'load_default_css' => true,
+		'load_modernizr' => true
+	);
+
 	/**
 	 * Make sure that js injected once only
 	 * @var boolean
@@ -78,8 +83,11 @@ class CleanVideo extends DataObject {
 	 */
 	public static function init_js() {
 		if (!self::$js_initialized) {
-			if (self::$default_css) {
+			if (self::get_config('load_default_css')) {
 				Requirements::css(CleanUtils::$module . '/css/video-js.css');
+			}
+			if (self::get_config('load_modernizr')) {
+				Requirements::javascript(CleanUtils::$module . '/javascript/libs/modernizr.custom.js');
 			}
 			Requirements::javascript(CleanUtils::$module . '/javascript/libs/video.js');
 			
@@ -97,6 +105,21 @@ class CleanVideo extends DataObject {
 			");
 			self::$js_initialized = true;
 		}
+	}
+
+	public static function set_config($key, $value = null) {
+		if (is_array($key)) {
+			CleanUtils::array_extend(self::$config, $key);
+		} else if ($key && $value) {
+			self::$config[$key] = $value;
+		}
+	}
+
+	public static function get_config($key) {
+		if (isset(self::$config[$key])) {
+			return self::$config[$key];
+		}
+		return false;
 	}
 
 	/**
