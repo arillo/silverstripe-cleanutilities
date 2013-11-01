@@ -25,7 +25,6 @@ class CleanUtils {
 	public static function add_required_css(Form $form, $cssClass = "required"){
 		if($requiredFields = $form->getValidator()->getRequired()){
 			foreach($requiredFields as $f){
-				// $form->dataFieldByName($f)->addExtraClass($cssClass);
 				if ($field = $form->Fields()->fieldByName($f)) {
 					$field->addExtraClass($cssClass);
 				}

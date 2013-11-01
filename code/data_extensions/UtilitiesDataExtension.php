@@ -63,7 +63,18 @@ class UtilitiesDataExtension extends DataExtension {
 		}
 		return false;
 	}
-	
+
+	/**
+	 * Make Email::obfuscate available for templates.
+	 * 
+	 * @param text $text   [description]
+	 * @param string $method [description]
+	 * @return string
+	 */
+	public function Obfuscate($text, $method = 'hex') {
+		return Email::obfuscate($text, $method);
+	}
+
 	/**
 	 * Returns shortlang from Locale.
 	 * 
