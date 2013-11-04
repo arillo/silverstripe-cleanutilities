@@ -89,10 +89,10 @@ class CleanVideo extends DataObject {
 			if (is_array($config) && count($config) > 0) {
 				self::$config = array_merge(self::$config, $config);
 			}
-			if (self::get_config('load_default_css')) {
+			if (self::get_setting('load_default_css')) {
 				Requirements::css(CleanUtils::$module . '/css/video-js.css');
 			}
-			if (self::get_config('load_modernizr')) {
+			if (self::get_setting('load_modernizr')) {
 				Requirements::javascript(CleanUtils::$module . '/javascript/libs/modernizr.custom.js');
 			}
 			Requirements::javascript(CleanUtils::$module . '/javascript/libs/video.js');
@@ -113,6 +113,12 @@ class CleanVideo extends DataObject {
 		}
 	}
 
+	/**
+	 * Setter for configuration
+	 * 
+	 * @param string $key
+	 * @param $value
+	 */
 	public static function set_config($key, $value = null) {
 		if (is_array($key)) {
 			self::$config = array_merge(self::$config, $key);
@@ -121,7 +127,13 @@ class CleanVideo extends DataObject {
 		}
 	}
 
-	public static function get_config($key) {
+	/**
+	 * Getter for a setting
+	 * 
+	 * @param  string $key
+	 * @return mixed
+	 */
+	public static function get_setting($key) {
 		if (isset(self::$config[$key])) {
 			return self::$config[$key];
 		}
