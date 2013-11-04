@@ -25,18 +25,20 @@ class CleanUtils {
 	 */
 	public static function array_extend(array $array1, array $array2) {
 		$merged = $array1;
-		foreach ($array2 as $key => $value) {
-			if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
-				$merged[$key] = self::array_extend($merged[$key], $value);
-			} else {
-				$merged[$key] = $value;
+		if (is_array($array1) && is_array($array2)) {
+			foreach ($array2 as $key => $value) {
+				if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
+					$merged[$key] = self::array_extend($merged[$key], $value);
+				} else {
+					$merged[$key] = $value;
+				}
 			}
-		}
-		if (func_num_args() > 2) {
-			$rest = array_slice(func_get_args(), 2);
-			foreach ($rest as $other) {
-				if (is_array($other)) {
-					$merged = self::array_extend($merged, $other);
+			if (func_num_args() > 2) {
+				$rest = array_slice(func_get_args(), 2);
+				foreach ($rest as $other) {
+					if (is_array($other)) {
+						$merged = self::array_extend($merged, $other);
+					}
 				}
 			}
 		}
