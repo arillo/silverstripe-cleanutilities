@@ -146,10 +146,11 @@ class CleanVideo extends DataObject {
 	 * @param int $height
 	 * @param boolean $autoplay
 	 * @param boolean $controls
-	 * @param boolean $preload
+	 * @param boolean $loop
+	 * @param string $preload  (auto, none, metadata)
 	 * @return string
 	 */
-	public function VideoEmbed($width = 640, $height = 375, $autoplay = null, $controls = null, $preload = null) {
+	public function VideoEmbed($width = 640, $height = 375, $autoplay = null, $controls = null, $loop = null, $preload = null) {
 		$autoplay = isset($autoplay) && is_bool(filter_var($autoplay, FILTER_VALIDATE_BOOLEAN)) ? $autoplay : $this->Autoplay;
 
 		switch($this->VideoType) {
@@ -170,6 +171,7 @@ class CleanVideo extends DataObject {
 				) {
 					self::init_js();
 					$controls = isset($controls) && is_bool(filter_var($controls, FILTER_VALIDATE_BOOLEAN)) ? $controls : $this->Controls;
+					$loop = isset($loop) && is_bool(filter_var($loop, FILTER_VALIDATE_BOOLEAN)) ? $loop : $this->Loop;
 					$preload = isset($preload) && array_search($preload, $this->obj('Preload')->enumValues()) ? $preload : $this->Preload;
 					$vars = array(
 						'ID' => $this->ID,
@@ -179,7 +181,7 @@ class CleanVideo extends DataObject {
 						'MP4File' => $this->MP4File(),
 						'OGVFile' => $this->OGVFile(),
 						'WebMFile' => $this->WebMFile(),
-						'Setup' => '{ "controls": ' . $controls . ', "autoplay":' . $autoplay . ', "preload": "' . $preload . '" }'
+						'Setup' => '{ "controls": ' . $controls . ', "autoplay":' . $autoplay . ', "preload": "' . $preload . ', "loop" : "' . $loop . '" }'
 					);
 					return $this->customise($vars)->renderWith(array('VideoJSEmbed'));
 				}
