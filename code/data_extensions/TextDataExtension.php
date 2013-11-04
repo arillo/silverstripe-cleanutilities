@@ -13,7 +13,24 @@
  * @author arillo
  */
 class TextDataExtension extends DataExtension {
-	
+
+	/**
+	 * Creates a summary text block limited to $limit.
+	 * It will stripe html tags and add $add to the text.
+	 * 
+	 * @param  string  $text
+	 * @param  integer $limit
+	 * @param  string  $add
+	 * @return string
+	 */
+	public static function summarize($text, $limit = 40, $add = '...') {
+		$text = strip_tags($text);
+		if ($limit > 0) {
+			$text = substr($text, 0, $limit);
+		}
+		return (strlen($text) >= $limit && $limit > 0) ? $text . $add : $text;
+	}
+
 	/**
 	 * Shortens (html) text to a given $limit and appends $add to it.
 	 * 
@@ -21,7 +38,7 @@ class TextDataExtension extends DataExtension {
 	 * @param string $add
 	 * @return string
 	 */
-	public function SummaryHTML($limit=100, $add = "&hellip;") {
+	public function SummaryHTML($limit = 40, $add = "&hellip;") {
 		$m = 0;
 		$addEplisis = '';
 		$returnstr = '';
@@ -35,9 +52,9 @@ class TextDataExtension extends DataExtension {
 				array_push($html, $matches[1]);// convert <p class=""> to p
 				array_push($returnArray, $elemnt);
 			// found end tag
-			} else if(preg_match('/^<\/(p|h1|h2|h3|h4|h5|h6|q|b|i|strong|em)(.*)>$/', $elemnt)) {
+			} else if (preg_match('/^<\/(p|h1|h2|h3|h4|h5|h6|q|b|i|strong|em)(.*)>$/', $elemnt)) {
 				preg_match('/^<\/(p|h1|h2|h3|h4|h5|h6|q|b|i|strong|em)(.*)>$/', $elemnt, $matches);
-				$testelement = array_pop ($html);
+				$testelement = array_pop($html);
 				// match (ie: <p>etc</p>)
 				if ($testelement==$elemnt[1]) array_pop($html);
 				array_push($returnArray, $elemnt);
@@ -59,7 +76,7 @@ class TextDataExtension extends DataExtension {
 		}
 		return implode($returnArray, ' ') . $addEplisis . $tmpr;
 	}
-	
+
 	/**
 	 * Converts a given text into uft8 and shortens ist to $limit.
 	 * Caution: Dont't use it with HTMLText instances.
@@ -69,12 +86,9 @@ class TextDataExtension extends DataExtension {
 	 */
 	public function ConvertPlainTextToUTF8($limit = 0) {
 		$text = trim($this->owner->value);
-		if ($limit > 0) {
-			$text = substr($text, 0, $limit);
-		}
-		return utf8_encode($text);
+		return utf8_encode(self::summarize($text, $limit));
 	}
-	
+
 	/**
 	 * Converts a given text into uft8 and 
 	 * shortens it by $limit and adds $add.
@@ -89,7 +103,7 @@ class TextDataExtension extends DataExtension {
 		$result = (strlen(trim($this->owner->value)) > $limit && $limit != 0) ? utf8_encode($value . $add) : $value;
 		return $result;
 	}
-	
+
 	/**
 	 * Returns a representation of this text
 	 * with all email addresses converted into html character entities.
@@ -104,7 +118,7 @@ class TextDataExtension extends DataExtension {
 			$replaces = array(); 
 			for ($i=0; $i<count($matches[0]); $i++) {
 				$link = $matches[0][$i];
-				$obfuscatedLink = Email::obfuscate($link,'hex');;
+				$obfuscatedLink = Email::obfuscate($link, 'hex');
 				array_push($searches,$link); 
 				array_push($replaces, $obfuscatedLink); 
 			}
@@ -112,7 +126,7 @@ class TextDataExtension extends DataExtension {
 		}
 		return $content;
 	}
-	
+
 	/**
 	 * Tests if the text is longer than $numWords.
 	 * 

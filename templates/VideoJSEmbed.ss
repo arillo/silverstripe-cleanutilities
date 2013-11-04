@@ -1,9 +1,8 @@
 <% if $MP4File || $WebmFile || $OGVFile %>
   <video id="example_video_$ID" class="video-js vjs-default-skin"
-      controls preload="none"
       width="$Width"
       height="$Height"
-      <% if $PreviewImage %>poster="$PreviewImage.CroppedImage(380,235).URL"<% end_if %>
+      <% if $PreviewImage %>poster="$PreviewImage.CroppedImage($Width, $Height).URL"<% end_if %>
       data-setup='$Setup'
       >
     <% if $MP4File %>

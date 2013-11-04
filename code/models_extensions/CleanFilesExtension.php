@@ -44,8 +44,8 @@ class CleanFilesExtension extends DataExtension {
 			$data = $this->owner->CleanFiles("ClassName = 'CleanFile'");
 		}
 		$fields->addFieldToTab(
-			"Root.Files",
-			GridField::create('CleanFiles','CleanFile', $data, $config)
+			'Root.Files',
+			GridField::create('CleanFiles','Files', $data, $config)
 		);
 	}
 	/**

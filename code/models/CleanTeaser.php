@@ -1,7 +1,6 @@
 <?php
 /**
- * A DataObject for Teasers
- * Provides Title, Description and an Image
+ * A DataObject for Teasers with Title and Description
  *
  * @package cleanutilities
  * @subpackage models
@@ -16,8 +15,7 @@ class CleanTeaser extends DataObject {
 	);
 	
 	static $has_one = array(
-		'Reference' => 'SiteTree',
-		'Image' => 'Image'
+		'Reference' => 'SiteTree'
 	);
 	
 	static $searchable_fields = array(
@@ -27,49 +25,27 @@ class CleanTeaser extends DataObject {
 
 	static $summary_fields = array(
 		'Title',
-		'Description' => 'Description',
-		'Thumbnail' => 'Thumbnail'
+		'Description' => 'Description'
 	);
 
-	public static $upload_folder = "Teaser";
+	public static $upload_folder = 'Teaser';
+
+	public static $singular_name = 'Teaser';
+	public static $plural_name = 'Teasers';
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 		$fields->removeByName('ReferenceID');
-		
-		$fields->removeByName('Image');
-		$upload = UploadField::create(
-			'Attachment',
-			_t('CleanUtilities.IMAGE', 'Image')
-		);
-		$upload->setConfig('allowedMaxFileNumber', 1);
-		$upload->getValidator()->setAllowedExtensions(
-			Image::$allowed_extensions
-		);
-		if($this->hasExtension('ControlledFolderDataExtension')) {
-			$upload->setFolderName($this->getUploadFolder());
-		} else {
-			$upload->setFolderName(self::$upload_folder);
-		}
-		$fields->insertBefore($upload, 'Title');
 		$this->extend('updateCMSFields', $fields);
 		return $fields;
 	}
-	
-	public function getCleanDescription() {
-		return strip_tags($this->Description);
-	}
-	
+
 	/**
-	 * Returns CMS thumbnail, if an image is attached.
-	 * Mainly used by GridField.
-	 *
-	 * @return mixed
+	 * Summarized description for GridField
+	 * 
+	 * @return [type] [description]
 	 */
-	public function getThumbnail() {
-		if ($image = $this->Image()) {
-			return $image->CMSThumbnail();
-		}
-		return _t('CleanTeaser.NO_IMAGE', '(No Image)');
+	public function getCleanDescription() {
+		return TextDataExtension::summarize($this->Description, 200);
 	}
 }

@@ -14,7 +14,7 @@
  * @author arillo
  */
 class CleanTeasersExtension extends DataExtension {
-	
+
 	static $has_many = array(
 		'CleanTeasers' => 'CleanTeaser'
 	);
@@ -23,13 +23,12 @@ class CleanTeasersExtension extends DataExtension {
 		$sortable = singleton('CleanTeaser')->hasExtension('SortableDataExtension');
 		$config = GridFieldConfig_RelationEditor::create();
 		$config->addComponent($gridFieldForm = new GridFieldDetailForm());
-		
+
 		$dataFields = array();
 		if (singleton('CleanTeaser')->hasExtension('CMSPublishableDataExtension')) {
 			$dataFields['PublishIndicator'] = 'Published';
 		}
 		$dataFields = array_merge($dataFields, array(
-			'Thumbnail' => 'Thumbnail',
 			'Title' => 'Title',
 			'CleanDescription' => 'Description'
 		));
@@ -39,22 +38,6 @@ class CleanTeasersExtension extends DataExtension {
 		if ($sortable) {
 			$config->addComponent(new GridFieldSortableRows('SortOrder'));
 		}
-		
-		if (ClassInfo::exists('GridFieldBulkImageUpload')) {
-			$iu = new GridFieldBulkImageUpload('ImageID');
-			if(singleton('CleanTeaser')->hasExtension('ControlledFolderDataExtension')) {
-				$iu->setConfig(
-					'folderName',
-					singleton('CleanTeaser')->getUploadFolder()
-				);
-			} else {
-				$iu->setConfig(
-					'folderName',
-					CleanTeaser::$upload_folder
-				);
-			}
-			$config->addComponent($iu);
-		}
 
 		if ($sortable) {
 			$data = $this->owner->CleanTeasers("ClassName = 'CleanTeaser'")->sort('SortOrder');
@@ -62,14 +45,9 @@ class CleanTeasersExtension extends DataExtension {
 			$data = $this->owner->CleanTeasers("ClassName = 'CleanTeaser'");
 		}
 
-		$config->removeComponentsByType('GridFieldAddNewButton');
-		// if (ClassInfo::exists('GridFieldBulkImageUpload')) {
-		// 	$config->addComponent(new GridFieldAddNewMultiClass());
-		// }
-
 		$fields->addFieldToTab(
-			"Root.Teasers",
-			GridField::create('CleanTeasers', 'CleanTeaser', $data, $config)
+			'Root.Teasers',
+			GridField::create('CleanTeasers', 'Teaser', $data, $config)
 		);
 	}
 
