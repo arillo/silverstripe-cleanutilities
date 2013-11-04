@@ -13,7 +13,7 @@ class CleanUtils {
 	 * Define the foldername for this module.
 	 * @var string
 	 */
-	public static $module = "silverstripe-cleanutilities";
+	public static $module = 'silverstripe-cleanutilities';
 
 	/**
 	 * Merges two or more arrays of arrays.
@@ -52,7 +52,7 @@ class CleanUtils {
 	 * @param Form $form
 	 * @param string $cssClass
 	 */
-	public static function add_required_css(Form $form, $cssClass = "required"){
+	public static function add_required_css(Form $form, $cssClass = 'required'){
 		if($requiredFields = $form->getValidator()->getRequired()){
 			foreach($requiredFields as $f){
 				if ($field = $form->Fields()->fieldByName($f)) {
@@ -78,13 +78,13 @@ class CleanUtils {
 					$config->addComponent(new GridFieldManyRelationHandler(), 'GridFieldPaginator');
 				}
 				$sortable = singleton($model)->hasExtension('SortableDataExtension');
-				if ($sortable){
+				if ($sortable) {
 					$config->addComponent(new GridFieldSortableRows('SortOrder'));
 				}
 				$gridfield = GridField::create($relationname, $model, $items, $config);
 				$datacolumns = $gridfield->getConfig()->getComponentByType('GridFieldDataColumns');
 				$cfields = singleton($model)->summaryFields();
-				if(singleton($model)->hasExtension('CMSPublishableDataExtension') && !isset($cfields['PublishStatus'])){
+				if (singleton($model)->hasExtension('CMSPublishableDataExtension') && !isset($cfields['PublishStatus'])) {
 					$cfields = array('PublishStatus' => 'PublishStatus') + $cfields;
 				}
 				$datacolumns->setDisplayFields($cfields);
@@ -107,19 +107,19 @@ class CleanUtils {
 	 * @param  string $upload_folder
 	 * @return UploadField
 	 */
-	public static function create_uploadfield_for($relationname, $title, $reference, $allowed_extensions = null, $upload_folder=null){
+	public static function create_uploadfield_for($relationname, $title, $reference, $allowed_extensions = null, $upload_folder = null){
 		$upload = UploadField::create($relationname, $title);
 		$upload->setConfig('allowedMaxFileNumber', 1);
-		if($allowed_extensions!=null){
+		if ($allowed_extensions != null) {
 			$upload->getValidator()->setAllowedExtensions($allowed_extensions);
 		}
-		if($upload_folder != null){
+		if ($upload_folder != null) {
 			$upload->setFolderName($upload_folder);
-		}else{
-			if($reference->hasExtension('ControlledFolderDataExtension')) {
+		} else {
+			if ($reference->hasExtension('ControlledFolderDataExtension')) {
 				$upload->setFolderName($reference->getUploadFolder());
 			} else {
-				$upload->setFolderName('uploads');
+				$upload->setFolderName('Uploads');
 			}
 		}
 		return $upload;

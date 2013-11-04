@@ -43,13 +43,13 @@ class CleanFile extends DataObject {
 		'doc','docx','txt','rtf','xls','xlsx','pages',
 		'ppt','pptx','pps','csv',
 		'cab','arj','tar','zip','zipx','sit','sitx','gz','tgz','bz2','ace','arc','pkg','dmg','hqx','jar',
-		'xml','pdf',
+		'xml','pdf', 'webm'
 	);
 	/**
 	 * This var specifies the name of the upload folder
 	 * @var string
 	 */
-	public static $upload_folder = "Files";
+	public static $upload_folder = 'Files';
 	
 	/**
 	 * CMS fields, can be extended by write your
@@ -59,15 +59,15 @@ class CleanFile extends DataObject {
 	public function getCMSFields() {
 		$fields = FieldList::create(
 			new TabSet(
-				"Root",
-				new Tab("Main")
+				'Root',
+				new Tab('Main')
 			)
 		);
 		$fields->addFieldToTab(
 			'Root.Main',
 			TextField::create(
 				'Title',
-				_t('CleanUtilities.TITLE', 'Title')
+				_t('CleanFile.TITLE', 'Title')
 			)
 		);
 		$upload = UploadField::create(

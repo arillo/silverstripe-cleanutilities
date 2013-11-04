@@ -47,7 +47,12 @@ class CleanTeasersExtension extends DataExtension {
 
 		$fields->addFieldToTab(
 			'Root.Teasers',
-			GridField::create('CleanTeasers', 'Teaser', $data, $config)
+			GridField::create(
+				'CleanTeasers',
+				_t('CleanTeasersExtension.TEASERS', 'Teasers'),
+				$data,
+				$config
+			)
 		);
 	}
 

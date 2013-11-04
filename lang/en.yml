@@ -1,0 +1,90 @@
+en:
+  CMSBatchActions:
+# Output for class or file: CMSBatchActions
+    TRANSLATE_PAGES_TO_DRAFT: "Translate to draft"
+    TRANSLATED_PAGES: "Translated %d pages to draft site, %d failures"
+  CMSPublishableDataExtension:
+# Output for class or file: CMSPublishableDataExtension
+    PUBLISHED: "Published"
+    PUBLISH_DATE: "Publish date"
+  FileDataExtension:
+# Output for class or file: FileDataExtension
+    NO_DATE: "No date"
+  GroupLoginDataExtension:
+# Output for class or file: GroupLoginDataExtension
+    GO_ADMIN: "Go to Admin area"
+    REDIRECT_PAGE: "Or select a Page to redirect to"
+  SecondMenuDataExtension:
+# Output for class or file: SecondMenuDataExtension
+    SHOW_IN_SECONDMENU: "Show in second menu?"
+  SiteConfig:
+# Output for class or file: SiteConfig
+    COMPANY: "Company"
+    ADDRESS: "Address"
+    COUNTRY: "Country"
+    ZIP: "ZIP"
+    CITY: "City"
+    TELEPHONE: "Telephone"
+    Cell: "Cell"
+    FAX: "Fax"
+    EMAIL: "Email"
+    COPYRIGHT: "Copyright"
+    ANALYTICS: "GoogleAnalyticsTrackingCode"
+  Member:
+# Output for class or file: Member
+    WELCOMEBACK: "Welcome Back, {firstname}"
+  CleanFile:
+# Output for class or file: CleanFile
+    TITLE: "Title"
+    FILE: "File"
+  CleanUtilities:
+# Output for class or file: CleanUtilities
+    TITLE: "Title"
+    Title: "Title"
+  CleanImage:
+# Output for class or file: CleanImage
+    NO_IMAGE: "(No Image)"
+  CleanLink:
+# Output for class or file: CleanLink
+    LINK_TYPE: "link type"
+    INTERNAL_LINK: "Internal link"
+    EXTERNAL_LINK: "External link"
+    TARGET: "Choose the target"
+    EMPTY_STRING: "Please choose"
+    NO_LINK: "No link set."
+  CleanVideo:
+# Output for class or file: CleanVideo
+    BEHAVIOUR: "Choose a behaviour"
+    VIDEO_URL: "Video URL"
+    PREVIEW_IMAGE: "Preview image"
+    MP4_FILE: "Mp4 File"
+    OGV_FILE: "Ogv File"
+    WEBM_FILE: "Webm File"
+    CONTROLS: "Show controls"
+    LOOP: "Loop video"
+    PRELOAD: "Preload video"
+    UPLOAD_INFO: "Uploads can be attached after first saving."
+    AUTOPLAY: "Auto play"
+  Video_Validator:
+# Output for class or file: Video_Validator
+    ADDRESS_ERROR: "Please enter a valid Video URL"
+    ADDRESS_REQUIRED: "Video URL is required for Embeded videos"
+    VIDEOFILES_REQUIRED: "It looks like some video files are missing."
+  CleanFilesExtension:
+# Output for class or file: CleanFilesExtension
+    FILES: "Files"
+  CleanImagesExtension:
+# Output for class or file: CleanImagesExtension
+    IMAGES: "Images"
+  CleanLinksExtension:
+# Output for class or file: CleanLinksExtension
+    LINK: "Link"
+  CleanTeasersExtension:
+# Output for class or file: CleanTeasersExtension
+    TEASERS: "Teasers"
+  CleanVideosExtension:
+# Output for class or file: CleanVideosExtension
+    VIDEOS: "Videos"
+  LanguageMenu.ss:
+# Output for class or file: LanguageMenu.ss
+    SHOWINPAGE: "Show page in %s"

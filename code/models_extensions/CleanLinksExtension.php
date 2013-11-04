@@ -33,8 +33,13 @@ class CleanLinksExtension extends DataExtension {
 			$data = $this->owner->CleanLinks("ClassName = 'CleanLink'");
 		}
 		$fields->addFieldToTab(
-			"Root.Links",
-			GridField::create('CleanLinks', 'CleanLink', $data, $config)
+			'Root.Links',
+			GridField::create(
+				'CleanLinks',
+				_t('CleanLinksExtension.LINK', 'Link'),
+				$data,
+				$config
+			)
 		);
 	}
 	

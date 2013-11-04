@@ -51,8 +51,13 @@ class CleanVideosExtension extends DataExtension {
 		}
 
 		$fields->addFieldToTab(
-			"Root.Videos",
-			GridField::create('CleanVideos', 'CleanVideo', $data, $config)
+			'Root.Videos',
+			GridField::create(
+				'CleanVideos',
+				_t('CleanVideosExtension.VIDEOS', 'Videos'),
+				$data,
+				$config
+			)
 		);
 	}
 	

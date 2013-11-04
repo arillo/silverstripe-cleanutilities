@@ -51,8 +51,13 @@ class CleanImagesExtension extends DataExtension {
 		}
 		
 		$fields->addFieldToTab(
-			"Root.Images",
-			GridField::create('CleanImages', 'CleanImage', $data, $config)
+			'Root.Images',
+			GridField::create(
+				'CleanImages',
+				_t('CleanImagesExtension.IMAGES', 'Images'),
+				$data,
+				$config
+			)
 		);
 	}
 	

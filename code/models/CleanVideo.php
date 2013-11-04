@@ -266,7 +266,7 @@ class CleanVideo extends DataObject {
 				'Root.Main',
 				$previewImage = CleanUtils::create_uploadfield_for(
 					'PreviewImage',
-					_t('CleanVideo.PREVIEW_IAMGE', 'Preview image'),
+					_t('CleanVideo.PREVIEW_IMAGE', 'Preview image'),
 					$this,
 					CleanImage::$allowed_extensions,
 					$uploadFolder
