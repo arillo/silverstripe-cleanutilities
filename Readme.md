@@ -27,6 +27,7 @@ CleanUtilities is dependend on following third-party modules:
 * [GridFieldBulkEditingTools](https://github.com/colymba/GridFieldBulkEditingTools)
 * [GridFieldRelationHandler](https://github.com/simonwelsh/silverstripe-GridFieldRelationHandler)
 * [SortableGridField](https://github.com/UndefinedOffset/SortableGridField)
+* [Display logic](https://github.com/unclecheese/silverstripe-display-logic)
 
 ---
 Brought to you by [Arillo](http://arillo.net).
