@@ -164,7 +164,6 @@ class CleanVideo extends DataObject {
 	 */
 	public function VideoEmbed($width = 640, $height = 375, $autoplay = null, $controls = null, $loop = null, $preload = null) {
 		$autoplay = isset($autoplay) && is_bool(filter_var($autoplay, FILTER_VALIDATE_BOOLEAN)) ? $autoplay : $this->Autoplay;
-
 		switch($this->VideoType) {
 			case 'Embed':
 				if ($this->VideoAddress!='') {
