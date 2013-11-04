@@ -193,7 +193,7 @@ class CleanVideo extends DataObject {
 						'MP4File' => $this->MP4File(),
 						'OGVFile' => $this->OGVFile(),
 						'WebMFile' => $this->WebMFile(),
-						'Setup' => '{ "controls": ' . $controls . ', "autoplay":' . $autoplay . ', "preload": "' . $preload . ', "loop" : "' . $loop . '" }'
+						'Setup' => '{ "controls":' . $controls . ', "autoplay":' . $autoplay . ', "preload":"' . $preload . '", "loop" :' . $loop . ' }'
 					);
 					return $this->customise($vars)->renderWith(array('VideoJSEmbed'));
 				}
