@@ -1,6 +1,6 @@
 <% if Videos %>
   <% loop Videos %>
     $Title
-    $VideoEmbed
+    $VideoEmbed(320, 200, false, true, 'auto')
   <% end_loop %>
 <% end_if %>

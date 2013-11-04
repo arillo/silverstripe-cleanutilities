@@ -73,16 +73,22 @@ class CleanVideo extends DataObject {
 	);
 
 	/**
-	 * Make sure that js injected once only
+	 * Make sure that js is injected once only
 	 * @var boolean
 	 */
 	protected static $js_initialized = false;
 
 	/**
-	 * Inject required js
+	 * Inject required js.
+	 * $config can override values in {@see self::$config}.
+	 * 
+	 * @param  array $config
 	 */
-	public static function init_js() {
+	public static function init_js($config = array()) {
 		if (!self::$js_initialized) {
+			if (is_array($config) && count($config) > 0) {
+				self::$config = array_merge(self::$config, $config);
+			}
 			if (self::get_config('load_default_css')) {
 				Requirements::css(CleanUtils::$module . '/css/video-js.css');
 			}
@@ -109,7 +115,7 @@ class CleanVideo extends DataObject {
 
 	public static function set_config($key, $value = null) {
 		if (is_array($key)) {
-			CleanUtils::array_extend(self::$config, $key);
+			self::$config = array_merge(self::$config, $key);
 		} else if ($key && $value) {
 			self::$config[$key] = $value;
 		}
@@ -133,16 +139,19 @@ class CleanVideo extends DataObject {
 
 	/**
 	 * Returns the actual video embed code.
-	 * If $autoplay isset it will use this value
-	 * instead of the value stored in DB.
+	 * Some parameters can be set via template.
+	 * These will override the according db values.
 	 * 
 	 * @param int $width
 	 * @param int $height
 	 * @param boolean $autoplay
+	 * @param boolean $controls
+	 * @param boolean $preload
 	 * @return string
 	 */
-	public function VideoEmbed($width = 640, $height = 375, $autoplay = null) {
-		$autoplay = isset($autoplay) && is_bool($autoplay) ? $autoplay : $this->Autoplay;
+	public function VideoEmbed($width = 640, $height = 375, $autoplay = null, $controls = null, $preload = null) {
+		$autoplay = isset($autoplay) && is_bool(filter_var($autoplay, FILTER_VALIDATE_BOOLEAN)) ? $autoplay : $this->Autoplay;
+
 		switch($this->VideoType) {
 			case 'Embed':
 				if ($this->VideoAddress!='') {
@@ -160,6 +169,8 @@ class CleanVideo extends DataObject {
 					&& $this->WebMFile()->exists()
 				) {
 					self::init_js();
+					$controls = isset($controls) && is_bool(filter_var($controls, FILTER_VALIDATE_BOOLEAN)) ? $controls : $this->Controls;
+					$preload = isset($preload) && array_search($preload, $this->obj('Preload')->enumValues()) ? $preload : $this->Preload;
 					$vars = array(
 						'ID' => $this->ID,
 						'Width' => $width,
@@ -168,7 +179,7 @@ class CleanVideo extends DataObject {
 						'MP4File' => $this->MP4File(),
 						'OGVFile' => $this->OGVFile(),
 						'WebMFile' => $this->WebMFile(),
-						'Setup' => '{ "controls": ' . $this->Controls . ', "autoplay":' . $this->Autoplay . ', "preload": "' . $this->Preload . '" }'
+						'Setup' => '{ "controls": ' . $controls . ', "autoplay":' . $autoplay . ', "preload": "' . $preload . '" }'
 					);
 					return $this->customise($vars)->renderWith(array('VideoJSEmbed'));
 				}
@@ -292,7 +303,6 @@ class CleanVideo extends DataObject {
 			$webm->getValidator()->setAllowedMaxFileSize($uploadLimit);
 			$webm->hideUnless('VideoType')->isEqualTo('File');
 
-
 			$fields->addFieldToTab(
 				'Root.Main',
 				$controls = CheckboxField::create(
@@ -321,17 +331,22 @@ class CleanVideo extends DataObject {
 			);
 			$preload->hideUnless('VideoType')->isEqualTo('File');
 		}
-		$fields->addFieldToTab(
-			'Root.Main',
-			$videoUploadInfo = TextField::create(
-				'VideoUploadInfo',
-				'Info',
-				_t('CleanVideo.UPLOAD_INFO', 'Uploads can be attached after first saving.')
-			)
-		);
-		$videoUploadInfo->performReadonlyTransformation();
-		$videoUploadInfo->setDisabled(true);
-		$videoUploadInfo->hideUnless('VideoType')->isEqualTo('File')->andIf('ID')->isGreaterThan(0);
+
+		// show info if we have no ID.
+		// using TextField instead of HeaderField here, because display-logic doesn't work with it.
+		if (!$this->ID) {
+			$fields->addFieldToTab(
+				'Root.Main',
+				$videoUploadInfo = TextField::create(
+					'VideoUploadInfo',
+					'Info',
+					_t('CleanVideo.UPLOAD_INFO', 'Uploads can be attached after first saving.')
+				)
+			);
+			$videoUploadInfo->performReadonlyTransformation();
+			$videoUploadInfo->setDisabled(true);
+			$videoUploadInfo->hideUnless('VideoType')->isEqualTo('File');
+		}
 
 		$fields->addFieldToTab(
 			'Root.Main',
@@ -351,7 +366,7 @@ class CleanVideo extends DataObject {
 	 * @return string
 	 */
 	public function VideoID() {
-		$purl = VideoUtility::prepareURL($this->VideoAddress);
+		$purl = VideoUtility::prepare_url($this->VideoAddress);
 		return $purl['sourceid'];
 	}
 }
