@@ -12,7 +12,6 @@
 	"require": {
 		"php": ">=5.3.2",
 		"composer/installers": "*",
-		"colymba/gridfield-bulk-editing-tools": "1.0.0.x-dev",
 		"simonwelsh/gridfieldrelationhandler": "*",
 		"undefinedoffset/sortablegridfield": "*"
 	}
