@@ -15,7 +15,7 @@
  * @author arillo
  */
 class CleanFilesExtension extends DataExtension {
-	public static $has_many = array(
+	private static $has_many = array(
 		'CleanFiles' => 'CleanFile'
 	);
 	public function updateCMSFields(FieldList $fields) {

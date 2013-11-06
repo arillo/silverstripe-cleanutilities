@@ -14,7 +14,7 @@
  */
 class CMSPublishableDataExtension extends DataExtension {
 	
-	static $db = array(
+	private static $db = array(
 		'Published' => 'Boolean'
 	);
 	

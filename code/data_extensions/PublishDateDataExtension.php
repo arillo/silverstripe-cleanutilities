@@ -14,7 +14,7 @@
  */
 class PublishDateDataExtension extends DataExtension {
 	
-	static $db = array(
+	private static $db = array(
 		'PublishDate' => 'Datetime'
 	);
 	

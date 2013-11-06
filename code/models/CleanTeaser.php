@@ -10,22 +10,22 @@
  */
 class CleanTeaser extends DataObject {
 
-	static $db = array(
+	private static $db = array(
 		'Title'=> 'Text',
 		'Description' => 'HTMLText'
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		'Reference' => 'SiteTree',
 		'Image' => 'Image'
 	);
 	
-	static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'Title',
 		'Reference.Title'
 	);
 
-	static $summary_fields = array(
+	private static $summary_fields = array(
 		'Title',
 		'Description' => 'Description',
 		'Thumbnail' => 'Thumbnail'

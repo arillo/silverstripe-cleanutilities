@@ -21,11 +21,11 @@
 class GroupLoginDataExtension extends DataExtension {
 	
 	
-	static $db = array(
+	private static $db = array(
 		"GoToAdmin" => "Boolean"
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		"LinkPage" => "SiteTree"
 	);
 	

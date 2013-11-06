@@ -11,14 +11,14 @@
  */
 class CleanVideo extends DataObject {
 	
-	static $db = array(
+	private static $db = array(
 		"Title" => "Text",
 		"VideoAddress" => "Text",
 		"VideoType" => "Enum('Embed, File','Embed')",
 		"Autoplay" => "Boolean"
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		'Reference' => 'SiteTree',
 		'VideoFile' => 'File'
 	);

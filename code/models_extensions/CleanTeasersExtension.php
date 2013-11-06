@@ -15,7 +15,7 @@
  */
 class CleanTeasersExtension extends DataExtension {
 	
-	static $has_many = array(
+	private static $has_many = array(
 		'CleanTeasers' => 'CleanTeaser'
 	);
 	

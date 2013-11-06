@@ -18,7 +18,7 @@
  */
 class ThemeDataExtension extends DataExtension {
 
-	static $db = array(
+	private static $db = array(
 		'Template' => 'Varchar(255)'
 	);
 	

@@ -14,7 +14,7 @@
  */
 class SecondMenuDataExtension extends DataExtension {
 	
-	static $db = array(
+	private static $db = array(
 		'SecondMenu' => 'Boolean'
 	);
 	

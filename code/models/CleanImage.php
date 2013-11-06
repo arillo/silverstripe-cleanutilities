@@ -10,21 +10,21 @@
  */
 class CleanImage extends DataObject {
 	
-	static $db = array(
+	private static $db = array(
 		'Title'=> 'Text'
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		'Attachment' => 'Image',
 		'Reference' => 'SiteTree'
 	);
 	
-	static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'Title',
 		'Attachment.Title'
 	);
 
-	static $summary_fields = array(
+	private static $summary_fields = array(
 		'Thumbnail' => 'Image',
 		'Title' => 'Title'
 	);

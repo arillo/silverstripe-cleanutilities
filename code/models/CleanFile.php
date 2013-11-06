@@ -10,22 +10,22 @@
  */
 class CleanFile extends DataObject {
 	
-	static $db = array(
+	private static $db = array(
 		'Title'=> 'Text'
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		'Attachment' => 'File',
 		'Reference' => 'SiteTree'
 	);
 	
-	static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'Title',
 		"Attachment.Extension",
 		'Attachment.Title'
 	);
 
-	static $summary_fields = array(
+	private static $summary_fields = array(
 		'Title' => 'Title',
 		'Attachment.Extension' => 'Type',
 		'Attachment.Title' => 'Attachment'

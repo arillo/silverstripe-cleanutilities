@@ -13,7 +13,7 @@
  * @author arillo
  */
 class SiteConfigAddressExtension extends DataExtension {
-	static $db = array(
+	private static $db = array(
 		'Company' => 'Text',
 		'Address' => 'Text',
 		'Country' => 'Text',

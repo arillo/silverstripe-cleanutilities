@@ -13,7 +13,7 @@
  * @author arillo
  */
 class SiteConfigExtension extends DataExtension {
-	static $db = array(
+	private static $db = array(
 		'Copyright' => 'Text',
 		'GoogleAnalyticsTrackingCode' => 'Text',
 	);

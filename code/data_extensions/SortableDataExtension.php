@@ -15,11 +15,11 @@
  */
 class SortableDataExtension extends DataExtension {
 	
-	static $db = array(
+	private static $db = array(
 		'SortOrder' => 'Int'
 	);
 	
-	public static $default_sort = 'SortOrder';
+	private static $default_sort = 'SortOrder';
 
 	/**
 	 * Remove SortOrder from CMSFields

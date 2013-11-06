@@ -9,23 +9,23 @@
  */
 class CleanLink extends DataObject{
 	
-	static $db = array(
+	private static $db = array(
 		'Title' => 'Text',
 		'URL' => 'Varchar(255)',
 		'Target' => "Enum('_blank,_self','_blank')"
 	);
 
-	static $has_one = array(
+	private static $has_one = array(
 		'Reference' => 'SiteTree'
 	);
 	
-	static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'Title',
 		'URL',
 		'Reference.Title'
 	);
 	
-	static $summary_fields = array(
+	private static $summary_fields = array(
 		'Title' => 'Title',
 		'URL' => 'URL',
 		'Target' => 'Target'

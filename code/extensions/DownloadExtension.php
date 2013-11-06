@@ -14,7 +14,7 @@
  */
 class DownloadExtension extends Extension {
 
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'download'
 	);
 
