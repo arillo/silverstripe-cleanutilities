@@ -155,8 +155,11 @@ class CleanVideo extends DataObject {
 	 * @return string
 	 */
 	public function VideoID() {
-		$purl = VideoUtility::prepareURL($this->VideoAddress);
+		$purl = VideoUtility::prepare_url($this->VideoAddress);
 		return $purl['sourceid'];
+	}
+	public function IsYoutube(){
+		return VideoUtility::is_youtube($this->VideoAddress);
 	}
 }
 

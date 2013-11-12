@@ -64,7 +64,7 @@ class CleanImage extends DataObject {
 		$fields->addFieldToTab(
 			'Root.Main',
 			TextField::create('Title',
-				_t('CleanUtilities.TITLE', 'Title')
+				_t('CleanUtilities.TITLE','Title')
 			)
 		);
 		$upload = UploadField::create('Attachment', 'Image');
