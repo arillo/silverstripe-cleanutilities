@@ -4,8 +4,6 @@ DataObject::add_extension("CleanImage", "SortableDataExtension");
 DataObject::add_extension("CleanVideo", "SortableDataExtension");
 DataObject::add_extension("CleanLink", "SortableDataExtension");
 DataObject::add_extension("CleanTeaser", "SortableDataExtension");
-DataObject::add_extension("CleanTeaserLink", "SortableDataExtension");
-
 
 DataObject::add_extension("CleanFile", "ControlledFolderDataExtension");
 DataObject::add_extension("CleanImage", "ControlledFolderDataExtension");
