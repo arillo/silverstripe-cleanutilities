@@ -87,7 +87,7 @@ Wrapper for external links.
 		'Reference' => 'SiteTree'
 
 ##CleanTeaser
-Wrapper for a Teaser. A DataObject that gives you two text fields, an Image, a relation to an internal Page (RelatedPage) and many further Links [CleanTeaserLink](Clean_Models#cleanteaserlink).
+Wrapper for a Teaser. A DataObject that gives you two text fields, an Image, a relation to an internal Page (RelatedPage).
 ####db
 
 		'Title'=> 'Text',
@@ -99,10 +99,6 @@ Wrapper for a Teaser. A DataObject that gives you two text fields, an Image, a r
 		'Reference' => 'SiteTree',
 		'Image' => 'Image'
 
-####has_many
-
-		'Links' => 'CleanTeaserLink'
-
 ###Public functions
 #####getThumbnail()
 	/**
@@ -112,18 +108,6 @@ Wrapper for a Teaser. A DataObject that gives you two text fields, an Image, a r
 	 * @return mixed
 	 */
 	function getThumbnail()
-
-##CleanTeaserLink
-Link used in [CleanTeaser](Clean_Models#cleanteaser).
-####db
-
-		'Title'=> 'Text',
-		'URL' => 'Text',
-		'Target'	=> "Enum('_self,_blank','_blank')"
-
-####has_one
-
-		'Reference' => 'CleanTeaser'
 
 ##CleanVideo
 A DataObject for Videos. Provides a video that can either be embedded through a service api or through its own embed code.

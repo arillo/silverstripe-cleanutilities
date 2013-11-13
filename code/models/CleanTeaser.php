@@ -54,4 +54,19 @@ class CleanTeaser extends DataObject{
 		if ($image = $this->Image()) return $image->CMSThumbnail();
 		return _t('CleanTeaser.NO_IMAGE', '(No Image)');
 	}
+	/**
+	* Permissions
+	*/
+	public function canView($member = null) {
+		return true;
+	}
+	public function canEdit($member = null) {
+		return true;
+	}
+	public function canDelete($member = null) {
+		return true;
+	}
+	public function canCreate($member = null) {
+		return true;
+	}
 }
