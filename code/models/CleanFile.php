@@ -101,7 +101,7 @@ class CleanFile extends DataObject {
 		if ($this->Reference()->URLSegment == 'home'
 			&& !$this->Reference()->Parent()->exists()
 		) {
-			$rlink = Controller::join_links($this->Reference()->Link(), 'home');
+			$rlink = Controller::join_links($rlink, 'home');
 		}
 		return Controller::join_links(
 			$rlink,
