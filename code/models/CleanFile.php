@@ -97,15 +97,8 @@ class CleanFile extends DataObject {
 	 * @return string
 	 */
 	public function DownloadLink() {
-		$rlink = $this->Reference()->Link();
-		if ($this->Reference()->URLSegment == 'home'
-			&& !$this->Reference()->Parent()->exists()
-		) {
-			$rlink = Controller::join_links($rlink, 'home');
-		}
 		return Controller::join_links(
-			$rlink,
-			'download',
+			$this->Reference()->Link('download'),
 			$this->ClassName,
 			$this->ID
 		);
