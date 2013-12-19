@@ -33,29 +33,32 @@ class CleanTeaser extends DataObject {
 
 	public static $upload_folder = "Teaser";
 
-	public function getCMSFields() {
-		$fields = parent::getCMSFields();
-		$fields->removeByName('ReferenceID');
-		
-		$fields->removeByName('Image');
-		$upload = UploadField::create(
-			'Attachment',
-			_t('CleanUtilities.IMAGE', 'Image')
+	public function getCMSFields(){
+		$fields = FieldList::create(
+			new TabSet(
+				"Root",
+				new Tab("Main")
+			)
 		);
+		$fields->addFieldToTab('Root.Main',TextField::create('Title','Title'));
+		$fields->addFieldToTab('Root.Main',TextareaField::create('Description','Description'));
+		$upload = UploadField::create('Image', 'Image');
 		$upload->setConfig('allowedMaxFileNumber', 1);
 		$upload->getValidator()->setAllowedExtensions(
-			Image::$allowed_extensions
+			CleanImage::$allowed_extensions
 		);
 		if($this->hasExtension('ControlledFolderDataExtension')) {
 			$upload->setFolderName($this->getUploadFolder());
 		} else {
 			$upload->setFolderName(self::$upload_folder);
 		}
-		$fields->insertBefore($upload, 'Title');
+		$fields->addFieldToTab(
+			'Root.Main',
+			$upload
+		);
 		$this->extend('updateCMSFields', $fields);
 		return $fields;
 	}
-	
 	public function getCleanDescription() {
 		return strip_tags($this->Description);
 	}
