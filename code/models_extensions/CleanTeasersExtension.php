@@ -62,7 +62,7 @@ class CleanTeasersExtension extends DataExtension {
 			$data = $this->owner->CleanTeasers("ClassName = 'CleanTeaser'");
 		}
 
-		$config->removeComponentsByType('GridFieldAddNewButton');
+		// $config->removeComponentsByType('GridFieldAddNewButton');
 		// if (ClassInfo::exists('GridFieldBulkImageUpload')) {
 		// 	$config->addComponent(new GridFieldAddNewMultiClass());
 		// }
