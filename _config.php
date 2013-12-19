@@ -1,4 +1,6 @@
 <?php
+DataObject::add_extension("SiteTree", "UtilitiesDataExtension");
+
 DataObject::add_extension("CleanFile", "SortableDataExtension");
 DataObject::add_extension("CleanImage", "SortableDataExtension");
 DataObject::add_extension("CleanVideo", "SortableDataExtension");
