@@ -48,7 +48,7 @@ class CleanGD extends GD{
 		imagecopy($this->gd, $dest, 0, 0, 0, 0, $width, $height);
 		imagedestroy($dest);
 		$output = clone $this;
-		$output->setGD($this->gd);
+		$output->setImageResource($this->gd);
 		return $output;
 	}
 }

@@ -34,12 +34,12 @@ class PublishDateDataExtension extends DataExtension {
 	 * @param $fields
 	 */
 	function updateCMSFields(FieldList $fields) {
-		$datefield = DateField::create(
+		$datefield = DatetimeField::create(
 			'PublishDate', 
 			_t('CMSPublishableDataExtension.PUBLISH_DATE', 'Publish date')
 		);
-		$datefield->setConfig('setLocale', 'en_US');
-		$datefield->setConfig('showcalendar', 1);
+		$datefield->getDateField()->setConfig('showcalendar', 1);
+		// $datefield->setConfig('setLocale', en_US);
 		$fields->addFieldToTab("Root.Main", $datefield, 'Content');
 	}
 }

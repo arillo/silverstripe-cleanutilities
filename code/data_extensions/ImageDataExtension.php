@@ -185,7 +185,7 @@ class ImageDataExtension extends DataExtension {
 	function setColoredImage($tint_r = 255, $tint_g = 255, $tint_b = 255) {
 		$cacheFile = Director::baseFolder().'/'.$this->owner->cacheFilename("ColorizedImage", $tint_r, $tint_g, $tint_b);
 		$gd = new CleanGD(Director::baseFolder().'/'.$this->owner->Filename);
-		if ($gd->hasGD()) {
+		if ($gd->hasImageResource()) {
 			$gd = $gd->imagetint($gd, $tint_r, $tint_g, $tint_b);
 			if($gd) {
 				$gd->writeTo($cacheFile);
