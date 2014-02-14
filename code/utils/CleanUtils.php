@@ -47,10 +47,11 @@ class CleanUtils {
 			if ($items = $reference->$relationname()) {
 				if (is_a($items, 'ManyManyList') && ClassInfo::exists('GridFieldManyRelationHandler')) {
 					$config->addComponent(new GridFieldManyRelationHandler(), 'GridFieldPaginator');
-				}
-				$sortable = singleton($model)->hasExtension('SortableDataExtension');
-				if ($sortable){
-					$config->addComponent(new GridFieldSortableRows('SortOrder'));
+				}else{
+					$sortable = singleton($model)->hasExtension('SortableDataExtension');
+					if ($sortable){
+						$config->addComponent(new GridFieldSortableRows('SortOrder'));
+					}
 				}
 				$gridfield = GridField::create($relationname, $model, $items, $config);
 				$datacolumns = $gridfield->getConfig()->getComponentByType('GridFieldDataColumns');
