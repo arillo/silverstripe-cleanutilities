@@ -77,7 +77,7 @@ class CleanUtils{
 	 */
 	public static function generate_urlsegment($title){
 		$t = (function_exists('mb_strtolower')) ? mb_strtolower($title) : strtolower($title);
-		$t = Object::create('Transliterator')->toASCII($t);
+		$t = Object::create('SS_Transliterator')->toASCII($t);
 		$t = str_replace('&amp;','-and-',$t);
 		$t = str_replace('&','-and-',$t);
 		$t = ereg_replace('[^A-Za-z0-9]+','-',$t);
