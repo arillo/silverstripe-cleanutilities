@@ -32,12 +32,12 @@ class CleanImagesExtension extends DataExtension {
 		if (ClassInfo::exists('GridFieldBulkUpload')) {
 			$iu = new GridFieldBulkUpload('Attachment');
 			if(singleton('CleanImage')->hasExtension('ControlledFolderDataExtension')) {
-				$iu->setConfig(
+				$iu->setUfConfig(
 					'folderName',
 					singleton('CleanImage')->getUploadFolder()
 				);
 			} else {
-				$iu->setConfig(
+				$iu->setUfConfig(
 					'folderName',
 					CleanImage::$upload_folder
 				);

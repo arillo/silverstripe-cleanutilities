@@ -27,12 +27,12 @@ class CleanFilesExtension extends DataExtension {
 		}
 		$iu = new GridFieldBulkUpload('Attachment');
 		if(singleton('CleanFile')->hasExtension('ControlledFolderDataExtension')) {
-			$iu->setConfig(
+			$iu->setUfConfig(
 				'folderName',
 				singleton('CleanFile')->getUploadFolder()
 			);
 		} else {
-			$iu->setConfig(
+			$iu->setUfConfig(
 				'folderName',
 				CleanFile::$upload_folder
 			);

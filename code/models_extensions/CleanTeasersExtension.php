@@ -43,12 +43,12 @@ class CleanTeasersExtension extends DataExtension {
 		if (ClassInfo::exists('GridFieldBulkUpload')) {
 			$iu = new GridFieldBulkUpload('ImageID');
 			if(singleton('CleanTeaser')->hasExtension('ControlledFolderDataExtension')) {
-				$iu->setConfig(
+				$iu->setUfConfig(
 					'folderName',
 					singleton('CleanTeaser')->getUploadFolder()
 				);
 			} else {
-				$iu->setConfig(
+				$iu->setUfConfig(
 					'folderName',
 					CleanTeaser::$upload_folder
 				);

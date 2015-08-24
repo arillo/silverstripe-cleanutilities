@@ -31,12 +31,12 @@ class CleanVideosExtension extends DataExtension {
 		if (ClassInfo::exists('GridFieldBulkFileUpload')) {
 			$iu = new GridFieldBulkFileUpload('VideoFileID');
 			if(singleton('CleanVideo')->hasExtension('ControlledFolderDataExtension')) {
-				$iu->setConfig(
+				$iu->setUfConfig(
 					'folderName',
 					singleton('CleanVideo')->getUploadFolder()
 				);
 			} else {
-				$iu->setConfig(
+				$iu->setUfConfig(
 					'folderName',
 					CleanVideo::$upload_folder
 				);
