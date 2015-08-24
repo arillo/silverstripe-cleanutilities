@@ -29,8 +29,8 @@ class CleanImagesExtension extends DataExtension {
 			$config->addComponent(new GridFieldSortableRows('SortOrder'));
 		}
 		
-		if (ClassInfo::exists('GridFieldBulkImageUpload')) {
-			$iu = new GridFieldBulkImageUpload('Attachment');
+		if (ClassInfo::exists('GridFieldBulkUpload')) {
+			$iu = new GridFieldBulkUpload('Attachment');
 			if(singleton('CleanImage')->hasExtension('ControlledFolderDataExtension')) {
 				$iu->setConfig(
 					'folderName',

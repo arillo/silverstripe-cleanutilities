@@ -25,7 +25,7 @@ class CleanFilesExtension extends DataExtension {
 		if ($sortable) {
 			$config->addComponent(new GridFieldSortableRows('SortOrder'));
 		}
-		$iu = new GridFieldBulkImageUpload('Attachment');
+		$iu = new GridFieldBulkUpload('Attachment');
 		if(singleton('CleanFile')->hasExtension('ControlledFolderDataExtension')) {
 			$iu->setConfig(
 				'folderName',

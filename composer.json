@@ -12,7 +12,8 @@
 	"require": {
 		"php": ">=5.3.2",
 		"composer/installers": "*",
-		"simonwelsh/gridfieldrelationhandler": "*",
-		"undefinedoffset/sortablegridfield": "*"
+		"arillo/gridfieldrelationhandler": "*",
+		"undefinedoffset/sortablegridfield": "*",
+		"colymba/gridfield-bulk-editing-tools": "*"
 	}
 }

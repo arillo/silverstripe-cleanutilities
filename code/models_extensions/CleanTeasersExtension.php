@@ -40,8 +40,8 @@ class CleanTeasersExtension extends DataExtension {
 			$config->addComponent(new GridFieldSortableRows('SortOrder'));
 		}
 		
-		if (ClassInfo::exists('GridFieldBulkImageUpload')) {
-			$iu = new GridFieldBulkImageUpload('ImageID');
+		if (ClassInfo::exists('GridFieldBulkUpload')) {
+			$iu = new GridFieldBulkUpload('ImageID');
 			if(singleton('CleanTeaser')->hasExtension('ControlledFolderDataExtension')) {
 				$iu->setConfig(
 					'folderName',
@@ -63,7 +63,7 @@ class CleanTeasersExtension extends DataExtension {
 		}
 
 		// $config->removeComponentsByType('GridFieldAddNewButton');
-		// if (ClassInfo::exists('GridFieldBulkImageUpload')) {
+		// if (ClassInfo::exists('GridFieldBulkUpload')) {
 		// 	$config->addComponent(new GridFieldAddNewMultiClass());
 		// }
 
