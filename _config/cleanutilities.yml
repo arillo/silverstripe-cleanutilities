@@ -1,0 +1,33 @@
+---
+Name: cleanutilitiesconfig
+---
+SiteTree:
+  extensions:
+    - UtilitiesDataExtension
+CleanFile:
+  extensions:
+    - SortableDataExtension
+CleanImage:
+  extensions:
+    - SortableDataExtension
+CleanVideo:
+  extensions:
+    - SortableDataExtension
+CleanLink:
+  extensions:
+    - SortableDataExtension
+CleanTeaser:
+  extensions:
+    - SortableDataExtension
+CleanFile:
+  extensions:
+    - ControlledFolderDataExtension
+CleanImage:
+  extensions:
+    - ControlledFolderDataExtension
+CleanVideo:
+  extensions:
+    - ControlledFolderDataExtension
+CleanTeaser:
+  extensions:
+    - ControlledFolderDataExtension
