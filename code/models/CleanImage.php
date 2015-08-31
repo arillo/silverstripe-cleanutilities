@@ -33,7 +33,7 @@ class CleanImage extends DataObject {
 	 * This var specifies the name of the upload folder
 	 * @var string
 	 */
-	public static $upload_folder = "Images";
+	public static $upload_folder = "images";
 
 	/**
 	 * Allowed file extensions for uploading.

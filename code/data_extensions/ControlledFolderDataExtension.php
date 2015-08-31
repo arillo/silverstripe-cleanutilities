@@ -248,12 +248,18 @@ class ControlledFolderDataExtension extends DataExtension {
 				self::$controlled_folders[$className]
 			);
 		} else {
+			$folderName = $className;
+
+			if (isset($className::$upload_folder)) {
+				$folderName = $className::$upload_folder;
+			}
+
 			$config = array(
-				'folderName' => self::sanitize_folder_name($className),
+				'folderName' => self::sanitize_folder_name($folderName),
 				'folderMaxFiles' => self::$folder_max_files
 			);
 			self::set_controlled_folder_for(
-				$className,
+				$folderName,
 				$config
 			);
 			return self::find_or_make_controlled_folder($config);

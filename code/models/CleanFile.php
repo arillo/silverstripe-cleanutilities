@@ -49,7 +49,7 @@ class CleanFile extends DataObject {
 	 * This var specifies the name of the upload folder
 	 * @var string
 	 */
-	public static $upload_folder = "Files";
+	public static $upload_folder = "files";
 	
 	/**
 	 * CMS fields, can be extended by write your
