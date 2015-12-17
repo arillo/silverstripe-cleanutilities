@@ -13,19 +13,21 @@
  * 
  * @author arillo
  */
-class SortableDataExtension extends DataExtension {
-	
-	private static $db = array(
-		'SortOrder' => 'Int'
-	);
-	
-	private static $default_sort = 'SortOrder';
+class SortableDataExtension extends DataExtension
+{
+    
+    private static $db = array(
+        'SortOrder' => 'Int'
+    );
+    
+    private static $default_sort = 'SortOrder';
 
-	/**
-	 * Remove SortOrder from CMSFields
-	 * @param  FieldList $fields
-	 */
-	function updateCMSFields(FieldList $fields) {
-		$fields->removeByName('SortOrder');
-	}
+    /**
+     * Remove SortOrder from CMSFields
+     * @param  FieldList $fields
+     */
+    public function updateCMSFields(FieldList $fields)
+    {
+        $fields->removeByName('SortOrder');
+    }
 }

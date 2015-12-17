@@ -18,34 +18,36 @@
  *
  * @author arillo
  */
-class GroupLoginDataExtension extends DataExtension {
-	
-	
-	private static $db = array(
-		"GoToAdmin" => "Boolean"
-	);
-	
-	private static $has_one = array(
-		"LinkPage" => "SiteTree"
-	);
-	
-	public function updateCMSFields(FieldList $fields) {
-		$fields->addFieldToTab(
-			"Root.Members",
-			CheckboxField::create(
-				"GoToAdmin", 
-				_t('GroupLoginDataExtension.GO_ADMIN', 'Go to Admin area')
-			),
-			'Members'
-		);
-		$fields->addFieldToTab(
-			"Root.Members",
-			TreeDropdownField::create(
-				"LinkPageID",
-				_t('GroupLoginDataExtension.REDIRECT_PAGE', 'Or select a Page to redirect to'),
-				"SiteTree"
-			),
-			'Members'
-		);
-	}
+class GroupLoginDataExtension extends DataExtension
+{
+    
+    
+    private static $db = array(
+        "GoToAdmin" => "Boolean"
+    );
+    
+    private static $has_one = array(
+        "LinkPage" => "SiteTree"
+    );
+    
+    public function updateCMSFields(FieldList $fields)
+    {
+        $fields->addFieldToTab(
+            "Root.Members",
+            CheckboxField::create(
+                "GoToAdmin",
+                _t('GroupLoginDataExtension.GO_ADMIN', 'Go to Admin area')
+            ),
+            'Members'
+        );
+        $fields->addFieldToTab(
+            "Root.Members",
+            TreeDropdownField::create(
+                "LinkPageID",
+                _t('GroupLoginDataExtension.REDIRECT_PAGE', 'Or select a Page to redirect to'),
+                "SiteTree"
+            ),
+            'Members'
+        );
+    }
 }

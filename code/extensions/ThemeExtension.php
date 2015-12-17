@@ -14,21 +14,23 @@
  * 
  * @author arillo
  */
-class ThemeExtension extends Extension {
+class ThemeExtension extends Extension
+{
 
-	/**
-	 * Renders the decorated page with a given template.
-	 * @return array
-	 */
-	function index() {
-		if ($this->owner->Template != '') {
-			return $this->owner->renderWith(
-				array(
-					$this->owner->Template,
-					'Page'
-				)
-			);
-		}
-		return array();
-	}
+    /**
+     * Renders the decorated page with a given template.
+     * @return array
+     */
+    public function index()
+    {
+        if ($this->owner->Template != '') {
+            return $this->owner->renderWith(
+                array(
+                    $this->owner->Template,
+                    'Page'
+                )
+            );
+        }
+        return array();
+    }
 }
