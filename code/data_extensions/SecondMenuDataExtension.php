@@ -12,43 +12,48 @@
  * 
  * @author arillo
  */
-class SecondMenuDataExtension extends DataExtension {
-	
-	private static $db = array(
-		'SecondMenu' => 'Boolean'
-	);
-	
-	public function updateSettingsFields(FieldList $fields) {
-		$fields->addFieldToTab(
-			'Root.Settings',
-			CheckboxField::create(
-				'SecondMenu',
-				_t('SecondMenuDataExtension.SHOW_IN_SECONDMENU', 'Show in second menu?')
-			),
-			'ShowInSearch'
-		);
-		return $fields;
-	}
-	
-	/**
-	 * Returns all SiteTree instances which have SecondMenu activated. 
-	 * 
-	 * @param int $parentID
-	 * @return ArrayList
-	 */
-	public function SecondMenu($parentID = 0) {
-		$filter = array("SecondMenu" => true);
-		if ($parentID != 0) {
-			$filter["ParentID"] = $parentID;
-		}
-		$result = SiteTree::get()->filter($filter);
-		if ($result->Count() > 0) {
-			$visible = new ArrayList();
-			foreach($result as $page) {
-				if($page->can('view')) $visible->push($page);
-			}
-			return $visible;
-		}
-		return false;
-	}
+class SecondMenuDataExtension extends DataExtension
+{
+    
+    private static $db = array(
+        'SecondMenu' => 'Boolean'
+    );
+    
+    public function updateSettingsFields(FieldList $fields)
+    {
+        $fields->addFieldToTab(
+            'Root.Settings',
+            CheckboxField::create(
+                'SecondMenu',
+                _t('SecondMenuDataExtension.SHOW_IN_SECONDMENU', 'Show in second menu?')
+            ),
+            'ShowInSearch'
+        );
+        return $fields;
+    }
+    
+    /**
+     * Returns all SiteTree instances which have SecondMenu activated. 
+     * 
+     * @param int $parentID
+     * @return ArrayList
+     */
+    public function SecondMenu($parentID = 0)
+    {
+        $filter = array("SecondMenu" => true);
+        if ($parentID != 0) {
+            $filter["ParentID"] = $parentID;
+        }
+        $result = SiteTree::get()->filter($filter);
+        if ($result->Count() > 0) {
+            $visible = new ArrayList();
+            foreach ($result as $page) {
+                if ($page->can('view')) {
+                    $visible->push($page);
+                }
+            }
+            return $visible;
+        }
+        return false;
+    }
 }

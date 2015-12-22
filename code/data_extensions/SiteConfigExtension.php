@@ -12,20 +12,23 @@
  * 
  * @author arillo
  */
-class SiteConfigExtension extends DataExtension {
-	private static $db = array(
-		'Copyright' => 'Text',
-		'GoogleAnalyticsTrackingCode' => 'Text',
-	);
-	
-	function updateCMSFields(FieldList $fields) {
-		$fields->addFieldToTab("Root.Main", TextField::create("Copyright", _t('SiteConfig.COPYRIGHT', "Copyright")));
-		$fields->addFieldToTab("Root.Main", TextField::create("GoogleAnalyticsTrackingCode", _t('SiteConfig.ANALYTICS', "GoogleAnalyticsTrackingCode")));
-	}
-	
-	public function GoogleAnalytics() {
-		if (Director::isLive() && $this->owner->GoogleAnalyticsTrackingCode != '') {
-			Requirements::customScript("
+class SiteConfigExtension extends DataExtension
+{
+    private static $db = array(
+        'Copyright' => 'Text',
+        'GoogleAnalyticsTrackingCode' => 'Text',
+    );
+    
+    public function updateCMSFields(FieldList $fields)
+    {
+        $fields->addFieldToTab("Root.Main", TextField::create("Copyright", _t('SiteConfig.COPYRIGHT', "Copyright")));
+        $fields->addFieldToTab("Root.Main", TextField::create("GoogleAnalyticsTrackingCode", _t('SiteConfig.ANALYTICS', "GoogleAnalyticsTrackingCode")));
+    }
+    
+    public function GoogleAnalytics()
+    {
+        if (Director::isLive() && $this->owner->GoogleAnalyticsTrackingCode != '') {
+            Requirements::customScript("
 				var _gaq = _gaq || [];
 				_gaq.push(['_setAccount', '".$this->owner->GoogleAnalyticsTrackingCode."']);
 				_gaq.push(['_trackPageview']);
@@ -35,6 +38,6 @@ class SiteConfigExtension extends DataExtension {
 					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 				})();
 			");
-		}
-	}
+        }
+    }
 }
