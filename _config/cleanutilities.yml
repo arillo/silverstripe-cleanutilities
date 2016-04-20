@@ -7,27 +7,19 @@ SiteTree:
 CleanFile:
   extensions:
     - SortableDataExtension
+    - ControlledFolderDataExtension
 CleanImage:
   extensions:
     - SortableDataExtension
+    - ControlledFolderDataExtension
 CleanVideo:
   extensions:
     - SortableDataExtension
+    - ControlledFolderDataExtension
 CleanLink:
   extensions:
     - SortableDataExtension
 CleanTeaser:
   extensions:
     - SortableDataExtension
-CleanFile:
-  extensions:
-    - ControlledFolderDataExtension
-CleanImage:
-  extensions:
-    - ControlledFolderDataExtension
-CleanVideo:
-  extensions:
-    - ControlledFolderDataExtension
-CleanTeaser:
-  extensions:
     - ControlledFolderDataExtension
