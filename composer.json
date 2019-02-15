@@ -1,19 +1,20 @@
 {
-	"name": "arillo/silverstripe-cleanutilities",
-	"type": "silverstripe-module",
-	"license": "MIT license",
-	"keywords": ["silverstripe", "cleanutilities"],
-	"authors": [
-		{
-			"name": "Arillo GmbH",
-			"homepage": "http://arillo.net"
-		}
-	],
-	"require": {
-		"php": ">=5.3.2",
-		"composer/installers": "*",
-		"arillo/gridfieldrelationhandler": "*",
-		"undefinedoffset/sortablegridfield": "*",
-		"colymba/gridfield-bulk-editing-tools": "*"
-	}
+    "name": "arillo/silverstripe-cleanutilities",
+    "type": "silverstripe-vendormodule",
+    "license": "MIT license",
+    "keywords": ["silverstripe", "cleanutilities"],
+    "authors": [
+        {
+            "name": "Arillo GmbH",
+            "homepage": "http://arillo.net"
+        }
+    ],
+    "extra": {
+        "installer-name": "cleanutilities"
+    },
+    "autoload": {
+        "psr-4": {
+            "Arillo\\CleanUtilities\\": "src/"
+        }
+    }
 }

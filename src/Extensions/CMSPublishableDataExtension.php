@@ -1,4 +1,5 @@
 <?php
+namespace Arillo\CleanUtilities\Extensions;
 /**
  * Provides publish/unpublish functionality to DataObjects.
  *
@@ -14,16 +15,16 @@
  */
 class CMSPublishableDataExtension extends DataExtension
 {
-    
+
     private static $db = array(
         'Published' => 'Boolean'
     );
-    
+
     public function populateDefaults()
     {
         $this->owner->Published = true;
     }
-    
+
     public function updateCMSFields(FieldList $fields)
     {
         $fields->removeByName('Published');
@@ -46,7 +47,7 @@ class CMSPublishableDataExtension extends DataExtension
             $query->addWhere("Published=1");
         }
     }
-    
+
     /**
      * Returns an inactive Checkbox, as indicator
      * useful feature for GridField etc.
