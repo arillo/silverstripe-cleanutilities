@@ -1,4 +1,7 @@
 <?php
+namespace Arillo\CleanUtilities\Extensions;
+use SilverStripe\ORM\DataExtension;
+
 /**
  * Provides with some modulo helper functionality for
  * use in templates.
@@ -15,7 +18,6 @@
  */
 class ModuloDataExtension extends DataExtension
 {
-    
     /**
      * Indicator for, if this object is the nth child of a collection.
      *
@@ -27,7 +29,7 @@ class ModuloDataExtension extends DataExtension
     {
         return (($pos%$modulo) == 0);
     }
-    
+
     /**
      * Indicator for, if this object is before the nth child of a collection.
      *
@@ -39,11 +41,11 @@ class ModuloDataExtension extends DataExtension
     {
         return (($pos-1) % $modulo == 0);
     }
-    
+
     /**
-     * Tests if current position is smaller than a 
+     * Tests if current position is smaller than a
      * given value.
-     * 
+     *
      * @param int $pos current position in the list
      * @param int $num
      * @return bool

@@ -1,4 +1,15 @@
 <?php
+namespace Arillo\CleanUtilities\Extensions;
+
+use SilverStripe\Core\{
+    Extension,
+    HTTPRequest,
+    Convert
+};
+
+use SilverStripe\ORM\DataOject;
+
+
 /**
  * Controller extension to force a direct download of a file. Works out of the box using the CleanFile.DownloadLink.
  *
@@ -14,7 +25,6 @@
  */
 class DownloadExtension extends Extension
 {
-
     private static $allowed_actions = array(
         'download'
     );
@@ -22,13 +32,15 @@ class DownloadExtension extends Extension
     /**
      * Controller action for downloading a Clean File.
      * It responds to urls matching the following pattern:
-     * 
+     *
      * /download/ClassName/ID
-     * 
+     *
      * like:
-     * 
+     *
      * /download/CleanFile/1
      * /download/CleanImage/1
+     *
+     * @todo check this is still needed?
      *
      * @param $request
      * @return SS_HTTPRequest
@@ -40,7 +52,7 @@ class DownloadExtension extends Extension
         if (is_numeric($id) && $classname!='' && $id!='') {
             if ($file = DataObject::get_by_id($classname, $id)) {
                 if ($file->AttachmentID != 0 && isset($file->AttachmentID)) {
-                    return SS_HTTPRequest::send_file(
+                    return HTTPRequest::send_file(
                         file_get_contents($file->Attachment()->getFullPath()),
                         $file->Attachment()->Name
                     );

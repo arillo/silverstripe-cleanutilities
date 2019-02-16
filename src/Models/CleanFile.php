@@ -2,15 +2,20 @@
 namespace Arillo\CleanUtilities\Models;
 
 use SilverStripe\ORM\Dataobject;
+use SilverStripe\Assets\File;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\AssetAdmin\Forms\UploadField;
+
 use SilverStripe\Control\{
     Controller,
     Director
-;
-
-use SilverStripe\Forms\{
-    FieldList
 };
 
+use SilverStripe\Forms\{
+    FieldList,
+    TextField,
+    TabSet
+};
 
 /**
  * A wrapper for File, which adds a Title field
@@ -28,8 +33,8 @@ class CleanFile extends DataObject
     ];
 
     private static $has_one = [
-        'Attachment' => 'File',
-        'Reference' => 'SiteTree'
+        'Attachment' => File::class,
+        'Reference' => SiteTree::class,
     ];
 
     private static $searchable_fields = [
@@ -48,7 +53,7 @@ class CleanFile extends DataObject
      * Allowed file extensions for uploading.
      * @var array
      */
-    public static $allowed_extensions = [
+    private static $allowed_extensions = [
         '','html','htm','xhtml','js','css',
         'bmp','png','gif','jpg','jpeg','ico','pcx','tif','tiff',
         'au','mid','midi','mpa','mp3','ogg','m4a','ra','wma','wav','cda',
@@ -63,43 +68,43 @@ class CleanFile extends DataObject
      * This var specifies the name of the upload folder
      * @var string
      */
-    public static $upload_folder = "files";
+    private static $upload_folder = "files";
 
     /**
      * CMS fields, can be extended by write your
      * own updateCMSFields function.
      * @return FieldList
      */
-    // public function getCMSFields()
-    // {
-    //     $fields = FieldList::create(
-    //         new TabSet(
-    //             "Root",
-    //             new Tab("Main")
-    //         )
-    //     );
-    //     $fields->addFieldToTab(
-    //         'Root.Main',
-    //         TextField::create(
-    //             'Title',
-    //             _t('CleanUtilities.TITLE', 'Title')
-    //         )
-    //     );
-    //     $upload = UploadField::create(
-    //         'Attachment',
-    //         _t('CleanFile.FILE', 'File')
-    //     );
-    //     $upload->setConfig('allowedMaxFileNumber', 1);
-    //     $upload->getValidator()->setAllowedExtensions(self::$allowed_extensions);
-    //     if ($this->hasExtension('ControlledFolderDataExtension')) {
-    //         $upload->setFolderName($this->getUploadFolder());
-    //     } else {
-    //         $upload->setFolderName(self::$upload_folder);
-    //     }
-    //     $fields->addFieldToTab('Root.Main', $upload);
-    //     $this->extend('updateCMSFields', $fields);
-    //     return $fields;
-    // }
+    public function getCMSFields()
+    {
+        $fields = FieldList::create(TabSet::create('Root'));
+        $fields->addFieldToTab(
+            'Root.Main',
+            TextField::create(
+                'Title',
+                _t('CleanUtilities.TITLE', 'Title')
+            )
+        );
+
+        $upload = UploadField::create(
+            'Attachment',
+            _t('CleanFile.FILE', 'File')
+        );
+
+        $upload->setConfig('allowedMaxFileNumber', 1);
+        $upload->getValidator()->setAllowedExtensions($this->config()->allowed_extensions);
+
+        if ($this->hasExtension('ControlledFolderDataExtension')) {
+            $upload->setFolderName($this->getUploadFolder());
+        } else {
+            $upload->setFolderName($this->config()->upload_folder);
+        }
+
+        $fields->addFieldToTab('Root.Main', $upload);
+
+        $this->extend('updateCMSFields', $fields);
+        return $fields;
+    }
 
     /**
      * Returns a download link like:

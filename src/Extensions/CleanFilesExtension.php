@@ -6,7 +6,7 @@ use SilverStripe\ORM\{
     ArrayList
 };
 
-use SilverStripe\Forms\GridField{
+use SilverStripe\Forms\GridField\{
     GridField,
     GridFieldConfig_RelationEditor
 };

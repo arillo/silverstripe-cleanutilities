@@ -1,15 +1,27 @@
 <?php
+namespace Arillo\CleanUtilities\Models;
+
+use SilverStripe\ORM\Dataobject;
+use SilverStripe\CMS\Model\SiteTree;
+
+use SilverStripe\Forms\{
+    FieldList,
+    TextField,
+    TabSet,
+    DropdownField
+};
+
 /**
  * A DataObject for Links
- * 
+ *
  * @package cleanutilities
  * @subpackage models
- * 
+ *
  * @author arillo
  */
 class CleanLink extends DataObject
 {
-    
+
     private static $db = array(
         'Title' => 'Text',
         'URL' => 'Varchar(255)',
@@ -17,15 +29,15 @@ class CleanLink extends DataObject
     );
 
     private static $has_one = array(
-        'Reference' => 'SiteTree'
+        'Reference' => SiteTree::class
     );
-    
+
     private static $searchable_fields = array(
         'Title',
         'URL',
         'Reference.Title'
     );
-    
+
     private static $summary_fields = array(
         'Title' => 'Title',
         'URL' => 'URL',
@@ -34,27 +46,24 @@ class CleanLink extends DataObject
 
     public function getCMSFields()
     {
-        $options = DropdownField::create(
-            'Target',
-            _t('CleanLink.TARGET', 'Choose the target'),
-            $this->dbObject('Target')->enumValues()
-        );
-        $fields = FieldList::create(
-            new TabSet(
-                "Root",
-                new Tab("Main",
-                    TextField::create(
-                        'Title',
-                        _t('CleanUtilities.Title', 'Title')
-                    ),
-                    TextField::create(
-                        'URL',
-                        _t('CleanUtilities.URL', 'Url')
-                    ),
-                    $options
-                )
+        $fields = FieldList::create(TabSet::create('Root'));
+
+        $fields->addFieldsToTab('Root.Main', [
+            TextField::create(
+                'Title',
+                _t('CleanUtilities.Title', 'Title')
+            ),
+            TextField::create(
+                'URL',
+                _t('CleanUtilities.URL', 'Url')
+            ),
+            DropdownField::create(
+                'Target',
+                _t('CleanLink.TARGET', 'Choose the target'),
+                $this->dbObject('Target')->enumValues()
             )
-        );
+        ]);
+
         $this->extend('updateCMSFields', $fields);
         return $fields;
     }

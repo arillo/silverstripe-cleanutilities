@@ -1,7 +1,6 @@
 {
     "name": "arillo/silverstripe-cleanutilities",
     "type": "silverstripe-vendormodule",
-    "license": "MIT license",
     "keywords": ["silverstripe", "cleanutilities"],
     "authors": [
         {

@@ -1,23 +1,27 @@
 <?php
+namespace Arillo\CleanUtilities\Extensions;
+
+use SilverStripe\ORM\DataExtension;
+use SilverStripe\Control\Email\Email;
+
 /**
  * Provides a couple of helper methods to Text classes.
- * 
+ *
  * Add this extension to a SiteTree instance
  * by adding this to your _config.php:
- * 
+ *
  * Object::add_extension('HTMLText', 'TextExtension');
- * 
+ *
  * @package cleanutilities
  * @subpackage data_extensions
- * 
+ *
  * @author arillo
  */
 class TextDataExtension extends DataExtension
 {
-    
     /**
      * Shortens (html) text to a given $limit and appends $add to it.
-     * 
+     *
      * @param int $limit
      * @param string $add
      * @return string
@@ -65,11 +69,11 @@ class TextDataExtension extends DataExtension
         }
         return implode($returnArray, ' ') . $addEplisis . $tmpr;
     }
-    
+
     /**
      * Converts a given text into uft8 and shortens ist to $limit.
      * Caution: Dont't use it with HTMLText instances.
-     * 
+     *
      * @param int $limit
      * @return string
      */
@@ -81,12 +85,12 @@ class TextDataExtension extends DataExtension
         }
         return utf8_encode($text);
     }
-    
+
     /**
-     * Converts a given text into uft8 and 
+     * Converts a given text into uft8 and
      * shortens it by $limit and adds $add.
      * Caution: Dont't use it with HTMLText instances.
-     * 
+     *
      * @param int $limit
      * @param string $add
      * @return string
@@ -97,11 +101,11 @@ class TextDataExtension extends DataExtension
         $result = (strlen(trim($this->owner->value)) > $limit && $limit != 0) ? utf8_encode($value . $add) : $value;
         return $result;
     }
-    
+
     /**
      * Returns a representation of this text
      * with all email addresses converted into html character entities.
-     * 
+     *
      * @return string
      */
     public function EmailObfuscated()
@@ -122,10 +126,10 @@ class TextDataExtension extends DataExtension
         }
         return $content;
     }
-    
+
     /**
      * Tests if the text is longer than $numWords.
-     * 
+     *
      * @param int $numWords
      * @return bool
      */

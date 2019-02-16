@@ -1,15 +1,24 @@
 <?php
+namespace Arillo\CleanUtilities\Extensions;
+
+use SilverStripe\Forms\{
+    TextField,
+    FieldList
+};
+use SilverStripe\Control\Email\Email;
+use SilverStripe\ORM\DataExtension;
+
 /**
  * Generates general contact data for the client.
  *
  * Add this extension to a SiteConfig instance
  * by adding this to your _config.php:
- * 
+ *
  * Object::add_extension('SiteConfig', 'SiteConfigAddressExtension');
- * 
+ *
  * @package cleanutilities
  * @subpackage data_extensions
- * 
+ *
  * @author arillo
  */
 class SiteConfigAddressExtension extends DataExtension
@@ -39,7 +48,7 @@ class SiteConfigAddressExtension extends DataExtension
     }
     /**
      * Email encoded in html character entities.
-     * 
+     *
      * @return string
      */
     public function EncodedEmail()

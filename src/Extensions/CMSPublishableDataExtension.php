@@ -1,5 +1,17 @@
 <?php
 namespace Arillo\CleanUtilities\Extensions;
+
+use SilverStripe\Control\Controller;
+use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\Queries\SQLSelect;
+use SilverStripe\ORM\DataQuery;
+
+use SilverStripe\Forms\{
+    FieldList,
+    CheckboxField
+};
+
+
 /**
  * Provides publish/unpublish functionality to DataObjects.
  *
@@ -41,7 +53,7 @@ class CMSPublishableDataExtension extends DataExtension
      * Filter out all unpublished items
      * @param  SQLQuery $query
      */
-    public function augmentSQL(SQLQuery &$query)
+    public function augmentSQL(SQLSelect $query, DataQuery $dataQuery = null)
     {
         if (Controller::curr() != 'CMSPageEditController') {
             $query->addWhere("Published=1");

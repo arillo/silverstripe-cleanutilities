@@ -1,24 +1,32 @@
-<?php 
+<?php
+namespace Arillo\CleanUtilities\Extensions;
+
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\ORM\{
+    ArrayList,
+    DataExtension
+};
+
 /**
  * Provides SiteTree with extra an extra menu.
  *
  * Add this extension to a SiteConfig instance
  * by adding this to your _config.php:
- * 
+ *
  * Object::add_extension('SiteTree', 'SecondMenuDataExtension');
- * 
+ *
  * @package cleanutilities
  * @subpackage data_extensions
- * 
+ *
  * @author arillo
  */
 class SecondMenuDataExtension extends DataExtension
 {
-    
     private static $db = array(
         'SecondMenu' => 'Boolean'
     );
-    
+
     public function updateSettingsFields(FieldList $fields)
     {
         $fields->addFieldToTab(
@@ -31,10 +39,10 @@ class SecondMenuDataExtension extends DataExtension
         );
         return $fields;
     }
-    
+
     /**
-     * Returns all SiteTree instances which have SecondMenu activated. 
-     * 
+     * Returns all SiteTree instances which have SecondMenu activated.
+     *
      * @param int $parentID
      * @return ArrayList
      */
