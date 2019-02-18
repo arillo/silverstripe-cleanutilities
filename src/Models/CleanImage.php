@@ -28,6 +28,7 @@ use SilverStripe\Forms\{
  */
 class CleanImage extends DataObject
 {
+    private static $table_name = 'CleanImage';
 
     private static $db = array(
         'Title'=> 'Text'
@@ -38,21 +39,25 @@ class CleanImage extends DataObject
         'Reference' => SiteTree::class
     );
 
+    private static $owns = array(
+        'Attachment'
+    );
+
     private static $searchable_fields = array(
         'Title',
         'Attachment.Title'
     );
 
     private static $summary_fields = array(
-        'Thumbnail' => 'Image',
+        'Attachment.CMSThumbnail' => 'Image',
         'Title' => 'Title'
     );
 
-        /**
+    /**
      * This var specifies the name of the upload folder
      * @var string
      */
-    public static $upload_folder = "images";
+    private static $upload_folder = "images";
 
     /**
      * Allowed file extensions for uploading.
@@ -62,17 +67,6 @@ class CleanImage extends DataObject
         '', 'bmp','png','gif','jpg','jpeg','ico','pcx','tif','tiff'
 
     );
-
-    /**
-     * Getter for current upload folder.
-     * @return string
-     */
-    public static function get_upload_folder()
-    {
-        return self::$use_controlled_upload_folder ?
-                CleanUtils::controlled_upload_folder(self::$upload_folder) :
-                self::$upload_folder;
-    }
 
     public function getCMSFields()
     {
@@ -85,15 +79,15 @@ class CleanImage extends DataObject
         );
 
         $upload = UploadField::create('Attachment', 'Image');
-        $upload->setConfig('allowedMaxFileNumber', 1);
+        // $upload->setConfig('allowedMaxFileNumber', 1);
         $upload->getValidator()->setAllowedExtensions(
-            $this->config()->$allowed_extensions
+            $this->config()->allowed_extensions
         );
 
         if ($this->hasExtension('ControlledFolderDataExtension')) {
             $upload->setFolderName($this->getUploadFolder());
         } else {
-            $upload->setFolderName($this->config()->$upload_folder);
+            $upload->setFolderName($this->config()->upload_folder);
         }
 
         $fields->addFieldToTab(
@@ -103,56 +97,5 @@ class CleanImage extends DataObject
 
         $this->extend('updateCMSFields', $fields);
         return $fields;
-    }
-
-    /**
-     * Returns CMS thumbnail, if an image is attached.
-     * Mainly used by GridField.
-     *
-     * @return mixed
-     */
-    public function getThumbnail()
-    {
-        if ($image = $this->Attachment()) {
-            return $image->CMSThumbnail();
-        }
-        return _t('CleanImage.NO_IMAGE', '(No Image)');
-    }
-
-    /**
-     * Returns a download link like:
-     * URLSegment/download/ClassName/ID
-     *
-     * To make this to work you need to implement a "download" function in
-     * the Reference's controller.
-     * This can be achieved by using DownloadExtension.
-     *
-     * @return string
-     */
-    public function DownloadLink()
-    {
-        return Controller::join_links(
-            $this->Reference()->Link(),
-            'download',
-            $this->ClassName,
-            $this->ID
-        );
-    }
-
-    /**
-     * Returns a absolute download link like:
-     * http://domain.com/URLSegment/download/ClassName/ID
-     *
-     * To make this to work you need to implement a "download" function in
-     * the Reference's controller.
-     * This can be achieved by using DownloadExtension.
-     *
-     * @return string
-     */
-    public function AbsoluteDownloadLink()
-    {
-        return Director::absoluteURL(
-            $this->DownloadLink()
-        );
     }
 }

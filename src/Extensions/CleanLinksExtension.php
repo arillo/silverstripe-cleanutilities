@@ -14,6 +14,7 @@ use SilverStripe\Forms\GridField\{
 };
 
 use SilverStripe\Forms\FieldList;
+use Arillo\CleanUtilities\Extensions\SortableDataExtension;
 
 /**
  * Provides your SiteTree class with has_many links feature.
@@ -40,22 +41,20 @@ class CleanLinksExtension extends DataExtension
     {
         $sortable = CleanLink::singleton()->hasExtension('SortableDataExtension');
         $config = GridFieldConfig_RelationEditor::create();
-        $config->addComponent($gridFieldForm = new GridFieldDetailForm());
 
         if ($sortable) {
             $config->addComponent(new GridFieldSortableRows('SortOrder'));
         }
 
-        if ($sortable) {
-            $data = $this->owner->CleanLinks()->sort('SortOrder');
-        } else {
-            $data = $this->owner->CleanLinks();
-        }
+        $data = $this->owner->CleanLinks();
+        if ($sortable) $data = $data->sort('SortOrder');
 
         $fields->addFieldToTab(
             "Root.Links",
-            GridField::create('CleanLinks', 'Links', $data, $config)
+            $gridField = GridField::create('CleanLinks', 'Links', $data, $config)
         );
+
+        if ($sortable) SortableDataExtension::make_gridfield_sortable($gridField);
     }
 
     /**

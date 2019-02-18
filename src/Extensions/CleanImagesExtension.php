@@ -1,22 +1,22 @@
 <?php
 namespace Arillo\CleanUtilities\Extensions;
 
-use  Arillo\CleanUtilities\Models\CleanImage;
-use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\{
     DataExtension,
     ArrayList
 };
 
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\GridField\{
+    GridField,
+    GridFieldConfig_RelationEditor
+};
+
+use  Arillo\CleanUtilities\Models\CleanImage;
+use Arillo\CleanUtilities\Extensions\SortableDataExtension;
+
 /**
  * Provides your SiteTree class with has_many images feature.
- * It uses CleanImages.
- *
- * Add this extension to a SiteTree instance
- * by adding this to your _config.php:
- *
- * Object::add_extension('Page', 'CleanImagesExtension');
- *
  *
  * @package cleanutilities
  * @subpackage models_extensions
@@ -31,40 +31,17 @@ class CleanImagesExtension extends DataExtension
 
     public function updateCMSFields(FieldList $fields)
     {
-        $inst = CleanImage::singleton();
-        $sortable = $inst->hasExtension('SortableDataExtension');
         $config = GridFieldConfig_RelationEditor::create();
-        $config->addComponent($gridFieldForm = new GridFieldDetailForm());
-
-        if ($sortable) {
-            $config->addComponent(new GridFieldSortableRows('SortOrder'));
-        }
-
-        if (ClassInfo::exists('GridFieldBulkUpload')) {
-            $iu = new GridFieldBulkUpload('Attachment');
-            if ($inst->hasExtension('ControlledFolderDataExtension')) {
-                $iu->setUfConfig(
-                    'folderName',
-                    $inst->getUploadFolder()
-                );
-            } else {
-                $iu->setUfConfig(
-                    'folderName',
-                    $inst->config()->upload_folder
-                );
-            }
-            $config->addComponent($iu);
-        }
-
-        if ($sortable) {
-            $data = $this->owner->CleanImages()->sort('SortOrder');
-        } else {
-            $data = $this->owner->CleanImages();
-        }
-
         $fields->addFieldToTab(
-            "Root.Images",
-            GridField::create('CleanImages', 'CleanImage', $data, $config)
+            'Root.Images',
+            SortableDataExtension::make_gridfield_sortable(
+                GridField::create(
+                    'CleanImages',
+                    'Images',
+                    $this->owner->CleanImages(),
+                    $config
+                )
+            )
         );
     }
 
@@ -78,8 +55,12 @@ class CleanImagesExtension extends DataExtension
      * @param string $sortDir
      * @return DataList
      */
-    public function Images($limit = 0, $offset = 0, $sortField = 'SortOrder', $sortDir = 'ASC')
-    {
+    public function Images(
+        $limit = 0,
+        $offset = 0,
+        $sortField = SortableDataExtension::SORT_FIELD,
+        $sortDir = 'ASC'
+    ) {
         return $this
             ->owner
             ->CleanImages()
@@ -96,8 +77,11 @@ class CleanImagesExtension extends DataExtension
      * @param string $sortDir
      * @return Image|boolean
      */
-    public function ImageAttachment($index = 0, $sortField = 'SortOrder', $sortDir = 'ASC')
-    {
+    public function ImageAttachment(
+        $index = 0,
+        $sortField = SortableDataExtension::SORT_FIELD,
+        $sortDir = 'ASC'
+    ) {
         $images = $this->owner->CleanImages()->sort($sortField, $sortDir);
         $images = $images->toArray();
         if (count($images) > $index) {
@@ -115,8 +99,12 @@ class CleanImagesExtension extends DataExtension
      * @param string $sortDir
      * @return DataList|boolean
      */
-    public function ImagesAttachment($limit = 0, $offset = 0, $sortField = 'SortOrder', $sortDir = 'ASC')
-    {
+    public function ImagesAttachment(
+        $limit = 0,
+        $offset = 0,
+        $sortField = SortableDataExtension::SORT_FIELD,
+        $sortDir = 'ASC'
+    ) {
         $images = $this->owner->CleanImages()
             ->limit($limit, $offset)
             ->sort($sortField, $sortDir);

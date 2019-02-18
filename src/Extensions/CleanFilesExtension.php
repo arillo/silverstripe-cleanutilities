@@ -13,16 +13,11 @@ use SilverStripe\Forms\GridField\{
 
 use SilverStripe\Forms\FieldList;
 use Arillo\CleanUtilities\Models\CleanFile;
+use Arillo\CleanUtilities\Extensions\SortableDataExtension;
 
 /**
  * Provides your SiteTree class with has_many files feature.
  * It will use CleanFiles.
- *
- * Add this extension to a SiteTree instance
- * by adding this to your _config.php:
- *
- * Object::add_extension('Page', 'CleanFilesExtension');
- *
  *
  * @package cleanutilities
  * @subpackage models_extensions
@@ -39,39 +34,17 @@ class CleanFilesExtension extends DataExtension
 
     public function updateCMSFields(FieldList $fields)
     {
-        $sortable = CleanFile::singleton()->hasExtension('SortableDataExtension');
         $config = GridFieldConfig_RelationEditor::create();
-        $config->addComponent($gridFieldForm = new GridFieldDetailForm());
-
-        if ($sortable) {
-            $config->addComponent(new GridFieldSortableRows('SortOrder'));
-        }
-
-        $iu = new GridFieldBulkUpload('Attachment');
-
-        if (CleanFile::singleton()->hasExtension('ControlledFolderDataExtension')) {
-            $iu->setUfConfig(
-                'folderName',
-                CleanFile::singleton()->getUploadFolder()
-            );
-        } else {
-            $iu->setUfConfig(
-                'folderName',
-                CleanFile::$upload_folder
-            );
-        }
-
-        $config->addComponent($iu);
-
-        if ($sortable) {
-            $data = $this->owner->CleanFiles("ClassName = 'CleanFile'")->sort('SortOrder');
-        } else {
-            $data = $this->owner->CleanFiles("ClassName = 'CleanFile'");
-        }
-
         $fields->addFieldToTab(
-            "Root.Files",
-            GridField::create('CleanFiles', 'CleanFile', $data, $config)
+            'Root.Files',
+            SortableDataExtension::make_gridfield_sortable(
+                GridField::create(
+                    'CleanFiles',
+                    'Files',
+                    $this->owner->CleanFiles(),
+                    $config
+                )
+            )
         );
     }
     /**
@@ -92,7 +65,7 @@ class CleanFilesExtension extends DataExtension
     ) {
         return $this
             ->owner
-            ->CleanFiles("ClassName = 'CleanFile'")
+            ->CleanFiles()
             ->limit($limit, $offset)
             ->sort($sortField, $sortDir)
         ;
@@ -113,7 +86,7 @@ class CleanFilesExtension extends DataExtension
     ) {
         $files = $this
             ->owner
-            ->CleanFiles("ClassName = 'CleanFile'")
+            ->CleanFiles()
             ->sort($sortField, $sortDir)
         ;
 
@@ -139,7 +112,7 @@ class CleanFilesExtension extends DataExtension
         $sortField = 'SortOrder',
         $sortDir = 'ASC'
     ) {
-        $files = $this->owner->CleanFiles("ClassName = 'CleanFile'")
+        $files = $this->owner->CleanFiles()
             ->limit($limit, $offset)
             ->sort($sortField, $sortDir);
 
@@ -158,6 +131,6 @@ class CleanFilesExtension extends DataExtension
      */
     public function MoreFilesThan($num = 0)
     {
-        return ($this->owner->CleanFiles("ClassName = 'CleanFile'")->Count() > $num);
+        return ($this->owner->CleanFiles()->Count() > $num);
     }
 }

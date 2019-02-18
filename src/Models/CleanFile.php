@@ -28,6 +28,8 @@ use SilverStripe\Forms\{
  */
 class CleanFile extends DataObject
 {
+    private static $table_name = 'CleanFile';
+
     private static $db = [
         'Title'=> 'Text'
     ];
@@ -91,14 +93,8 @@ class CleanFile extends DataObject
             _t('CleanFile.FILE', 'File')
         );
 
-        $upload->setConfig('allowedMaxFileNumber', 1);
         $upload->getValidator()->setAllowedExtensions($this->config()->allowed_extensions);
-
-        if ($this->hasExtension('ControlledFolderDataExtension')) {
-            $upload->setFolderName($this->getUploadFolder());
-        } else {
-            $upload->setFolderName($this->config()->upload_folder);
-        }
+        $upload->setFolderName($this->config()->upload_folder);
 
         $fields->addFieldToTab('Root.Main', $upload);
 

@@ -21,6 +21,7 @@ use SilverStripe\Forms\{
  */
 class CleanLink extends DataObject
 {
+    private static $table_name = 'CleanLink';
 
     private static $db = array(
         'Title' => 'Text',

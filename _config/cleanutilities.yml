@@ -1,25 +1,23 @@
 ---
 Name: cleanutilitiesconfig
 ---
-SiteTree:
+Arillo\CleanUtilities\Models\CleanFile:
   extensions:
-    - UtilitiesDataExtension
-CleanFile:
+    - Arillo\CleanUtilities\Extensions\SortableDataExtension
+
+Arillo\CleanUtilities\Models\CleanImage:
   extensions:
-    - SortableDataExtension
-    - ControlledFolderDataExtension
-CleanImage:
+    - Arillo\CleanUtilities\Extensions\SortableDataExtension
+
+Arillo\CleanUtilities\Models\CleanVideo:
   extensions:
-    - SortableDataExtension
-    - ControlledFolderDataExtension
-CleanVideo:
+    - Arillo\CleanUtilities\Extensions\SortableDataExtension
+
+Arillo\CleanUtilities\Models\CleanLink:
   extensions:
-    - SortableDataExtension
-    - ControlledFolderDataExtension
-CleanLink:
+    - Arillo\CleanUtilities\Extensions\SortableDataExtension
+
+Arillo\CleanUtilities\Models\CleanTeaser:
   extensions:
-    - SortableDataExtension
-CleanTeaser:
-  extensions:
-    - SortableDataExtension
-    - ControlledFolderDataExtension
+    - Arillo\CleanUtilities\Extensions\SortableDataExtension
+

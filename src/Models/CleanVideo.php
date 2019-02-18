@@ -14,6 +14,9 @@ use SilverStripe\Control\{
 use SilverStripe\Forms\{
     FieldList,
     TextField,
+    CheckboxField,
+    DropdownField,
+    LiteralField,
     TabSet
 };
 
@@ -31,6 +34,7 @@ use SilverStripe\Forms\{
  */
 class CleanVideo extends DataObject
 {
+    private static $table_name = 'CleanVideo';
 
     private static $db = array(
         "Title" => "Text",
@@ -83,8 +87,12 @@ class CleanVideo extends DataObject
      * @param bool $autoplay
      * @return string
      */
-    public static function video_embed($media_url, $width = 400, $height = 300, $autoplay = false)
-    {
+    public static function video_embed(
+        $media_url,
+        $width = 400,
+        $height = 300,
+        $autoplay = false
+    ) {
         $infos = self::prepare_url($media_url);
         if ($infos['sourcetype'] != 'error') {
             switch ($infos['sourcetype']) {
@@ -251,16 +259,6 @@ class CleanVideo extends DataObject
     }
 
     /**
-     * Returns custom validator
-     *
-     * @return CleanVideo_Validator
-     */
-    // public function getValidator()
-    // {
-    //     return new CleanVideo_Validator();
-    // }
-
-    /**
      * Returns the actual video embed code.
      * If $autoplay isset it will use this value
      * instead of the value stored in DB.
@@ -306,12 +304,7 @@ class CleanVideo extends DataObject
 
     public function getCMSFields()
     {
-        $fields = FieldList::create(
-            new TabSet(
-                "Root",
-                new Tab("Main")
-            )
-        );
+        $fields = FieldList::create(TabSet::create('Root'));
         $fields->addFieldToTab("Root.Main", LiteralField::create('VideoError', '<div></div>'));
         $fields->addFieldToTab("Root.Main", CheckboxField::create(
             'Autoplay',

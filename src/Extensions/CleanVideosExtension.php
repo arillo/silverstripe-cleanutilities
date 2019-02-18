@@ -14,6 +14,8 @@ use SilverStripe\Forms\GridField\{
 };
 
 use SilverStripe\Forms\FieldList;
+use Arillo\CleanUtilities\Extensions\SortableDataExtension;
+
 /**
  * Provides your SiteTree class with has_many videos feature.
  * It uses CleanVideos.
@@ -40,38 +42,36 @@ class CleanVideosExtension extends DataExtension
         $inst = CleanVideo::singleton();
         $sortable = $inst->hasExtension('SortableDataExtension');
         $config = GridFieldConfig_RelationEditor::create();
-        $config->addComponent($gridFieldForm = new GridFieldDetailForm());
 
         if ($sortable) {
             $config->addComponent(new GridFieldSortableRows('SortOrder'));
         }
 
-        if (ClassInfo::exists('GridFieldBulkFileUpload')) {
-            $iu = new GridFieldBulkFileUpload('VideoFileID');
-            if ($inst->hasExtension('ControlledFolderDataExtension')) {
-                $iu->setUfConfig(
-                    'folderName',
-                    $inst->getUploadFolder()
-                );
-            } else {
-                $iu->setUfConfig(
-                    'folderName',
-                    CleanVideo::$upload_folder
-                );
-            }
-            $config->addComponent($iu);
-        }
+        // if (ClassInfo::exists('GridFieldBulkFileUpload')) {
+        //     $iu = new GridFieldBulkFileUpload('VideoFileID');
+        //     if ($inst->hasExtension('ControlledFolderDataExtension')) {
+        //         $iu->setUfConfig(
+        //             'folderName',
+        //             $inst->getUploadFolder()
+        //         );
+        //     } else {
+        //         $iu->setUfConfig(
+        //             'folderName',
+        //             CleanVideo::$upload_folder
+        //         );
+        //     }
+        //     $config->addComponent($iu);
+        // }
 
-        if ($sortable) {
-            $data = $this->owner->CleanVideos()->sort('SortOrder');
-        } else {
-            $data = $this->owner->CleanVideos();
-        }
+        $data = $this->owner->CleanVideos();
+        // if ($sortable) $data = $data->sort('SortOrder');
 
         $fields->addFieldToTab(
             "Root.Videos",
-            GridField::create('CleanVideos', 'CleanVideo', $data, $config)
+            $gridField = GridField::create('CleanVideos', 'Videos', $data, $config)
         );
+
+        if ($sortable) SortableDataExtension::make_gridfield_sortable($gridField);
     }
 
     /**

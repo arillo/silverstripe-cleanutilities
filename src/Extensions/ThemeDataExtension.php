@@ -55,18 +55,18 @@ class ThemeDataExtension extends DataExtension
      *
      * @return mixed
      */
-    public function ThemeDir()
-    {
-        if ($theme = SSViewer::current_theme()) {
-            return THEMES_DIR . "/$theme";
-        } elseif ($theme = SSViewer::current_custom_theme()) {
-            return THEMES_DIR . "/$theme";
-        } elseif ($theme = SiteConfig::current_site_config()->Theme) {
-            return THEMES_DIR . "/$theme";
-        } else {
-            throw new Exception("cannot detect theme");
-        }
-    }
+    // public function ThemeDir()
+    // {
+    //     if ($theme = SSViewer::current_theme()) {
+    //         return THEMES_DIR . "/$theme";
+    //     } elseif ($theme = SSViewer::current_custom_theme()) {
+    //         return THEMES_DIR . "/$theme";
+    //     } elseif ($theme = SiteConfig::current_site_config()->Theme) {
+    //         return THEMES_DIR . "/$theme";
+    //     } else {
+    //         throw new Exception("cannot detect theme");
+    //     }
+    // }
 
     /**
      * Returns a relative path to current template file.
@@ -75,7 +75,7 @@ class ThemeDataExtension extends DataExtension
      */
     public function TemplateFile()
     {
-        return $this->TemplateDir().$this->owner->Template.".ss";
+        return $this->owner->TemplateDir().$this->owner->Template.".ss";
     }
 
     /**
@@ -96,7 +96,7 @@ class ThemeDataExtension extends DataExtension
      */
     public function TemplateDir($directory = 'Layout/')
     {
-        return $this->ThemeDir()."/templates/".$directory;
+        return $this->owner->ThemeDir()."/templates/".$directory;
     }
 
     /**

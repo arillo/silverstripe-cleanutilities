@@ -29,6 +29,8 @@ use SilverStripe\Forms\{
  */
 class CleanTeaser extends DataObject
 {
+    private static $table_name = 'CleanTeaser';
+
     private static $db = array(
         'Title'=> 'Text',
         'Description' => 'HTMLText'
