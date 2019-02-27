@@ -5,18 +5,14 @@ use SilverStripe\ORM\Dataobject;
 use SilverStripe\Assets\Image;
 use SilverStripe\CMS\Model\SiteTree;
 
-use SilverStripe\Control\{
-    Controller,
-    Director
-};
-
-use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\{
     FieldList,
     TextField,
     TextareaField,
     TabSet
 };
+
+use Arillo\CleanUtilities\CMS\Fields;
 
 /**
  * A DataObject for Teasers
@@ -52,27 +48,17 @@ class CleanTeaser extends DataObject
         'Image.CMSThumbnail' => 'Image'
     );
 
-    public static $upload_folder = "Teaser";
-
     public function getCMSFields()
     {
         $fields = FieldList::create(TabSet::create('Root'));
         $fields->addFieldToTab('Root.Main', TextField::create('Title', 'Title'));
         $fields->addFieldToTab('Root.Main', TextareaField::create('Description', 'Description'));
-        $upload = UploadField::create('Image', 'Image');
-        $upload->setConfig('allowedMaxFileNumber', 1);
-        $upload->getValidator()->setAllowedExtensions(
-            CleanImage::$allowed_extensions
-        );
-        if ($this->hasExtension('ControlledFolderDataExtension')) {
-            $upload->setFolderName($this->getUploadFolder());
-        } else {
-            $upload->setFolderName(self::$upload_folder);
-        }
-        $fields->addFieldToTab(
-            'Root.Main',
-            $upload
-        );
+
+        Fields::add_file_field($this, $fields, [
+            'field' => 'Image',
+            'folderName' => 'Teaser',
+        ]);
+
         $this->extend('updateCMSFields', $fields);
         return $fields;
     }
@@ -81,18 +67,4 @@ class CleanTeaser extends DataObject
     {
         return strip_tags($this->Description);
     }
-
-    /**
-     * Returns CMS thumbnail, if an image is attached.
-     * Mainly used by GridField.
-     *
-     * @return mixed
-     */
-    // public function getThumbnail()
-    // {
-    //     if ($image = $this->Image()) {
-    //         return $image->CMSThumbnail();
-    //     }
-    //     return _t('CleanTeaser.NO_IMAGE', '(No Image)');
-    // }
 }

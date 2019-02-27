@@ -6,16 +6,15 @@ use SilverStripe\Assets\File;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 
-use SilverStripe\Control\{
-    Controller,
-    Director
-};
+use SilverStripe\Control\Director;
 
 use SilverStripe\Forms\{
     FieldList,
     TextField,
     TabSet
 };
+
+use Arillo\CleanUtilities\CMS\Fields;
 
 /**
  * A wrapper for File, which adds a Title field
@@ -39,6 +38,10 @@ class CleanFile extends DataObject
         'Reference' => SiteTree::class,
     ];
 
+    private static $owns = [
+        'Attachment',
+    ];
+
     private static $searchable_fields = [
         'Title',
         "Attachment.Extension",
@@ -50,27 +53,6 @@ class CleanFile extends DataObject
         'Attachment.Extension' => 'Type',
         'Attachment.Title' => 'Attachment'
     ];
-
-    /**
-     * Allowed file extensions for uploading.
-     * @var array
-     */
-    private static $allowed_extensions = [
-        '','html','htm','xhtml','js','css',
-        'bmp','png','gif','jpg','jpeg','ico','pcx','tif','tiff',
-        'au','mid','midi','mpa','mp3','ogg','m4a','ra','wma','wav','cda',
-        'avi','mpg','mpeg','asf','wmv','m4v','mov','mkv','mp4','swf','flv','ram','rm',
-        'doc','docx','txt','rtf','xls','xlsx','pages',
-        'ppt','pptx','pps','csv',
-        'cab','arj','tar','zip','zipx','sit','sitx','gz','tgz','bz2','ace','arc','pkg','dmg','hqx','jar',
-        'xml','pdf',
-    ];
-
-    /**
-     * This var specifies the name of the upload folder
-     * @var string
-     */
-    private static $upload_folder = "files";
 
     /**
      * CMS fields, can be extended by write your
@@ -88,49 +70,17 @@ class CleanFile extends DataObject
             )
         );
 
-        $upload = UploadField::create(
-            'Attachment',
-            _t('CleanFile.FILE', 'File')
-        );
-
-        $upload->getValidator()->setAllowedExtensions($this->config()->allowed_extensions);
-        $upload->setFolderName($this->config()->upload_folder);
-
-        $fields->addFieldToTab('Root.Main', $upload);
+        Fields::add_file_field($this, $fields);
 
         $this->extend('updateCMSFields', $fields);
         return $fields;
     }
 
-    /**
-     * Returns a download link like:
-     * URLSegment/download/ClassName/ID
-     *
-     * To make this to work you need to implement a "download" function in
-     * the Reference's controller.
-     * This can be achieved by using DownloadExtension.
-     *
-     * @return string
-     */
     public function DownloadLink()
     {
-        return Controller::join_links(
-            $this->Reference()->Link('download'),
-            $this->ClassName,
-            $this->ID
-        );
+        return $this->Attachment()->Link();
     }
 
-    /**
-     * Returns a absolute download link like:
-     * http://domain.com/URLSegment/download/ClassName/ID
-     *
-     * To make this to work you need to implement a "download" function in
-     * the Reference's controller.
-     * This can be achieved by using DownloadExtension.
-     *
-     * @return string
-     */
     public function AbsoluteDownloadLink()
     {
         return Director::absoluteURL(

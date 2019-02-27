@@ -94,8 +94,10 @@ class CleanVideo extends DataObject
         $autoplay = false
     ) {
         $infos = self::prepare_url($media_url);
-        if ($infos['sourcetype'] != 'error') {
-            switch ($infos['sourcetype']) {
+        if ($infos['sourcetype'] != 'error')
+        {
+            switch ($infos['sourcetype'])
+            {
                 case 'youtube':
                     if ($autoplay) {
                         $ap = 'true';
@@ -103,6 +105,7 @@ class CleanVideo extends DataObject
                         $ap = 'false';
                     }
                     return '<iframe src="http://www.youtube.com/embed/'.$infos['sourceid'].'?wmode=opaque&autoplay='.$autoplay.'" width="'. $width .'" height="'. $height .'" frameborder="0"></iframe>';
+
                 case 'vimeo':
                     if ($autoplay) {
                         $ap = 'true';
@@ -110,6 +113,7 @@ class CleanVideo extends DataObject
                         $ap = 'false';
                     }
                     return '<iframe src="http://player.vimeo.com/video/'.$infos['sourceid'].'?wmode=transparent&autoplay='.$autoplay.'" width="'. $width .'" height="'. $height .'" frameborder="0"></iframe>';
+
                 case 'metacafe':
                     if ($autoplay) {
                         $ap = 'yes';
@@ -118,6 +122,7 @@ class CleanVideo extends DataObject
                     }
                     return '<iframe flashVars="playerVars=autoPlay='.$ap.'" src="'.$infos['media_url'].'?playerVars=autoPlay='.$ap.'" width="'.$width.'" height="'.$height.'"</iframe>';
 //                  return '<embed flashVars="playerVars=autoPlay='.$ap.'" src="'.$infos['media_url'].'" width="'.$width.'" height="'.$height.'" wmode="transparent" allowFullScreen="true" allowScriptAccess="always" name="Metacafe_8409457" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash"></embed>';
+
                 case 'dailymotion':
                     if ($autoplay) {
                         $ap = '1';
@@ -125,10 +130,12 @@ class CleanVideo extends DataObject
                         $ap = '0';
                     }
                     return '<iframe frameborder="0" width="'.$width.'" height="'.$height.'" src="http://www.dailymotion.com/embed/video/'.$infos['sourceid'].'?autoPlay='.$autoplay.'"></iframe>';
+
                 case 'facebook':
 //                  if($autoplay) $ap = '1';
 //                  else $ap = '0';
                     return '<iframe width="516" height="346" frameborder="0" src="http://www.facebook.com/v/'.$infos['sourceid'].'"></iframe>';
+
                 default:
                     return '
                     <object type="application/x-shockwave-flash" data="'.$infos['media_url'].'?wmode=transparent" width="'. $width .'" height="'. $height .'">
@@ -146,22 +153,36 @@ class CleanVideo extends DataObject
      * @param string $media
      * @return bool
      */
-    public static function is_youtube($media)
+    public static function is_youtube($url)
     {
-        $urls = parse_url($media);
+        $urls = parse_url($url);
         //expect url is http://youtu.be/abcd, where abcd is video iD
-        if (isset($urls['host'])) {
-            if ($urls['host'] == 'youtu.be' || $urls['host'] == 'www.youtu.be') {
+        if (isset($urls['host']))
+        {
+            if ($urls['host'] == 'youtu.be' || $urls['host'] == 'www.youtu.be')
+            {
                 return true;
             }
-            if ((preg_match('/v=([^(\&|$)]*)/i', $media, $match)
-                || preg_match('/v\/([^(\&|$)]*)/i', $media, $match)
-                || preg_match('/video_id=([^(\&|$)]*)/i', $media, $match))
+
+            if ((preg_match('/v=([^(\&|$)]*)/i', $url, $match)
+                || preg_match('/v\/([^(\&|$)]*)/i', $url, $match)
+                || preg_match('/video_id=([^(\&|$)]*)/i', $url, $match))
                 && ($urls['host'] == 'youtube.com' || $urls['host'] == 'www.youtube.com')
             ) {
                 return true;
             }
         }
+        return false;
+    }
+
+    public static function is_vimeo($url)
+    {
+        $urls = parse_url($url);
+        if (isset($urls['host']))
+        {
+            return ($urls['host'] == 'vimeo.com' || $urls['host'] == 'www.vimeo.com');
+        }
+
         return false;
     }
 
@@ -302,6 +323,30 @@ class CleanVideo extends DataObject
         return false;
     }
 
+    public function VideoThumb($width = 240, $height = 180)
+    {
+        if (self::is_youtube($this->VideoAddress))
+        {
+            return $this
+                ->customise([
+                    'Width' => $width,
+                    'Height' => $height,
+                    'Src' => "http://img.youtube.com/vi/{$this->VideoId()}/0.jpg",
+                ])
+                ->renderWith(__CLASS__ . '_VideoThumb')
+            ;
+            // return '<img width="'.$width.'px" height="'.$height.'px" src="http://img.youtube.com/vi/'.$this->VideoId().'/0.jpg"/>';
+        }
+
+        if (self::is_vimeo($this->VideoAddress))
+        {
+            $hash = unserialize(file_get_contents("http://vimeo.com/api/v2/video/".$this->VideoId().".php"));
+            $src = $hash[0]['thumbnail_medium'];
+            return '<img width="240px" height="180px" src="'.$src.'"/>';
+        }
+        return false;
+    }
+
     public function getCMSFields()
     {
         $fields = FieldList::create(TabSet::create('Root'));
@@ -364,7 +409,7 @@ class CleanVideo extends DataObject
      *
      * @return string
      */
-    public function VideoID()
+    public function VideoId()
     {
         $purl = self::prepare_url($this->VideoAddress);
         return $purl['sourceid'];
@@ -374,58 +419,3 @@ class CleanVideo extends DataObject
         return self::is_youtube($this->VideoAddress);
     }
 }
-
-/**
- * Custom validator for the videos
- *
- * @package cleanutilities
- * @subpackage models
- */
-// class CleanVideo_Validator extends RequiredFields
-// {
-
-//     protected $customRequired = array('Number');
-
-//     public function __construct()
-//     {
-//         $required = func_get_args();
-//         if (isset($required[0]) && is_array($required[0])) {
-//             $required = $required[0];
-//         }
-//         $required = array_merge($required, $this->customRequired);
-//         parent::__construct($required);
-//     }
-
-//     public function php($data)
-//     {
-//         $valid = parent::php($data);
-//         if ($data['VideoType'] == 'Embed') {
-//             if ($data['VideoAddress'] != '') {
-//                 if (self::validate_video($data['VideoAddress']) == false) {
-//                     $this->validationError(
-//                         "VideoError",
-//                         _t('Video_Validator.ADDRESS_ERROR', 'Please enter a valid Video URL')
-//                     );
-//                     $valid = false;
-//                 }
-//             } else {
-//                 $this->validationError(
-//                     "VideoError",
-//                     _t('Video_Validator.ADDRESS_REQUIRED', 'Video URL is required for Embeded videos')
-//                 );
-//                 $valid = false;
-//             }
-//         }
-//         if ($data['VideoType'] == 'File') {
-//             $videofile = $data['VideoFile'];
-//             if ($data['VideoFile'] == '') {
-//                 $this->validationError(
-//                     "VideoError",
-//                     _t('Video_Validator.VIDEOFILE_REQUIRED', 'Video File is required for File videos')
-//                 );
-//                 $valid = false;
-//             }
-//         }
-//         return $valid;
-//     }
-// }

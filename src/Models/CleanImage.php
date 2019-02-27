@@ -4,18 +4,14 @@ namespace Arillo\CleanUtilities\Models;
 use SilverStripe\ORM\Dataobject;
 use SilverStripe\Assets\Image;
 use SilverStripe\CMS\Model\SiteTree;
-use SilverStripe\AssetAdmin\Forms\UploadField;
-
-use SilverStripe\Control\{
-    Controller,
-    Director
-};
 
 use SilverStripe\Forms\{
     FieldList,
     TextField,
     TabSet
 };
+
+use Arillo\CleanUtilities\CMS\Fields;
 
 /**
  * A wrapper for File, which adds a Title field
@@ -53,21 +49,6 @@ class CleanImage extends DataObject
         'Title' => 'Title'
     );
 
-    /**
-     * This var specifies the name of the upload folder
-     * @var string
-     */
-    private static $upload_folder = "images";
-
-    /**
-     * Allowed file extensions for uploading.
-     * @var array
-     */
-    private static $allowed_extensions = array(
-        '', 'bmp','png','gif','jpg','jpeg','ico','pcx','tif','tiff'
-
-    );
-
     public function getCMSFields()
     {
         $fields = FieldList::create(TabSet::create('Root'));
@@ -78,22 +59,7 @@ class CleanImage extends DataObject
             )
         );
 
-        $upload = UploadField::create('Attachment', 'Image');
-        // $upload->setConfig('allowedMaxFileNumber', 1);
-        $upload->getValidator()->setAllowedExtensions(
-            $this->config()->allowed_extensions
-        );
-
-        if ($this->hasExtension('ControlledFolderDataExtension')) {
-            $upload->setFolderName($this->getUploadFolder());
-        } else {
-            $upload->setFolderName($this->config()->upload_folder);
-        }
-
-        $fields->addFieldToTab(
-            'Root.Main',
-            $upload
-        );
+        Fields::add_image_field($this, $fields);
 
         $this->extend('updateCMSFields', $fields);
         return $fields;

@@ -10,3 +10,4 @@ It is recommended to run in legacy file mode, add this to config:
 SilverStripe\Assets\Flysystem\FlysystemAssetStore:
   legacy_filenames: true
 ```
+

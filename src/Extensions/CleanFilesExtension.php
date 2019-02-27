@@ -34,7 +34,6 @@ class CleanFilesExtension extends DataExtension
 
     public function updateCMSFields(FieldList $fields)
     {
-        $config = GridFieldConfig_RelationEditor::create();
         $fields->addFieldToTab(
             'Root.Files',
             SortableDataExtension::make_gridfield_sortable(
@@ -42,7 +41,7 @@ class CleanFilesExtension extends DataExtension
                     'CleanFiles',
                     'Files',
                     $this->owner->CleanFiles(),
-                    $config
+                    GridFieldConfig_RelationEditor::create()
                 )
             )
         );
