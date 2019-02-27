@@ -52,7 +52,7 @@ class CleanVideo extends DataObject
      * Allowed file extensions for uploading.
      * @var array
      */
-    private static $allowed_extensions = array('mov', 'flv', 'mp4');
+    private static $allowed_extensions =[ 'mov', 'flv', 'mp4' ];
 
     /**
      * Specifies a custom upload folder name.
@@ -335,14 +335,20 @@ class CleanVideo extends DataObject
                 ])
                 ->renderWith(__CLASS__ . '_VideoThumb')
             ;
-            // return '<img width="'.$width.'px" height="'.$height.'px" src="http://img.youtube.com/vi/'.$this->VideoId().'/0.jpg"/>';
         }
 
         if (self::is_vimeo($this->VideoAddress))
         {
             $hash = unserialize(file_get_contents("http://vimeo.com/api/v2/video/".$this->VideoId().".php"));
             $src = $hash[0]['thumbnail_medium'];
-            return '<img width="240px" height="180px" src="'.$src.'"/>';
+            return $this
+                ->customise([
+                    'Width' => $width,
+                    'Height' => $height,
+                    'Src' => $hash[0]['thumbnail_medium'],
+                ])
+                ->renderWith(__CLASS__ . '_VideoThumb')
+            ;
         }
         return false;
     }

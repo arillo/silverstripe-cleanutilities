@@ -52,7 +52,6 @@ class Fields
             ->removeByName('Images')
             ->removeByName('Links')
             ->removeByName('Videos')
-            ->removeByName('Header')
             ->removeByName('Files')
         ;
     }
