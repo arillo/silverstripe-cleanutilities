@@ -7,6 +7,7 @@ use SilverStripe\Forms\{
     FieldList
 };
 
+
 /**
  * Provides PublishDate for Pages
  *
@@ -40,18 +41,12 @@ class PublishDateDataExtension extends DataExtension
         }
         parent::onBeforeWrite();
     }
-    /**
-     * Adds PublishDate to CMS Form.
-     * @param $fields
-     */
-    public function updateCMSFields(FieldList $fields)
+
+    public static function datetime_field()
     {
-        $datefield = DatetimeField::create(
+        return DatetimeField::create(
             'PublishDate',
             _t('CMSPublishableDataExtension.PUBLISH_DATE', 'Publish date')
         );
-        // $datefield->getDateField()->setConfig('showcalendar', 1);
-        // $datefield->setConfig('setLocale', en_US);
-        $fields->addFieldToTab("Root.Main", $datefield, 'Content');
     }
 }
