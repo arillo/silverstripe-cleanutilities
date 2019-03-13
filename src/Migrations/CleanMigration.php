@@ -57,11 +57,10 @@ class CleanMigration extends BuildTask
                 break;
 
             case 'thumbs':
-                // ImageThumbnailHelper::singleton()->run();
                 $files = File::get();
                 $assetAdmin = AssetAdmin::singleton();
-                // set_time_limit(0);
                 foreach ($files as $file) {
+                    self::echo("{$file->ID} - {$file->Filename}");
                     $assetAdmin->generateThumbnails($file, true);
                 }
                 self::echo("#### DONE ####");
@@ -71,7 +70,7 @@ class CleanMigration extends BuildTask
                 self::echo("Please specify a migration type:");
                 foreach (self::TYPES as $type)
                 {
-                    self::echo("  - {$type}");
+                    self::echo("  type={$type}");
                 }
 
                 self::echo("");
@@ -90,7 +89,7 @@ class CleanMigration extends BuildTask
                 '"ClassName"' => $new,
             ]);
             $update->execute();
-            self::echo("Updated '{old}'");
+            self::echo("Updated '{$old}'");
         }
 
         self::echo("#### DONE ####");
