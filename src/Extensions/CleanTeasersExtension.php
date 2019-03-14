@@ -38,51 +38,16 @@ class CleanTeasersExtension extends DataExtension
 
     public function updateCMSFields(FieldList $fields)
     {
-        $sortable = CleanTeaser::singleton()->hasExtension('SortableDataExtension');
-        $config = GridFieldConfig_RelationEditor::create();
-        $config->addComponent($gridFieldForm = new GridFieldDetailForm());
-
-        $dataFields = array();
-        if (singleton('CleanTeaser')->hasExtension('CMSPublishableDataExtension')) {
-            $dataFields['PublishIndicator'] = 'Published';
-        }
-        $dataFields = array_merge($dataFields, array(
-            'Thumbnail' => 'Thumbnail',
-            'Title' => 'Title',
-            'CleanDescription' => 'Description'
-        ));
-        $config->getComponentByType('GridFieldDataColumns')->setDisplayFields($dataFields);
-        $gridFieldForm->setTemplate('CMSGridFieldPopupForms');
-
-        if ($sortable) {
-            $config->addComponent(new GridFieldSortableRows('SortOrder'));
-        }
-
-        if (ClassInfo::exists('GridFieldBulkUpload')) {
-            $iu = new GridFieldBulkUpload('ImageID');
-            if (singleton('CleanTeaser')->hasExtension('ControlledFolderDataExtension')) {
-                $iu->setUfConfig(
-                    'folderName',
-                    singleton('CleanTeaser')->getUploadFolder()
-                );
-            } else {
-                $iu->setUfConfig(
-                    'folderName',
-                    CleanTeaser::$upload_folder
-                );
-            }
-            $config->addComponent($iu);
-        }
-
-        if ($sortable) {
-            $data = $this->owner->CleanTeasers()->sort('SortOrder');
-        } else {
-            $data = $this->owner->CleanTeasers();
-        }
-
         $fields->addFieldToTab(
-            "Root.Teasers",
-            GridField::create('CleanTeasers', 'CleanTeaser', $data, $config)
+            'Root.Teasers',
+            SortableDataExtension::make_gridfield_sortable(
+                GridField::create(
+                    'CleanTeasers',
+                    'Teasers',
+                    $this->owner->CleanTeasers(),
+                    GridFieldConfig_RelationEditor::create()
+                )
+            )
         );
     }
 

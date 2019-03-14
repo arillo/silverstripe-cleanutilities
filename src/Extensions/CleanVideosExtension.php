@@ -39,39 +39,17 @@ class CleanVideosExtension extends DataExtension
 
     public function updateCMSFields(FieldList $fields)
     {
-        $inst = CleanVideo::singleton();
-        $sortable = $inst->hasExtension('SortableDataExtension');
-        $config = GridFieldConfig_RelationEditor::create();
-
-        if ($sortable) {
-            $config->addComponent(new GridFieldSortableRows('SortOrder'));
-        }
-
-        // if (ClassInfo::exists('GridFieldBulkFileUpload')) {
-        //     $iu = new GridFieldBulkFileUpload('VideoFileID');
-        //     if ($inst->hasExtension('ControlledFolderDataExtension')) {
-        //         $iu->setUfConfig(
-        //             'folderName',
-        //             $inst->getUploadFolder()
-        //         );
-        //     } else {
-        //         $iu->setUfConfig(
-        //             'folderName',
-        //             CleanVideo::$upload_folder
-        //         );
-        //     }
-        //     $config->addComponent($iu);
-        // }
-
-        $data = $this->owner->CleanVideos();
-        // if ($sortable) $data = $data->sort('SortOrder');
-
         $fields->addFieldToTab(
-            "Root.Videos",
-            $gridField = GridField::create('CleanVideos', 'Videos', $data, $config)
+            'Root.Videos',
+            SortableDataExtension::make_gridfield_sortable(
+                GridField::create(
+                    'CleanVideos',
+                    'Videos',
+                    $this->owner->CleanVideos(),
+                    GridFieldConfig_RelationEditor::create()
+                )
+            )
         );
-
-        if ($sortable) SortableDataExtension::make_gridfield_sortable($gridField);
     }
 
     /**

@@ -39,22 +39,17 @@ class CleanLinksExtension extends DataExtension
 
     public function updateCMSFields(FieldList $fields)
     {
-        $sortable = CleanLink::singleton()->hasExtension('SortableDataExtension');
-        $config = GridFieldConfig_RelationEditor::create();
-
-        if ($sortable) {
-            $config->addComponent(new GridFieldSortableRows('SortOrder'));
-        }
-
-        $data = $this->owner->CleanLinks();
-        if ($sortable) $data = $data->sort('SortOrder');
-
         $fields->addFieldToTab(
-            "Root.Links",
-            $gridField = GridField::create('CleanLinks', 'Links', $data, $config)
+            'Root.Links',
+            SortableDataExtension::make_gridfield_sortable(
+                GridField::create(
+                    'CleanLinks',
+                    'Links',
+                    $this->owner->CleanLinks(),
+                    GridFieldConfig_RelationEditor::create()
+                )
+            )
         );
-
-        if ($sortable) SortableDataExtension::make_gridfield_sortable($gridField);
     }
 
     /**
