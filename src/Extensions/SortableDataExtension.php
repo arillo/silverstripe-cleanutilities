@@ -50,6 +50,17 @@ class SortableDataExtension extends DataExtension
         return $gridField;
     }
 
+
+    public function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+
+        if (!$this->owner->{self::SORT_FIELD})
+        {
+            $this->owner->{self::SORT_FIELD} = get_class($this->owner)::get()->max(self::SORT_FIELD) + 1;
+        }
+    }
+
     /**
      * Remove SortOrder from CMSFields
      * @param  FieldList $fields
