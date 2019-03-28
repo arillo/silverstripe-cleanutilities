@@ -8,6 +8,10 @@
             "homepage": "http://arillo.net"
         }
     ],
+    "require": {
+        "silverstripe/framework": "^4",
+        "colymba/gridfield-bulk-editing-tools": "dev-master"
+    },
     "extra": {
         "installer-name": "cleanutilities"
     },
