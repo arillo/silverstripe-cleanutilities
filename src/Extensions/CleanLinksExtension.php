@@ -32,7 +32,6 @@ use Arillo\CleanUtilities\Extensions\SortableDataExtension;
  */
 class CleanLinksExtension extends DataExtension
 {
-
     private static $has_many = array(
         'CleanLinks' => CleanLink::class
     );

@@ -8,9 +8,11 @@ use SilverStripe\ORM\{
 
 use SilverStripe\Forms\GridField\{
     GridField,
-    GridFieldConfig_RelationEditor
+    GridFieldConfig_RelationEditor,
+    GridFieldAddExistingAutocompleter
 };
 
+use Colymba\BulkUpload\BulkUploader;
 use SilverStripe\Forms\FieldList;
 use Arillo\CleanUtilities\Models\CleanFile;
 use Arillo\CleanUtilities\Extensions\SortableDataExtension;
@@ -26,14 +28,26 @@ use Arillo\CleanUtilities\Extensions\SortableDataExtension;
  */
 class CleanFilesExtension extends DataExtension
 {
-    private static
-        $has_many = [
-            'CleanFiles' => CleanFile::class
-        ]
-    ;
+    private static $has_many = [
+        'CleanFiles' => CleanFile::class
+    ];
+
+    private static $owns = [
+        'CleanFiles'
+    ];
 
     public function updateCMSFields(FieldList $fields)
     {
+        $config = GridFieldConfig_RelationEditor::create();
+        $config
+            ->removeComponentsByType(GridFieldAddExistingAutocompleter::class)
+            ->addComponent(
+                (new BulkUploader())
+                    ->setUfSetup('setFolderName', 'Uploads')
+                    ->setAutoPublishDataObject(true)
+            )
+        ;
+
         $fields->addFieldToTab(
             'Root.Files',
             SortableDataExtension::make_gridfield_sortable(
@@ -41,7 +55,7 @@ class CleanFilesExtension extends DataExtension
                     'CleanFiles',
                     'Files',
                     $this->owner->CleanFiles(),
-                    GridFieldConfig_RelationEditor::create()
+                    $config
                 )
             )
         );
