@@ -2,6 +2,7 @@
 namespace Arillo\CleanUtilities\Extensions;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\CMS\Controllers\CMSPageEditController;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\DataQuery;
@@ -55,7 +56,7 @@ class CMSPublishableDataExtension extends DataExtension
      */
     public function augmentSQL(SQLSelect $query, DataQuery $dataQuery = null)
     {
-        if (Controller::curr() != 'CMSPageEditController') {
+        if (Controller::curr() != CMSPageEditController::class) {
             $query->addWhere("Published=1");
         }
     }
