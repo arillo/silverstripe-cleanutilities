@@ -110,7 +110,7 @@ class ControlledFolderDataExtension extends DataExtension
                 self::set_controlled_folder_for($modelclass, $config);
             }
         } else {
-            Object::add_extension($className, 'ControlledFolderDataExtension');
+            SS_Object::add_extension($className, 'ControlledFolderDataExtension');
             if (is_string($config)) {
                 $fconfig = self::get_folder_config();
                 $fconfig['folderName'] = self::sanitize_folder_name($config);
